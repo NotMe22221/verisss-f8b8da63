@@ -324,6 +324,22 @@ function Hero() {
   );
 }
 
+function Callout({ pos, label }: { pos: "tl" | "tr" | "bl" | "br"; label: string }) {
+  const map = {
+    tl: "top-2 left-2",
+    tr: "top-2 right-2",
+    bl: "bottom-2 left-2",
+    br: "bottom-2 right-2",
+  } as const;
+  return (
+    <div
+      className={`absolute ${map[pos]} flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground`}
+    >
+      <span className="h-1 w-1 rounded-full bg-gold" />
+      {label}
+    </div>
+  );
+}
 
 function HeroStat({ label, value }: { label: string; value: string }) {
   return (
