@@ -302,10 +302,10 @@
   position: absolute;
   inset: 0;
   display: grid;
-  align-items: end;
+  align-items: center;
   justify-items: center;
-  padding-bottom: clamp(2rem, 8vh, 6rem);
-  opacity: calc(1 - var(--hero-progress, 0) * 2.5);
+  padding-top: clamp(22rem, 48vh, 30rem);
+  opacity: calc(1 - var(--hero-progress, 0) * 2.2);
   transform: translate3d(0, calc(var(--hero-progress, 0) * 40px), 0);
   pointer-events: none;
 }
