@@ -140,7 +140,7 @@ function LiveConsole() {
         <ConsoleRow k="HRV" v={`${hrv.toFixed(1)} ms`} />
         <ConsoleRow k="EDA" v={`${eda.toFixed(2)} µS`} />
         <ConsoleRow k="RISK" v={risk.toFixed(2)} />
-        <ConsoleRow k="UTC" v={now.toISOString().slice(11, 19)} />
+        <ConsoleRow k="UTC" v={now ? now.toISOString().slice(11, 19) : "--:--:--"} />
       </div>
     </div>
   );
