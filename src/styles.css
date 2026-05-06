@@ -249,16 +249,17 @@
 }
 .ring-assembled {
   position: absolute;
-  width: min(62vmin, 560px);
+  top: 0;
+  width: min(56vmin, 480px);
   aspect-ratio: 1;
   opacity: calc(1 - var(--hero-progress, 0) * 1.4);
   transform:
-    translate3d(0, calc(-12vh + var(--hero-progress, 0) * 0px), 0)
+    translate3d(0, calc(-8% + var(--hero-progress, 0) * 0px), 0)
     rotate(calc(var(--hero-progress, 0) * 30deg))
-    scale(calc(1 + var(--hero-progress, 0) * 0.25));
-  filter: drop-shadow(0 30px 80px oklch(0.78 0.10 80 / 0.45));
-  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 50%, transparent 78%);
-          mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 50%, transparent 78%);
+    scale(calc(1 + var(--hero-progress, 0) * 0.3));
+  filter: drop-shadow(0 30px 80px oklch(0.78 0.10 80 / 0.5));
+  -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 45%, transparent 75%);
+          mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 45%, transparent 75%);
   transition: opacity 60ms linear;
 }
 .ring-fragment {
