@@ -484,28 +484,6 @@ function Device() {
             </dl>
           </div>
         </div>
-        <div className="mt-16 grid gap-px border border-border bg-border md:grid-cols-3">
-          {[
-            { n: "01", label: "Titanium Shell", img: ringHero, pos: "center" },
-            { n: "02", label: "Interior Sensors", img: ringDevice, pos: "left" },
-            { n: "03", label: "Inductive Charge", img: ringHero, pos: "right" },
-          ].map((t) => (
-            <div key={t.n} className="group relative aspect-[4/3] overflow-hidden bg-background">
-              <img
-                src={t.img}
-                alt={t.label}
-                loading="lazy"
-                className="h-full w-full scale-150 object-cover transition-transform duration-700 group-hover:scale-[1.6]"
-                style={{ objectPosition: t.pos }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 flex items-baseline justify-between p-4 font-mono text-[10px] uppercase tracking-[0.22em]">
-                <span className="text-gold">{t.n}</span>
-                <span className="text-ink">{t.label}</span>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
