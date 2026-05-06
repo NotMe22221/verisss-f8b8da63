@@ -426,12 +426,8 @@ function Device() {
               A whisper-thin titanium ring engineered for{" "}
               <span className="italic text-gold">continuous wear.</span>
             </h2>
-            <p className="mt-8 text-base leading-relaxed text-muted-foreground md:text-lg">
-              No conversations are stored. No cloud recordings exist. Audio is
-              processed locally and discarded instantly.
-            </p>
-            <p className="mt-4 font-display text-xl font-light italic text-ink md:text-2xl">
-              Protection without surveillance.
+            <p className="mt-8 font-display text-xl font-light italic text-ink md:text-2xl">
+              No cloud. No recordings. Audio processed locally and discarded.
             </p>
             <dl className="mt-12 grid grid-cols-2 gap-px border border-border bg-border">
               {specs.map((s) => (
