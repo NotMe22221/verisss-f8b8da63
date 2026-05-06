@@ -79,7 +79,7 @@ function VerisLanding() {
       <Toaster />
       <StatusBar />
       <Nav />
-      <TelemetryTicker />
+      <div className="hidden md:block"><TelemetryTicker /></div>
       <main>
         <Hero />
         <Manifesto />
