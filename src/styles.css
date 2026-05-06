@@ -35,23 +35,23 @@
   --color-paper-foreground: var(--paper-foreground);
   --color-ink: var(--ink);
   --color-grid: var(--grid-line);
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-display: "Fraunces", "Cormorant Garamond", ui-serif, Georgia, serif;
+  /* One typographic voice — Fraunces everywhere except telemetry chrome */
+  --font-sans: "Fraunces", ui-serif, Georgia, "Cormorant Garamond", serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 :root {
   --radius: 0.25rem;
-  /* Moonshot lab palette: deep navy, ivory paper, champagne gold */
-  --background: oklch(0.16 0.025 255);              /* Deep navy near-black */
-  --foreground: oklch(0.96 0.005 80);               /* Off-white ivory */
-  --card: oklch(0.20 0.028 255);                    /* Slightly raised navy */
+  --background: oklch(0.16 0.025 255);
+  --foreground: oklch(0.96 0.005 80);
+  --card: oklch(0.20 0.028 255);
   --card-foreground: oklch(0.96 0.005 80);
   --popover: oklch(0.20 0.028 255);
   --popover-foreground: oklch(0.96 0.005 80);
-  --primary: oklch(0.78 0.10 80);                   /* Champagne gold #C9A46A */
+  --primary: oklch(0.78 0.10 80);
   --primary-foreground: oklch(0.16 0.025 255);
-  --secondary: oklch(0.55 0.04 230);                /* Muted teal */
+  --secondary: oklch(0.55 0.04 230);
   --secondary-foreground: oklch(0.96 0.005 80);
   --muted: oklch(0.24 0.02 255);
   --muted-foreground: oklch(0.66 0.02 240);
@@ -63,27 +63,113 @@
   --input: oklch(0.96 0.005 80 / 0.12);
   --ring: oklch(0.78 0.10 80);
 
-  /* Semantic aliases */
   --gold: oklch(0.78 0.10 80);
   --gold-soft: oklch(0.78 0.10 80 / 0.15);
-  --paper: oklch(0.96 0.008 80);                    /* Ivory paper */
+  --paper: oklch(0.96 0.008 80);
   --paper-foreground: oklch(0.16 0.025 255);
   --ink: oklch(0.96 0.005 80);
   --grid-line: oklch(0.96 0.005 80 / 0.06);
+
+  /* Scroll-driven progress (0 → 1), written by the scroll listener */
+  --scroll: 0;
+  --hero-progress: 0;
 }
 
 @layer base {
   * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-weight: 300;
     -webkit-font-smoothing: antialiased;
     font-feature-settings: "ss01", "cv11";
+    font-optical-sizing: auto;
   }
 }
 
-/* Blueprint grid overlay */
+::selection { background: var(--gold); color: oklch(0.10 0.02 255); }
+
+/* ---------- LIVING BACKGROUND ---------- */
+/* Fixed mesh gradient that drifts behind everything. */
+.living-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, oklch(0.78 0.10 80 / 0.18), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 80% 20%, oklch(0.55 0.10 260 / 0.22), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 70% 90%, oklch(0.6 0.12 200 / 0.18), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, oklch(0.78 0.10 80 / 0.10), transparent 60%);
+  background-size: 180% 180%, 200% 200%, 200% 200%, 180% 180%;
+  animation: mesh-drift 38s ease-in-out infinite alternate;
+  filter: saturate(1.05);
+}
+@keyframes mesh-drift {
+  0%   { background-position: 0% 0%, 100% 0%, 50% 100%, 0% 100%; }
+  50%  { background-position: 30% 20%, 70% 30%, 60% 70%, 20% 80%; }
+  100% { background-position: 60% 40%, 40% 60%, 80% 40%, 40% 60%; }
+}
+
+.living-grid {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 30%, transparent 90%);
+  opacity: 0.5;
+}
+
+.living-grain {
+  position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: 0.045;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+/* Aurora that follows scroll position, parented to body */
+.scroll-aurora {
+  position: fixed;
+  left: 50%;
+  top: calc(35vh + (var(--scroll, 0) * 0px));
+  width: 80vmin;
+  height: 80vmin;
+  margin-left: -40vmin;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle, oklch(0.78 0.10 80 / 0.18), transparent 60%);
+  filter: blur(40px);
+  transform: translate3d(0, calc(var(--scroll, 0) * -100px), 0);
+  transition: transform 80ms linear;
+}
+
+/* Top scroll progress bar */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 1px; z-index: 100;
+  width: calc(var(--scroll, 0) * 100%);
+  background: linear-gradient(90deg, transparent, var(--gold));
+  pointer-events: none;
+}
+
+/* ---------- TYPOGRAPHY HELPERS ---------- */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.label-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-variant: small-caps;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+}
+
+/* ---------- LEGACY UTILITIES (kept for sections still using them) ---------- */
 .bg-grid {
   background-image:
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
@@ -99,55 +185,17 @@
 .bg-nebula {
   background:
     radial-gradient(ellipse 80% 60% at 70% 30%, oklch(0.78 0.10 80 / 0.14), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 20% 80%, oklch(0.55 0.10 260 / 0.22), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 90%, oklch(0.6 0.12 200 / 0.15), transparent 60%);
+    radial-gradient(ellipse 70% 50% at 20% 80%, oklch(0.55 0.10 260 / 0.22), transparent 60%);
 }
 
-@keyframes scan-y {
-  0% { transform: translateY(-10%); opacity: 0; }
-  10%, 90% { opacity: 1; }
-  100% { transform: translateY(110%); opacity: 0; }
-}
-.scan-line { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.scan-line::after {
-  content: ""; position: absolute; left: 0; right: 0; height: 2px; top: 0;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  box-shadow: 0 0 24px var(--gold);
-  animation: scan-y 6s linear infinite;
-  opacity: 0.6;
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(0.5); opacity: 0.6; }
-  100% { transform: scale(1.6); opacity: 0; }
-}
-.pulse-ring {
-  position: absolute; inset: 0; border: 1px solid var(--gold);
-  border-radius: 9999px; animation: pulse-ring 4s ease-out infinite;
-  pointer-events: none;
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .marquee-track { animation: marquee 50s linear infinite; }
-
 @keyframes blink { 50% { opacity: 0.2; } }
 .blink { animation: blink 1.2s steps(2, start) infinite; }
-
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
+@keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .float-slow { animation: float-slow 7s ease-in-out infinite; }
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 .rise { animation: rise 0.9s ease-out both; }
-
 @keyframes spin-slow { to { transform: rotate(360deg); } }
 .spin-slow { animation: spin-slow 80s linear infinite; }
 
@@ -156,32 +204,114 @@
   background: radial-gradient(ellipse at center, transparent 55%, oklch(0.10 0.02 255 / 0.7) 100%);
 }
 
-.noise::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.05;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  mix-blend-mode: overlay;
-}
-
-/* Industry polish */
-html { scroll-behavior: smooth; }
-::selection { background: var(--gold); color: oklch(0.10 0.02 255); }
-
 .hairline-gold {
   display: block; width: 64px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
   margin: 0 auto;
 }
 
-@keyframes reveal-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes reveal-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 .reveal { opacity: 0; }
 .reveal.in { animation: reveal-up 0.9s cubic-bezier(.2,.7,.2,1) both; }
 
-@keyframes reveal-scale {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
-}
+@keyframes reveal-scale { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 .reveal-scale { opacity: 0; }
 .reveal-scale.in { animation: reveal-scale 1.1s cubic-bezier(.2,.7,.2,1) both; }
+
+/* Section-to-section soft fade overlay */
+.section-fade-top {
+  position: relative;
+}
+.section-fade-top::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 160px;
+  background: linear-gradient(to bottom, var(--background), transparent);
+  pointer-events: none; z-index: 1;
+}
+.section-fade-bottom::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 160px;
+  background: linear-gradient(to top, var(--background), transparent);
+  pointer-events: none; z-index: 1;
+}
+
+/* ---------- HERO RING DECONSTRUCTION ---------- */
+/* `--hero-progress` (0 → 1) drives every fragment + the assembled ring. */
+.hero-stage {
+  position: relative;
+  height: 280vh; /* tall scrolling area for the deconstruction */
+}
+.hero-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.ring-assembled {
+  position: absolute;
+  width: min(78vmin, 720px);
+  aspect-ratio: 1;
+  opacity: calc(1 - var(--hero-progress, 0) * 1.4);
+  transform:
+    translate3d(0, 0, 0)
+    rotate(calc(var(--hero-progress, 0) * 30deg))
+    scale(calc(1 + var(--hero-progress, 0) * 0.25));
+  filter: drop-shadow(0 30px 80px oklch(0.78 0.10 80 / 0.35));
+  transition: opacity 60ms linear;
+}
+.ring-fragment {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 20px 60px oklch(0.78 0.10 80 / 0.35));
+  opacity: calc(var(--hero-progress, 0) * 1.2);
+}
+.frag-shell {
+  width: 50vmin; max-width: 460px; aspect-ratio: 1;
+  transform:
+    translate3d(calc(var(--hero-progress, 0) * -38vw), calc(var(--hero-progress, 0) * -22vh), 0)
+    rotate(calc(var(--hero-progress, 0) * -25deg))
+    scale(calc(0.6 + var(--hero-progress, 0) * 0.55));
+}
+.frag-sensors {
+  width: 44vmin; max-width: 420px; aspect-ratio: 1;
+  transform:
+    translate3d(calc(var(--hero-progress, 0) * 38vw), calc(var(--hero-progress, 0) * -20vh), 0)
+    rotate(calc(var(--hero-progress, 0) * 18deg))
+    scale(calc(0.6 + var(--hero-progress, 0) * 0.6));
+}
+.frag-haptic {
+  width: 32vmin; max-width: 320px; aspect-ratio: 1;
+  transform:
+    translate3d(calc(var(--hero-progress, 0) * -34vw), calc(var(--hero-progress, 0) * 28vh), 0)
+    rotate(calc(var(--hero-progress, 0) * 40deg))
+    scale(calc(0.6 + var(--hero-progress, 0) * 0.7));
+}
+.frag-antenna {
+  width: 50vmin; max-width: 480px; aspect-ratio: 1;
+  transform:
+    translate3d(calc(var(--hero-progress, 0) * 36vw), calc(var(--hero-progress, 0) * 26vh), 0)
+    rotate(calc(var(--hero-progress, 0) * -32deg))
+    scale(calc(0.6 + var(--hero-progress, 0) * 0.55));
+}
+
+.hero-headline {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  padding-bottom: clamp(2rem, 8vh, 6rem);
+  opacity: calc(1 - var(--hero-progress, 0) * 2.5);
+  transform: translate3d(0, calc(var(--hero-progress, 0) * 40px), 0);
+  pointer-events: none;
+}
+
+/* Watermark fragments behind downstream sections */
+.section-watermark {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.07;
+  filter: blur(2px);
+  z-index: 0;
+}
