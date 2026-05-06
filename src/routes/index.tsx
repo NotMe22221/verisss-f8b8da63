@@ -375,14 +375,16 @@ function ScienceRow({
         </p>
       </div>
       <div className="col-span-12 md:col-span-5">
-        <div className="relative mx-auto aspect-square w-44 md:w-72" style={{ animationDelay: `${index * 80}ms` }}>
+        <div className="relative mx-auto aspect-square w-44 md:w-56" style={{ animationDelay: `${index * 80}ms` }}>
+          <div className="frag-glow" aria-hidden />
           <img
             src={img}
             alt=""
             aria-hidden
             loading="lazy"
-            className="float-slow h-full w-full object-contain"
-            style={{ filter: "drop-shadow(0 20px 50px oklch(0.78 0.10 80 / 0.30))" }}
+            width={1024}
+            height={1024}
+            className="float-slow frag-soft h-full w-full object-contain"
           />
         </div>
       </div>
