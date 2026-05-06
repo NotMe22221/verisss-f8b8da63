@@ -1,71 +1,71 @@
 ## Goal
 
-Re-skin the Veris landing page to feel like an X Development (Google moonshot) project brief: bold, scientific, ambitious, with a research-lab tone instead of a consumer wellness product page.
+Push the Veris landing visual design from "stylish lab brief" to "cinematic moonshot": add motion, telemetry overlays, and ambient atmosphere so the page feels alive — like a live mission console, not a static moodboard.
 
-## Visual direction
+## What changes
 
-Move away from the soft warm-ivory wellness palette toward a cinematic "lab notebook in deep space" feel.
+### 1. Atmosphere & motion (`src/styles.css`)
 
-- **Palette shift** in `src/styles.css`:
-  - Background: deep near-black navy (`oklch(0.14 0.02 250)`) with a subtle off-white (`oklch(0.96 0.005 80)`) "paper" surface for one or two contrasting sections
-  - Foreground: near-white on dark sections, deep navy on light
-  - Accent: keep champagne gold (`#C9A46A`) as the single signal color for CTAs, stat numbers, and key phrases — used sparingly
-  - Add `--grid-line` token (~5% white) for blueprint overlays
-- **Typography**: serif display (Fraunces) for headlines, mono uppercase eyebrows with wide tracking, light-weight body — already have Cormorant-style direction in plan.md, lean into it harder
-- **Motifs**: hairline corner brackets (existing `Frame.tsx`), faint dot/line grid overlays on hero and device sections, mono "MOONSHOT 03 / VERIS / CLASSIFICATION: PRIVATE BETA" status strips, small arrow glyphs
+Add reusable utility classes and keyframes:
 
-## Page structure (rewritten)
+- `.scan-line` — a thin gold horizontal line sweeping vertically, 6s loop (overlay on hero & device panels)
+- `.pulse-ring` — concentric rings expanding outward from the ring image, 4s loop, staggered with delays
+- `.float-slow` — slow vertical float (6s) for the hero ring image
+- `.marquee-track` — infinite horizontal scroll for a telemetry ticker
+- `.blink` — blinking cursor for the live status dot
+- `.vignette` — radial darkening at section edges for cinematic depth
+- `.noise` — subtle SVG fractal noise overlay (4–5% opacity) for grain
+- `.bg-nebula-deep` — richer nebula with cyan + violet + gold blooms
 
-```text
-┌─ Status bar ──────────────────────────────────────────────┐
-│ MOONSHOT 03  •  VERIS  •  PRIVATE BETA  •  EST. 2026     │
-├─ Nav ────────────────────────────────────────────────────┤
-│ Veris       Mission  Science  Device  Access     [CTA]   │
-└──────────────────────────────────────────────────────────┘
+### 2. New components
 
-Hero — "Mission brief" layout
-  Eyebrow: MOONSHOT IDEA 03 — COGNITIVE DEFENSE SYSTEM
-  Headline: Protection before the damage.
-  Sub: first wearable intelligence system…
-  CTAs: [Join Early Access] [See How It Works]
-  Right: floating ring on nebula glow + corner brackets
-  Footer strip: STATUS / PARTICIPANTS / DURATION / LOCATION
+- `TelemetryTicker` — full-width bar between StatusBar and Nav (or below hero) scrolling lab-style telemetry: `↗ HRV +0.4σ · ◐ EDA stable · ⚠ urgency-spike pattern detected · ◉ on-device · …`
+- `LiveConsole` — small fixed bottom-left panel showing 3–4 simulated readouts (HRV, EDA, RISK, MODE) that update every 2s via `useEffect` setInterval — gives the page a "console is running" feel
+- `Constellation` — a faint dot-and-line SVG network in the Statement section background, suggesting a global mesh
 
-Manifesto — "The problem"
-  Large serif statement, lab-report body column, pull quotes
+### 3. Hero upgrades
 
-How it works — Detect / Analyze / Intervene / Protect
-  Numbered 01–04 cards with corner brackets, mono labels
+- Wrap ring image in a stack of 3 `pulse-ring` divs with staggered animation delays
+- Add `float-slow` to the ring `<img>`
+- Overlay `scan-line` on the ring frame
+- Add 4 small "data callouts" anchored to the corners of the ring with leader-line dots (e.g. `01 · HRV` top-left, `02 · EDA` top-right, `03 · TEMP` bottom-left, `04 · IMU` bottom-right)
+- Replace the static `◐ Live Telemetry` text with an animated `blink` dot + monospaced timestamp that updates every second
+- Add `noise` overlay to the hero section
 
-The Device — blueprint panel
-  Ring on grid background, spec callouts with leader lines feel
-  Spec strip: 7d battery · 4g · IP rating · on-device AI
+### 4. Manifesto / Science / Device polish
 
-Statement — "human-aware security"
-  Centered serif, generous whitespace
+- Add `.rise` (fade-up on first paint) to section headings
+- Add hover micro-interactions to the 4 How-It-Works cards: corner brackets glow gold, number scales subtly, arrow translates
+- Device blueprint panel: animate the `scan-line` over the ring; add SVG leader lines from the spec table to points on the ring
+- Add tiny "FIG. 0X" measurement ticks (mono text + hairline) along the device frame edges
 
-Metrics — $3.4B / 76% / 0 / 1st
-  Gold numerals, mono captions, hairline dividers
+### 5. Statement / Metrics
 
-Early Access — bordered panel with corner brackets
-  Form fields, gold "Join Early Access" + ghost "Request Research Access"
+- Statement section: layer a faint animated `Constellation` SVG (slow rotate / parallax via CSS transform animation, no JS)
+- Metrics: animate the gold numerals with a count-up on first viewport entry (IntersectionObserver in a `useCountUp` hook)
 
-Footer — Veris © 2026 • Cognitive defense infrastructure
-```
+### 6. Early Access
 
-## Files to change
+- Add a faint scan-line behind the form panel
+- Submit button: gold→ink hover with arrow that slides on hover
+- Replace "Submissions reviewed weekly" footnote with monospace `> awaiting transmission_` with blinking cursor
 
-- `src/styles.css` — swap palette to deep navy + ivory + champagne gold; add `--grid-line`, font stack tokens
-- `src/routes/index.tsx` — restructure all sections to mission-brief layout, mono eyebrows, serif headlines, gold accents, corner-bracket framing
-- `src/components/landing/Frame.tsx` — already exists (`CornerFrame`); reuse on hero, device, and early-access panels; extend with optional `GridOverlay` subcomponent for blueprint backgrounds
-- `index.html` (or root head) — add Fraunces + JetBrains Mono via Google Fonts link tags (not CSS @import, which previously broke the build)
+### 7. Footer
 
-## Tone of copy
+- Add a thin telemetry strip above the footer line: `BUILD 2026.05.06 · NODE veris-01 · SIGNAL ◉◉◉○`
 
-Keep the user's exact copy verbatim, but present it with lab-report formatting: numbered sections (01 DETECT, 02 ANALYZE…), classification-style status strips, and pull quotes for the strongest lines ("Because the body reacts before the mind understands.", "The future of security is human-aware.").
+## Files touched
+
+- `src/styles.css` — keyframes + utility classes (scan-line, pulse-ring, float-slow, marquee, blink, vignette, noise, constellation helpers)
+- `src/routes/index.tsx` — wire new effects into existing sections; add `TelemetryTicker`, `LiveConsole`, `Constellation`, `useCountUp`, and a tiny `useNow()` clock hook (all client-only, all in this one file)
+- `src/components/landing/Frame.tsx` — extend `CornerFrame` with optional `glow` prop that animates the corner brackets gold on hover
 
 ## Out of scope
 
-- No new routes, no auth changes, no schema changes
-- Keep existing server function `submitEarlyAccess` and form behavior unchanged
-- Keep existing ring images; only restyle their containers
+- No new routes, no copy changes, no schema or auth changes
+- No external animation libraries — pure CSS keyframes + tiny React hooks (count-up, clock)
+- No JS scroll libraries — IntersectionObserver only, used minimally
+
+## Tone
+
+Restrained, never gimmicky. Every motion has a reason: scan = sensing, pulse = heartbeat, ticker = live data, noise = film grain. If a viewer pauses for 5 seconds, something subtle should always be moving.
