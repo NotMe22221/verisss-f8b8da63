@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import ringHero from "@/assets/ring-hero.jpg";
 import ringDevice from "@/assets/ring-device.jpg";
 import { CornerFrame } from "@/components/landing/Frame";
-import { submitEarlyAccess } from "@/server/early-access.functions";
+import { submitEarlyAccess } from "@/lib/early-access.functions";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
