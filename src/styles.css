@@ -43,34 +43,35 @@
 
 :root {
   --radius: 0.5rem;
-  /* Oura-inspired palette */
-  --background: oklch(0.96 0.013 80);              /* Cream Beige #F7F1E8 */
-  --foreground: oklch(0.16 0.012 250);             /* Near Black #0C0C14 */
-  --card: oklch(1 0 0);                            /* Off-White */
-  --card-foreground: oklch(0.16 0.012 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.16 0.012 250);
-  --primary: oklch(0.36 0.012 60);                 /* Taupe #4A4741 */
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.94 0 0);                    /* Silver #ECECEC */
-  --secondary-foreground: oklch(0.36 0.012 60);
-  --muted: oklch(0.94 0 0);
-  --muted-foreground: oklch(0.55 0.005 60);        /* Dark Gray #838280 */
-  --accent: oklch(0.92 0.04 290);                  /* Lavender Mist */
-  --accent-foreground: oklch(0.36 0.012 60);
+  /* Slate Blue / Champagne palette */
+  --background: oklch(0.95 0.012 80);              /* Warm Ivory #F4EFE6 */
+  --foreground: oklch(0.32 0.04 230);              /* Deep Slate Blue #1B3A4B */
+  --card: oklch(0.98 0.006 80);
+  --card-foreground: oklch(0.32 0.04 230);
+  --popover: oklch(0.98 0.006 80);
+  --popover-foreground: oklch(0.32 0.04 230);
+  --primary: oklch(0.32 0.04 230);                 /* Deep Slate Blue #1B3A4B */
+  --primary-foreground: oklch(0.95 0.012 80);
+  --secondary: oklch(0.6 0.05 220);                /* Muted Teal Blue #5B8C99 */
+  --secondary-foreground: oklch(0.98 0.006 80);
+  --muted: oklch(0.9 0.008 240);
+  --muted-foreground: oklch(0.62 0.02 240);        /* Dusty Blue Gray #8A9BA8 */
+  --accent: oklch(0.76 0.09 80);                   /* Champagne Gold #C9A46A */
+  --accent-foreground: oklch(0.32 0.04 230);
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.92 0 0);                       /* Silver #ECECEC */
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.45 0.24 280);                    /* Periwinkle */
+  --border: oklch(0.88 0.012 240);
+  --input: oklch(0.88 0.012 240);
+  --ring: oklch(0.76 0.09 80);
 
-  --taupe: oklch(0.36 0.012 60);
-  --taupe-foreground: oklch(1 0 0);
-  --cream: oklch(0.96 0.013 80);
-  --sage: oklch(0.45 0.03 145);                    /* Sage #5B6550 */
-  --periwinkle: oklch(0.45 0.24 280);              /* #4242CF */
-  --periwinkle-soft: oklch(0.92 0.04 290);         /* #E2E2FF */
-  --charcoal: oklch(0.24 0.012 230);               /* #1E2427 */
+  /* Semantic aliases used across the page */
+  --taupe: oklch(0.32 0.04 230);                   /* Deep Slate Blue */
+  --taupe-foreground: oklch(0.95 0.012 80);        /* Warm Ivory */
+  --cream: oklch(0.95 0.012 80);
+  --sage: oklch(0.6 0.05 220);                     /* Muted Teal Blue */
+  --periwinkle: oklch(0.76 0.09 80);               /* Champagne Gold (primary CTA) */
+  --periwinkle-soft: oklch(0.92 0.04 80);          /* Soft champagne tint */
+  --charcoal: oklch(0.32 0.04 230);                /* Deep Slate Blue */
 }
 
 @layer base {
