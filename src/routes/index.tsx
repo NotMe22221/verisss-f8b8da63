@@ -256,7 +256,7 @@ function HeroStage({ stageRef }: { stageRef: React.RefObject<HTMLElement | null>
         {/* Headline overlay — fades on scroll */}
         <div className="hero-headline">
           <div className="mx-auto max-w-5xl px-6 text-center">
-            <div className="flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em] text-gold">
+            <div className="flex items-center justify-center gap-2 label-italic text-gold">
               <span className="h-1.5 w-1.5 rounded-full bg-gold" />
               Moonshot 03 — Cognitive Defense
             </div>
