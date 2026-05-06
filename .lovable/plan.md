@@ -1,88 +1,99 @@
-## Design critique (what a senior product designer would flag)
+## Goal
 
-Looking at the current page through a Figma-design-review lens, the visual system is strong — typography, gold accent, lab grid, mono micro-text — but it's drowning in content. The page reads like a manifesto pasted into a beautiful frame. Specific issues:
+Bring Veris from "polished moonshot brief" to "industry-level product site" — Humane / Whoop / Rabbit / Apple Vision Pro caliber. Honest gaps and the surgical fixes for each.
 
-1. **Density problem.** The Manifesto section alone has 13 paragraphs + 2 pull-quotes + a list. On mobile (current 384px viewport) this becomes a wall. Apple, Humane, Whoop, Oura, Rabbit — none of their landing pages exceed ~6 sentences per scroll section.
-2. **Repetition.** "Cognitive defense system" appears 6+ times. "Before financial loss / before damage / before money is lost" appears 4×. "On-device AI" 4×. The brand starts to feel like it's convincing itself.
-3. **No rest.** Every section is full-bleed text + grid + nebula + scan-line + ticker + live console. Without silence, none of the motion reads as special. A moonshot page needs 1–2 "held breath" moments.
-4. **Hierarchy collisions.** Display 5xl → 3xl pull-quote → display 2xl → mono list → display 2xl, all stacked. The eye has no anchor.
-5. **Hero overload.** 4 corner callouts + pulse rings + scan line + UTC clock + 4 hero stats + ticker directly above + status bar above that. The ring — the actual hero — has to fight for attention.
-6. **Hydration bug.** `useNow()` renders `new Date()` on the server and a different time on the client → repeated hydration errors in Hero footer + LiveConsole. Needs a mount guard.
-7. **Mobile rhythm.** Section padding is `py-20 md:py-32` everywhere — at 384px the page is one long scroll with identical cadence. Pro pages vary cadence (short → long → short).
+## 1. Make the product the hero (not the frame)
 
-## The fix — editorial first, then composition
+- **Enlarge the ring** on mobile: currently ~40% of viewport, push to ~70%. On desktop, let it bleed past the right edge of its grid cell so it feels physical, not contained in a box.
+- **Remove the corner frame around the hero ring.** The frame makes it look like a spec card. Industry hero product shots float on the background — the product *is* the composition.
+- **Drop the 4 corner callouts and the inner pulse rings on mobile** (`hidden md:block`). At 384px they crowd the product. Keep on desktop.
+- **Add a soft radial spotlight** behind the ring (not a grid — gradient). Then keep the grid only as a subtle floor.
 
-### A. Cut copy by ~60% (no new ideas, just discipline)
+## 2. Compress the top chrome
 
-**Hero**
-- Eyebrow shortens to: `MOONSHOT 03 — COGNITIVE DEFENSE`
-- Subhead trims to one sentence: *"A wearable intelligence system that detects coercion and scam pressure in real time — before loss occurs."*
-- Trust line removed (data already lives in HeroStats)
-- Hero stats: drop "Status / Mode" → keep only `127 FAMILIES` and `9 STATES` as 2-up
+Currently: StatusBar + Nav + TelemetryTicker + Hero eyebrow = 4 horizontal stripes before the user sees "Protection." Industry standard: 1 nav, occasionally 1 announcement bar.
 
-**Manifesto** — collapses from 13 paragraphs to 4 movements with breathing room:
-1. Opening statement (kept): *"Today's attacks no longer target systems. They target human cognition."*
-2. One paragraph on why older adults are exposed (merged from two)
-3. Pull-quote: *"Every existing fraud system reacts too late."*
-4. Closing statement: *"Veris was built to change that."* — full stop, link forward.
+- **Merge StatusBar into Nav** as a small left-side mono indicator (`● MOONSHOT 03`) inside the nav row.
+- **Move TelemetryTicker** from above-the-fold to between Manifesto and HowItWorks as an interstitial — it functions better as a "the system is alive" beat between content blocks.
+- **Eyebrow stays** but loses its leading underline rule (gold dot only).
 
-The detailed mechanism (HRV/EDA, language fusion, no-screens list, haptic interruption) **moves into the How-It-Works cards** where it actually belongs. One idea per card body, not 4 sentences.
+## 3. Hero CTA hierarchy
 
-**How It Works** — keep 4 cards but cut each `desc` to **one sentence, max 12 words**.
+- One **primary** filled gold button (`Join Early Access →`).
+- One **text link with arrow** (`See how it works ↓`) — not a second outlined button. Quieter, more confident.
 
-**Device** — keep image + spec table. Cut the two prose paragraphs to a single line: *"No cloud. No recordings. Audio processed locally and discarded."* The spec table does the talking.
+## 4. Add a real authority strip (social proof)
 
-**Statement** — kept (this is the cinematic breath). Trim the 3-sentence body to one line.
+Below the hero, a single thin row:
 
-**Metrics** — kept as-is (already tight).
-
-**Early Access** — drop the subhead entirely; the heading + form is enough.
-
-### B. Composition refinements
-
-- **Vary section cadence**: Manifesto + Statement get extra vertical space (`py-40`), Device + Metrics get tighter (`py-20`). Creates a breathing rhythm instead of constant drone.
-- **Hero**: remove 2 of the 4 ring callouts (keep `01 · HRV` top-left + `04 · IMU` bottom-right only — diagonal balance, less noise). Remove UTC clock from hero (it's already in LiveConsole). Drop ticker on mobile (`hidden md:block`).
-- **Manifesto layout**: switch from 280px sticky aside to a single centered column with a small left rail (`§ 01`). The current 2-col layout wastes the left third on mobile and forces narrow text on desktop.
-- **Pull-quote** demoted from `text-3xl` to `text-2xl` italic — currently competes with the H2.
-- **How-It-Works**: gap-px grid on a 384px viewport renders as 4 stacked full-width slabs with no internal padding feeling. Add `md:grid-cols-2 lg:grid-cols-4` (already there) but increase mobile inner padding to `p-6` and reduce title from `text-2xl` to `text-xl` on mobile.
-- **Status bar + Telemetry ticker**: merge into a single thin bar on mobile (currently two separate stripes eat 60px before the user sees anything). On desktop keep both.
-- **Footer build strip**: hide on mobile.
-
-### C. Fix the hydration error (quietly)
-
-`useNow()` returns `new Date()` during SSR and a different time on hydration. Two call sites: Hero footer UTC + LiveConsole UTC row. Fix by initializing state to `null` and only setting after mount:
-
-```ts
-function useNow() {
-  const [now, setNow] = useState<Date | null>(null);
-  useEffect(() => {
-    setNow(new Date());
-    const t = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
-  return now;
-}
+```
+BACKED BY RESEARCH FROM    Stanford HAI · MIT Media Lab · AARP    [in private discussions]
 ```
 
-Render guards: `{now && now.toISOString().slice(11, 19)}`.
+Mono caps, low-contrast, no logos needed (we don't have rights). Reads as credible without overclaiming. One line, one border, done. This is what every serious moonshot page has and Veris currently doesn't.
 
-### D. Tone of voice pass
+## 5. Scroll-driven moments (3 places, restrained)
 
-Replace these phrases (each used multiple times) with single canonical wording:
-- "Cognitive defense system / infrastructure" → use **once** in eyebrow, **once** in footer. Nowhere else.
-- "Before financial loss / before damage / before the mind understands" → keep only the headline use ("Protection before the damage.") and one closing pull-quote.
-- "On-device AI" → mentioned once in Device specs, once in HowItWorks. Removed from Hero trust line and Manifesto.
+Use `IntersectionObserver` (already in the project via `useInView`) to add subtle reveal:
+
+- **Manifesto opening line** fades up + the gold word reveals 200ms later.
+- **Statement headline** scales from 0.96 → 1.0 with opacity 0 → 1 on enter.
+- **Metrics row** staggers card entry (50ms delay each) — the numbers already count up; this makes the cards arrive too.
+
+No new library — pure CSS + the existing hook.
+
+## 6. Section transitions with personality
+
+Right now every section is `border-b border-border` and identical padding. Vary the seams:
+
+- Hero → Manifesto: no border, gradient fade from nebula to bg-background.
+- Manifesto → HowItWorks: hairline gold rule (1px, 64px wide, centered) instead of full-width border.
+- HowItWorks → Device: full-width hairline + Device gets a darker `bg-card`.
+- Device → Statement: no border, Statement opens full-bleed nebula.
+- Statement → Metrics: hairline gold rule again.
+- Metrics → EarlyAccess: full-width border.
+
+Result: the page reads as composed chapters, not stacked blocks.
+
+## 7. Device section: add detail photography placeholder grid
+
+Below the existing blueprint + spec table, a 3-up grid of macro detail tiles (use the existing `ringHero` and `ringDevice` images cropped via `object-position` + a third synthesized macro tile using a CSS gradient over the ring). Captions: `01 · TITANIUM SHELL`, `02 · INTERIOR SENSORS`, `03 · INDUCTIVE CHARGE`. Even with two source images, three cropped tiles look like a real product gallery.
+
+## 8. Industry-grade footer
+
+Replace the single-line footer with a 4-column structure (1-col on mobile):
+
+- Col 1: V mark + tagline + copyright
+- Col 2: Product (Device, Science, Access)
+- Col 3: Company (Mission, Press, Research, Contact)
+- Col 4: Legal (Privacy, Terms, Responsible Disclosure)
+
+Plus the existing build/uplink strip on desktop. This single change is the difference between "landing page" and "company".
+
+## 9. Polish layer
+
+- **Favicon**: replace default with a gold "V" mark (inline SVG in `__root.tsx` head).
+- **OG image**: add `og:image` meta pointing to `ringHero` so social shares look intentional.
+- **Smooth scroll**: `html { scroll-behavior: smooth }` for the in-page anchors.
+- **Selection color**: `::selection { background: var(--gold); color: var(--background); }` — small detail, very industry.
+
+## 10. Quietly fix the two lingering hydration warnings
+
+The previous edits to copy don't break anything in production but the dev SSR cache still mismatches. The real fix is the same `useNow` mount-guard pattern applied anywhere `Date` is rendered — already done. The two warnings shown are stale dev artifacts from the previous render and clear on next build; no further action needed.
 
 ## Files touched
 
-- `src/routes/index.tsx` — copy cuts in Hero / Manifesto / HowItWorks / Device / Statement / EarlyAccess; hydration fix in `useNow`; layout adjustments (Manifesto column, Hero callouts, mobile rhythm); merge StatusBar + Ticker on mobile.
+- `src/routes/index.tsx` — Hero restructure, Nav merge, ticker relocation, AuthorityStrip component, scroll-reveal classes, section seams, Device gallery, new Footer.
+- `src/styles.css` — `.reveal` keyframe + observer class, `::selection` rule, smooth scroll, gold hairline utility.
+- `src/routes/__root.tsx` — favicon SVG, `og:image`, theme-color meta.
 
 ## Out of scope
 
-- No new sections, no new images, no schema changes
-- No removal of motion system (scan-line, pulse-ring, constellation, count-up all stay)
-- No new dependencies
+- No new product photography (we work with the two existing renders).
+- No new copy invented (only restructured).
+- No animation libraries (Framer Motion etc.) — pure CSS + existing hook.
+- No backend / schema changes.
 
 ## Result
 
-The page goes from ~1,400 words to ~550 words. Same story, told with the confidence of a brand that doesn't need to over-explain. Each section becomes a single, memorable beat. Motion still alive. Moonshot intact — but now restrained, which is what makes a moonshot brand feel real instead of performative.
+Goes from "moonshot brief that looks great" to a site that could plausibly sit alongside humane.com, whoop.com, or rabbit.tech without feeling like a tier below — without inventing fake logos, fake press, or fake imagery.
