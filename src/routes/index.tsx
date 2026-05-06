@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent, type ReactNode } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowUpRight } from "lucide-react";
 import { toast } from "sonner";
@@ -8,6 +14,43 @@ import { CornerFrame } from "@/components/landing/Frame";
 import ringHero from "@/assets/ring-hero.jpg";
 import ringDevice from "@/assets/ring-device.jpg";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
+
+/* ---------- HOOKS ---------- */
+function useNow() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  return now;
+}
+
+function useLiveSignal(base: number, jitter: number, interval = 1500) {
+  const [v, setV] = useState(base);
+  useEffect(() => {
+    const t = setInterval(() => {
+      setV(base + (Math.random() - 0.5) * jitter * 2);
+    }, interval);
+    return () => clearInterval(t);
+  }, [base, jitter, interval]);
+  return v;
+}
+
+function useInView<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || seen) return;
+    const io = new IntersectionObserver(
+      ([e]) => e.isIntersecting && setSeen(true),
+      { threshold: 0.3 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [seen]);
+  return [ref, seen] as const;
+}
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
@@ -35,6 +78,7 @@ function VerisLanding() {
       <Toaster />
       <StatusBar />
       <Nav />
+      <TelemetryTicker />
       <main>
         <Hero />
         <Manifesto />
@@ -45,6 +89,66 @@ function VerisLanding() {
         <EarlyAccess />
       </main>
       <Footer />
+      <LiveConsole />
+    </div>
+  );
+}
+
+/* ---------- TELEMETRY TICKER ---------- */
+function TelemetryTicker() {
+  const items = [
+    "↗ HRV +0.4σ",
+    "◐ EDA stable",
+    "⚠ urgency-spike pattern detected · cohort 14",
+    "◉ on-device inference",
+    "◇ 127 active nodes",
+    "↗ confidence 0.92",
+    "◐ no audio retained",
+    "⚡ haptic intervention · −38% loss",
+    "◉ private by design",
+    "↗ HRV +0.2σ",
+    "◇ 9 states online",
+    "⚠ impersonation vector blocked",
+  ];
+  const line = items.join("   ·   ");
+  return (
+    <div className="relative overflow-hidden border-b border-border bg-background/60">
+      <div className="marquee-track flex whitespace-nowrap py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+        <span className="px-6">{line}</span>
+        <span className="px-6">{line}</span>
+      </div>
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
+    </div>
+  );
+}
+
+/* ---------- LIVE CONSOLE ---------- */
+function LiveConsole() {
+  const hrv = useLiveSignal(62, 4, 1400);
+  const eda = useLiveSignal(1.4, 0.3, 1700);
+  const risk = useLiveSignal(0.12, 0.05, 1100);
+  const now = useNow();
+  return (
+    <div className="pointer-events-none fixed bottom-4 right-4 z-40 hidden border border-gold/30 bg-background/85 p-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur lg:block">
+      <div className="mb-2 flex items-center gap-2 text-gold">
+        <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
+        VERIS · LIVE
+      </div>
+      <div className="grid gap-1">
+        <ConsoleRow k="HRV" v={`${hrv.toFixed(1)} ms`} />
+        <ConsoleRow k="EDA" v={`${eda.toFixed(2)} µS`} />
+        <ConsoleRow k="RISK" v={risk.toFixed(2)} />
+        <ConsoleRow k="UTC" v={now.toISOString().slice(11, 19)} />
+      </div>
+    </div>
+  );
+}
+function ConsoleRow({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="flex items-center justify-between gap-6">
+      <span>{k}</span>
+      <span className="text-ink">{v}</span>
     </div>
   );
 }
@@ -103,12 +207,13 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 
 /* ---------- HERO ---------- */
 function Hero() {
+  const now = useNow();
   return (
-    <section className="relative overflow-hidden border-b border-border bg-nebula">
+    <section className="relative overflow-hidden border-b border-border bg-nebula noise vignette">
       <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
       <div className="relative mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28 lg:py-36">
         <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
-          <div>
+          <div className="rise">
             <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
               <span className="h-px w-8 bg-gold" />
               Moonshot Idea 03 · Cognitive Defense System
@@ -125,9 +230,10 @@ function Hero() {
             <div className="mt-10 flex flex-wrap gap-3">
               <a
                 href="#early-access"
-                className="inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
+                className="group inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
               >
-                Join Early Access →
+                Join Early Access
+                <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
               </a>
               <a
                 href="#science"
@@ -146,19 +252,34 @@ function Hero() {
           <div className="relative">
             <CornerFrame className="aspect-square">
               <div className="absolute inset-0 bg-grid-sm opacity-60" aria-hidden />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.25),transparent_60%)]" aria-hidden />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.28),transparent_60%)]" aria-hidden />
+              {/* Pulse rings */}
+              <div className="absolute inset-[18%] grid place-items-center" aria-hidden>
+                <div className="pulse-ring" />
+                <div className="pulse-ring" style={{ animationDelay: "1.3s" }} />
+                <div className="pulse-ring" style={{ animationDelay: "2.6s" }} />
+              </div>
               <img
                 src={ringHero}
                 alt="Veris titanium ring"
                 width={1024}
                 height={1024}
-                className="relative mx-auto h-full w-full object-contain p-6"
+                className="float-slow relative mx-auto h-full w-full object-contain p-6"
               />
+              {/* Scan line */}
+              <div className="scan-line" aria-hidden />
+              {/* Corner data callouts */}
+              <Callout pos="tl" label="01 · HRV" />
+              <Callout pos="tr" label="02 · EDA" />
+              <Callout pos="bl" label="03 · TEMP" />
+              <Callout pos="br" label="04 · IMU" />
+              {/* Footer strip inside frame */}
               <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                 VRS-01 · 04g · Ti
               </div>
-              <div className="absolute bottom-3 right-3 font-mono text-[10px] uppercase tracking-[0.22em] text-gold">
-                ◐ Live Telemetry
+              <div className="absolute bottom-3 right-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-gold">
+                <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
+                {now.toISOString().slice(11, 19)} UTC
               </div>
             </CornerFrame>
           </div>
@@ -168,6 +289,29 @@ function Hero() {
         </p>
       </div>
     </section>
+  );
+}
+
+function Callout({
+  pos,
+  label,
+}: {
+  pos: "tl" | "tr" | "bl" | "br";
+  label: string;
+}) {
+  const map = {
+    tl: "top-6 left-6",
+    tr: "top-6 right-6",
+    bl: "bottom-10 left-6",
+    br: "bottom-10 right-6",
+  } as const;
+  return (
+    <div
+      className={`absolute ${map[pos]} flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground`}
+    >
+      <span className="h-1 w-1 rounded-full bg-gold" />
+      {label}
+    </div>
   );
 }
 
@@ -394,9 +538,10 @@ function Device() {
 /* ---------- STATEMENT ---------- */
 function Statement() {
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
+    <section className="relative overflow-hidden border-b border-border vignette">
+      <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
       <div className="absolute inset-0 bg-nebula" aria-hidden />
+      <Constellation />
       <div className="relative mx-auto max-w-[1440px] px-4 py-28 md:px-10 md:py-40">
         <div className="mx-auto max-w-4xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 04 / Thesis</p>
@@ -419,17 +564,52 @@ function Statement() {
   );
 }
 
+function Constellation() {
+  // Faint dot+line mesh, very slow rotate
+  const nodes = [
+    [12, 22], [28, 14], [44, 30], [62, 18], [78, 28], [88, 46],
+    [70, 58], [52, 70], [34, 64], [18, 52], [8, 70], [80, 78],
+    [40, 42], [60, 48],
+  ];
+  const links: Array<[number, number]> = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8],
+    [8, 9], [9, 0], [9, 10], [6, 11], [12, 2], [12, 7], [13, 3], [13, 6],
+    [12, 13],
+  ];
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid slice"
+      className="spin-slow pointer-events-none absolute inset-[-20%] h-[140%] w-[140%] opacity-30"
+    >
+      {links.map(([a, b], i) => (
+        <line
+          key={i}
+          x1={nodes[a][0]} y1={nodes[a][1]}
+          x2={nodes[b][0]} y2={nodes[b][1]}
+          stroke="var(--gold)" strokeWidth="0.08" opacity="0.5"
+        />
+      ))}
+      {nodes.map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="0.4" fill="var(--gold)" />
+      ))}
+    </svg>
+  );
+}
+
 /* ---------- METRICS ---------- */
 function Metrics() {
-  const stats = [
-    { value: "$3.4B", label: "Lost annually by Americans 60+ to scams" },
-    { value: "76%", label: "Increase in AI-enabled fraud attempts" },
+  const stats: Array<{ value: string; label: string; numeric?: { to: number; prefix?: string; suffix?: string; decimals?: number } }> = [
+    { value: "$3.4B", label: "Lost annually by Americans 60+ to scams", numeric: { to: 3.4, prefix: "$", suffix: "B", decimals: 1 } },
+    { value: "76%", label: "Increase in AI-enabled fraud attempts", numeric: { to: 76, suffix: "%" } },
     { value: "0", label: "Existing systems for real-time cognitive fraud detection" },
     { value: "1st", label: "Wearable built for manipulation awareness" },
   ];
+  const [ref, seen] = useInView<HTMLDivElement>();
   return (
     <section className="border-b border-border bg-background">
-      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
+      <div ref={ref} className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
         <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 05 / Field Data</p>
         <div className="mt-12 grid gap-px bg-border md:grid-cols-2 lg:grid-cols-4">
           {stats.map((s, i) => (
@@ -438,7 +618,16 @@ function Metrics() {
                 FIG. {String(i + 1).padStart(2, "0")}
               </div>
               <div className="mt-6 font-display text-5xl font-light text-gold md:text-6xl">
-                {s.value}
+                {s.numeric && seen ? (
+                  <CountUp
+                    to={s.numeric.to}
+                    prefix={s.numeric.prefix}
+                    suffix={s.numeric.suffix}
+                    decimals={s.numeric.decimals ?? 0}
+                  />
+                ) : (
+                  s.value
+                )}
               </div>
               <div className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {s.label}
@@ -448,6 +637,41 @@ function Metrics() {
         </div>
       </div>
     </section>
+  );
+}
+
+function CountUp({
+  to,
+  prefix = "",
+  suffix = "",
+  decimals = 0,
+  duration = 1600,
+}: {
+  to: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  duration?: number;
+}) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    const start = performance.now();
+    let raf = 0;
+    const step = (t: number) => {
+      const p = Math.min(1, (t - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setV(to * eased);
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [to, duration]);
+  return (
+    <span>
+      {prefix}
+      {v.toFixed(decimals)}
+      {suffix}
+    </span>
   );
 }
 
@@ -534,7 +758,8 @@ function EarlyAccess() {
             </div>
           </form>
           <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-            Submissions reviewed weekly · No spam · Beta cohorts open quarterly
+            <span className="text-gold">{">"}</span> awaiting transmission
+            <span className="blink ml-1 inline-block h-3 w-1.5 -mb-0.5 bg-gold align-middle" />
           </p>
         </CornerFrame>
       </div>
@@ -575,6 +800,16 @@ function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 function Footer() {
   return (
     <footer className="border-t border-border">
+      <div className="border-b border-border">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
+          <span>BUILD 2026.05.06</span>
+          <span>NODE veris-01</span>
+          <span className="flex items-center gap-2">
+            SIGNAL <span className="text-gold">◉◉◉</span><span className="opacity-30">○</span>
+          </span>
+          <span className="hidden md:inline">UPLINK · STABLE</span>
+        </div>
+      </div>
       <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-4 py-12 md:flex-row md:items-center md:px-10">
         <div className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
