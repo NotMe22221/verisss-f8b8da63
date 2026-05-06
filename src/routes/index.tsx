@@ -758,7 +758,8 @@ function EarlyAccess() {
             </div>
           </form>
           <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-            Submissions reviewed weekly · No spam · Beta cohorts open quarterly
+            <span className="text-gold">{">"}</span> awaiting transmission
+            <span className="blink ml-1 inline-block h-3 w-1.5 -mb-0.5 bg-gold align-middle" />
           </p>
         </CornerFrame>
       </div>
