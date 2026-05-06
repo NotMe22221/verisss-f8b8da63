@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { insertEarlyAccessSignup } from "./early-access.server";
 
 const Schema = z.object({
   name: z.string().trim().min(1).max(100),
@@ -10,8 +11,7 @@ const Schema = z.object({
 export const submitEarlyAccess = createServerFn({ method: "POST" })
   .inputValidator((input) => Schema.parse(input))
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("early_access_signups").insert({
+    const { error } = await insertEarlyAccessSignup({
       name: data.name,
       email: data.email,
       team: data.team ? data.team : null,
