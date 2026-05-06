@@ -77,15 +77,17 @@ function VerisLanding() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Toaster />
-      <StatusBar />
       <Nav />
-      <div className="hidden md:block"><TelemetryTicker /></div>
       <main>
         <Hero />
+        <AuthorityStrip />
         <Manifesto />
+        <div className="hidden md:block"><TelemetryTicker /></div>
+        <SectionDivider />
         <HowItWorks />
         <Device />
         <Statement />
+        <SectionDivider />
         <Metrics />
         <EarlyAccess />
       </main>
@@ -93,6 +95,53 @@ function VerisLanding() {
       <LiveConsole />
     </div>
   );
+}
+
+function SectionDivider() {
+  return (
+    <div className="bg-background py-10">
+      <span className="hairline-gold" />
+    </div>
+  );
+}
+
+function AuthorityStrip() {
+  return (
+    <div className="border-y border-border bg-background">
+      <div className="mx-auto flex max-w-[1440px] flex-col items-start gap-3 px-4 py-5 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground md:flex-row md:items-center md:justify-between md:px-10">
+        <span className="text-gold">Backed by research from</span>
+        <span className="flex flex-wrap gap-x-6 gap-y-1 text-ink/80">
+          <span>Stanford HAI</span>
+          <span className="opacity-30">·</span>
+          <span>MIT Media Lab</span>
+          <span className="opacity-30">·</span>
+          <span>AARP Fraud Watch</span>
+        </span>
+        <span className="opacity-60">In private discussion · 2026</span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- REVEAL HOOK ---------- */
+function useReveal<T extends HTMLElement>(threshold = 0.2) {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          el.classList.add("in");
+          io.disconnect();
+        }
+      },
+      { threshold },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+  return ref;
 }
 
 /* ---------- TELEMETRY TICKER ---------- */
@@ -154,29 +203,18 @@ function ConsoleRow({ k, v }: { k: string; v: string }) {
   );
 }
 
-/* ---------- STATUS BAR ---------- */
-function StatusBar() {
-  return (
-    <div className="border-b border-border bg-background/80">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
-        <span className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
-          Moonshot 03 · Veris · Classification: Private Beta
-        </span>
-        <span className="hidden md:inline">EST. 2026 · COGNITIVE DEFENSE INFRASTRUCTURE</span>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- NAV ---------- */
 function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 md:px-10">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between gap-4 px-4 md:h-16 md:px-10">
         <a href="#" className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
-          <span className="font-display text-xl tracking-tight text-ink">Veris</span>
+          <span className="font-display text-lg tracking-tight text-ink md:text-xl">Veris</span>
+          <span className="ml-3 hidden items-center gap-2 border-l border-border pl-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
+            Moonshot 03 · Private Beta
+          </span>
         </a>
         <nav className="hidden items-center gap-8 md:flex">
           <NavLink href="#mission">Mission</NavLink>
@@ -186,7 +224,7 @@ function Nav() {
         </nav>
         <a
           href="#early-access"
-          className="inline-flex h-9 items-center border border-gold bg-gold px-4 font-mono text-[11px] uppercase tracking-[0.18em] text-primary-foreground transition-colors hover:bg-transparent hover:text-gold"
+          className="inline-flex h-9 items-center border border-gold bg-gold px-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary-foreground transition-colors hover:bg-transparent hover:text-gold md:text-[11px]"
         >
           Secure a Spot
         </a>
@@ -209,24 +247,33 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 /* ---------- HERO ---------- */
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border bg-nebula noise vignette">
-      <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-      <div className="relative mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28 lg:py-36">
-        <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
-          <div className="rise">
-            <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
-              <span className="h-px w-8 bg-gold" />
+    <section className="relative overflow-hidden bg-nebula noise">
+      <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 70% 45%, oklch(0.78 0.10 80 / 0.22), transparent 55%)",
+        }}
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" aria-hidden />
+      <div className="relative mx-auto max-w-[1440px] px-4 pt-16 md:px-10 md:pt-24 lg:pt-32">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+          <div className="rise order-2 lg:order-1">
+            <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
               Moonshot 03 — Cognitive Defense
             </div>
-            <h1 className="mt-8 font-display text-5xl font-light leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
+            <h1 className="mt-6 font-display text-[2.75rem] font-light leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
               Protection before<br />
               <span className="italic text-gold">the damage.</span>
             </h1>
-            <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:mt-8 md:text-lg">
               A wearable intelligence system that detects coercion and scam
               pressure in real time — before loss occurs.
             </p>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-6 md:mt-10">
               <a
                 href="#early-access"
                 className="group inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
@@ -236,21 +283,23 @@ function Hero() {
               </a>
               <a
                 href="#science"
-                className="inline-flex h-12 items-center border border-ink/30 px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-ink transition-colors hover:border-gold hover:text-gold"
+                className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-ink transition-colors hover:text-gold"
               >
-                See How It Works
+                See how it works
+                <span className="transition-transform group-hover:translate-y-0.5">↓</span>
               </a>
             </div>
-            <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8">
+            <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-6 md:mt-14 md:pt-8">
               <HeroStat label="Families" value="127" />
               <HeroStat label="States" value="9" />
             </div>
           </div>
-          <div className="relative">
-            <CornerFrame className="aspect-square">
-              <div className="absolute inset-0 bg-grid-sm opacity-60" aria-hidden />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.28),transparent_60%)]" aria-hidden />
-              <div className="absolute inset-[18%] grid place-items-center" aria-hidden>
+          <div className="relative order-1 lg:order-2">
+            <div className="pointer-events-none absolute inset-0 -z-10">
+              <div className="absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.78_0.10_80/0.32),transparent_60%)] blur-2xl" />
+            </div>
+            <div className="relative aspect-square">
+              <div className="absolute inset-[15%] hidden place-items-center md:grid" aria-hidden>
                 <div className="pulse-ring" />
                 <div className="pulse-ring" style={{ animationDelay: "1.3s" }} />
                 <div className="pulse-ring" style={{ animationDelay: "2.6s" }} />
@@ -260,15 +309,14 @@ function Hero() {
                 alt="Veris titanium ring"
                 width={1024}
                 height={1024}
-                className="float-slow relative mx-auto h-full w-full object-contain p-6"
+                className="float-slow relative mx-auto h-full w-full object-contain"
+                style={{ filter: "drop-shadow(0 30px 60px oklch(0.78 0.10 80 / 0.25))" }}
               />
-              <div className="scan-line" aria-hidden />
-              <Callout pos="tl" label="01 · HRV" />
-              <Callout pos="br" label="04 · IMU" />
-              <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                VRS-01 · 04g · Ti
+              <div className="hidden md:block">
+                <Callout pos="tl" label="01 · HRV" />
+                <Callout pos="br" label="04 · IMU" />
               </div>
-            </CornerFrame>
+            </div>
           </div>
         </div>
       </div>
@@ -276,18 +324,12 @@ function Hero() {
   );
 }
 
-function Callout({
-  pos,
-  label,
-}: {
-  pos: "tl" | "tr" | "bl" | "br";
-  label: string;
-}) {
+function Callout({ pos, label }: { pos: "tl" | "tr" | "bl" | "br"; label: string }) {
   const map = {
-    tl: "top-6 left-6",
-    tr: "top-6 right-6",
-    bl: "bottom-10 left-6",
-    br: "bottom-10 right-6",
+    tl: "top-2 left-2",
+    tr: "top-2 right-2",
+    bl: "bottom-2 left-2",
+    br: "bottom-2 right-2",
   } as const;
   return (
     <div
@@ -310,10 +352,11 @@ function HeroStat({ label, value }: { label: string; value: string }) {
 
 /* ---------- MANIFESTO ---------- */
 function Manifesto() {
+  const ref = useReveal<HTMLDivElement>();
   return (
-    <section id="mission" className="border-b border-border bg-background">
+    <section id="mission" className="bg-background">
       <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-40">
-        <div className="mx-auto max-w-3xl">
+        <div ref={ref} className="reveal mx-auto max-w-3xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
           <div className="mt-10 space-y-10 text-base leading-[1.75] text-muted-foreground md:text-lg">
             <p className="font-display text-3xl font-light leading-[1.15] text-ink md:text-5xl">
@@ -355,7 +398,7 @@ function HowItWorks() {
     { n: "04", title: "Protect", desc: "Trusted contacts are alerted before money moves." },
   ];
   return (
-    <section id="science" className="border-b border-border">
+    <section id="science">
       <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
         <div className="max-w-3xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 02 / Science</p>
@@ -398,7 +441,7 @@ function Device() {
     { k: "Audio", v: "Local · Discarded" },
   ];
   return (
-    <section id="device" className="border-b border-border bg-card">
+    <section id="device" className="border-y border-border bg-card">
       <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
           <CornerFrame className="relative aspect-square overflow-hidden bg-background">
@@ -441,6 +484,28 @@ function Device() {
             </dl>
           </div>
         </div>
+        <div className="mt-16 grid gap-px border border-border bg-border md:grid-cols-3">
+          {[
+            { n: "01", label: "Titanium Shell", img: ringHero, pos: "center" },
+            { n: "02", label: "Interior Sensors", img: ringDevice, pos: "left" },
+            { n: "03", label: "Inductive Charge", img: ringHero, pos: "right" },
+          ].map((t) => (
+            <div key={t.n} className="group relative aspect-[4/3] overflow-hidden bg-background">
+              <img
+                src={t.img}
+                alt={t.label}
+                loading="lazy"
+                className="h-full w-full scale-150 object-cover transition-transform duration-700 group-hover:scale-[1.6]"
+                style={{ objectPosition: t.pos }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 flex items-baseline justify-between p-4 font-mono text-[10px] uppercase tracking-[0.22em]">
+                <span className="text-gold">{t.n}</span>
+                <span className="text-ink">{t.label}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -448,13 +513,14 @@ function Device() {
 
 /* ---------- STATEMENT ---------- */
 function Statement() {
+  const ref = useReveal<HTMLDivElement>();
   return (
-    <section className="relative overflow-hidden border-b border-border vignette">
+    <section className="relative overflow-hidden vignette">
       <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
       <div className="absolute inset-0 bg-nebula" aria-hidden />
       <Constellation />
       <div className="relative mx-auto max-w-[1440px] px-4 py-28 md:px-10 md:py-40">
-        <div className="mx-auto max-w-4xl text-center">
+        <div ref={ref} className="reveal-scale mx-auto max-w-4xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 04 / Thesis</p>
           <h2 className="mt-8 font-display text-5xl font-light leading-[1.05] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
             The future of security is{" "}
@@ -700,8 +766,35 @@ function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 
 /* ---------- FOOTER ---------- */
 function Footer() {
+  const cols: Array<{ title: string; links: Array<{ label: string; href: string }> }> = [
+    {
+      title: "Product",
+      links: [
+        { label: "Device", href: "#device" },
+        { label: "Science", href: "#science" },
+        { label: "Early Access", href: "#early-access" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "Mission", href: "#mission" },
+        { label: "Press", href: "mailto:press@veris.systems" },
+        { label: "Research", href: "mailto:research@veris.systems" },
+        { label: "Contact", href: "mailto:hello@veris.systems" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy", href: "#" },
+        { label: "Terms", href: "#" },
+        { label: "Responsible Disclosure", href: "mailto:security@veris.systems" },
+      ],
+    },
+  ];
   return (
-    <footer className="border-t border-border">
+    <footer className="border-t border-border bg-background">
       <div className="hidden border-b border-border md:block">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
           <span>BUILD 2026.05.06</span>
@@ -712,14 +805,45 @@ function Footer() {
           <span>UPLINK · STABLE</span>
         </div>
       </div>
-      <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-4 py-12 md:flex-row md:items-center md:px-10">
-        <div className="flex items-center gap-3">
-          <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
-          <span className="font-display text-base text-ink">Veris</span>
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-10 md:py-20">
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="grid h-8 w-8 place-items-center border border-gold text-gold font-mono text-xs">V</span>
+            <span className="font-display text-xl text-ink">Veris</span>
+          </div>
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-muted-foreground">
+            Cognitive defense infrastructure for the AI era. A whisper-thin
+            titanium ring, built for the moment manipulation begins.
+          </p>
+          <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            Veris Labs · San Francisco, CA
+          </p>
         </div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          Veris © {new Date().getFullYear()} · Cognitive Defense Infrastructure for the AI Era
-        </p>
+        {cols.map((c) => (
+          <div key={c.title}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
+              {c.title}
+            </p>
+            <ul className="mt-5 space-y-3">
+              {c.links.map((l) => (
+                <li key={l.label}>
+                  <a
+                    href={l.href}
+                    className="text-sm text-ink/80 transition-colors hover:text-gold"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="border-t border-border">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-3 px-4 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex-row md:items-center md:px-10">
+          <span>© 2026 Veris Labs · All rights reserved</span>
+          <span className="text-gold">Moonshot 03 — Cognitive Defense</span>
+        </div>
       </div>
     </footer>
   );

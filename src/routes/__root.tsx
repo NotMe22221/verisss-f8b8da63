@@ -83,6 +83,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230b0d12'/><path d='M8 9 L16 24 L24 9' fill='none' stroke='%23c9a24a' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'/></svg>",
+      },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
