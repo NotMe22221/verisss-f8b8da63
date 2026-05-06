@@ -353,7 +353,7 @@ function HeroStat({ label, value }: { label: string; value: string }) {
 /* ---------- MANIFESTO ---------- */
 function Manifesto() {
   return (
-    <section id="mission" className="border-b border-border bg-background">
+    <section id="mission" className="bg-background">
       <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-40">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
@@ -397,7 +397,7 @@ function HowItWorks() {
     { n: "04", title: "Protect", desc: "Trusted contacts are alerted before money moves." },
   ];
   return (
-    <section id="science" className="border-b border-border">
+    <section id="science">
       <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
         <div className="max-w-3xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 02 / Science</p>
@@ -440,7 +440,7 @@ function Device() {
     { k: "Audio", v: "Local · Discarded" },
   ];
   return (
-    <section id="device" className="border-b border-border bg-card">
+    <section id="device" className="border-y border-border bg-card">
       <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
           <CornerFrame className="relative aspect-square overflow-hidden bg-background">
@@ -491,7 +491,7 @@ function Device() {
 /* ---------- STATEMENT ---------- */
 function Statement() {
   return (
-    <section className="relative overflow-hidden border-b border-border vignette">
+    <section className="relative overflow-hidden vignette">
       <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
       <div className="absolute inset-0 bg-nebula" aria-hidden />
       <Constellation />
