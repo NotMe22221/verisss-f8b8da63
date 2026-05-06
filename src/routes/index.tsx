@@ -78,6 +78,7 @@ function VerisLanding() {
       <Toaster />
       <StatusBar />
       <Nav />
+      <TelemetryTicker />
       <main>
         <Hero />
         <Manifesto />
@@ -88,6 +89,66 @@ function VerisLanding() {
         <EarlyAccess />
       </main>
       <Footer />
+      <LiveConsole />
+    </div>
+  );
+}
+
+/* ---------- TELEMETRY TICKER ---------- */
+function TelemetryTicker() {
+  const items = [
+    "↗ HRV +0.4σ",
+    "◐ EDA stable",
+    "⚠ urgency-spike pattern detected · cohort 14",
+    "◉ on-device inference",
+    "◇ 127 active nodes",
+    "↗ confidence 0.92",
+    "◐ no audio retained",
+    "⚡ haptic intervention · −38% loss",
+    "◉ private by design",
+    "↗ HRV +0.2σ",
+    "◇ 9 states online",
+    "⚠ impersonation vector blocked",
+  ];
+  const line = items.join("   ·   ");
+  return (
+    <div className="relative overflow-hidden border-b border-border bg-background/60">
+      <div className="marquee-track flex whitespace-nowrap py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+        <span className="px-6">{line}</span>
+        <span className="px-6">{line}</span>
+      </div>
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
+    </div>
+  );
+}
+
+/* ---------- LIVE CONSOLE ---------- */
+function LiveConsole() {
+  const hrv = useLiveSignal(62, 4, 1400);
+  const eda = useLiveSignal(1.4, 0.3, 1700);
+  const risk = useLiveSignal(0.12, 0.05, 1100);
+  const now = useNow();
+  return (
+    <div className="pointer-events-none fixed bottom-4 left-4 z-40 hidden border border-gold/30 bg-background/85 p-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur md:block">
+      <div className="mb-2 flex items-center gap-2 text-gold">
+        <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
+        VERIS · LIVE
+      </div>
+      <div className="grid gap-1">
+        <ConsoleRow k="HRV" v={`${hrv.toFixed(1)} ms`} />
+        <ConsoleRow k="EDA" v={`${eda.toFixed(2)} µS`} />
+        <ConsoleRow k="RISK" v={risk.toFixed(2)} />
+        <ConsoleRow k="UTC" v={now.toISOString().slice(11, 19)} />
+      </div>
+    </div>
+  );
+}
+function ConsoleRow({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="flex items-center justify-between gap-6">
+      <span>{k}</span>
+      <span className="text-ink">{v}</span>
     </div>
   );
 }
