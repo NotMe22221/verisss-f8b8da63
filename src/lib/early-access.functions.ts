@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { insertEarlyAccessSignup } from "@/server/early-access.server";
+import { insertEarlyAccessSignup } from "./early-access.server";
 
 const Schema = z.object({
   name: z.string().trim().min(1).max(100),
