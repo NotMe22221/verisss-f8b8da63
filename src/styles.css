@@ -328,10 +328,13 @@
   display: grid;
   align-items: center;
   justify-items: center;
-  padding-top: clamp(22rem, 48vh, 30rem);
+  padding: 5rem 0 0;
   opacity: calc(1 - var(--hero-progress, 0) * 2.2);
   transform: translate3d(0, calc(var(--hero-progress, 0) * 40px), 0);
   pointer-events: none;
+}
+@media (min-width: 768px) {
+  .hero-headline { padding-top: 0; }
 }
 
 /* Watermark fragments behind downstream sections */
