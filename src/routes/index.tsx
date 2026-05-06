@@ -766,8 +766,35 @@ function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 
 /* ---------- FOOTER ---------- */
 function Footer() {
+  const cols: Array<{ title: string; links: Array<{ label: string; href: string }> }> = [
+    {
+      title: "Product",
+      links: [
+        { label: "Device", href: "#device" },
+        { label: "Science", href: "#science" },
+        { label: "Early Access", href: "#early-access" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "Mission", href: "#mission" },
+        { label: "Press", href: "mailto:press@veris.systems" },
+        { label: "Research", href: "mailto:research@veris.systems" },
+        { label: "Contact", href: "mailto:hello@veris.systems" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy", href: "#" },
+        { label: "Terms", href: "#" },
+        { label: "Responsible Disclosure", href: "mailto:security@veris.systems" },
+      ],
+    },
+  ];
   return (
-    <footer className="border-t border-border">
+    <footer className="border-t border-border bg-background">
       <div className="hidden border-b border-border md:block">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
           <span>BUILD 2026.05.06</span>
@@ -778,14 +805,45 @@ function Footer() {
           <span>UPLINK · STABLE</span>
         </div>
       </div>
-      <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-4 py-12 md:flex-row md:items-center md:px-10">
-        <div className="flex items-center gap-3">
-          <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
-          <span className="font-display text-base text-ink">Veris</span>
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-10 md:py-20">
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="grid h-8 w-8 place-items-center border border-gold text-gold font-mono text-xs">V</span>
+            <span className="font-display text-xl text-ink">Veris</span>
+          </div>
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-muted-foreground">
+            Cognitive defense infrastructure for the AI era. A whisper-thin
+            titanium ring, built for the moment manipulation begins.
+          </p>
+          <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            Veris Labs · San Francisco, CA
+          </p>
         </div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          Veris © {new Date().getFullYear()} · Cognitive Defense Infrastructure for the AI Era
-        </p>
+        {cols.map((c) => (
+          <div key={c.title}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
+              {c.title}
+            </p>
+            <ul className="mt-5 space-y-3">
+              {c.links.map((l) => (
+                <li key={l.label}>
+                  <a
+                    href={l.href}
+                    className="text-sm text-ink/80 transition-colors hover:text-gold"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="border-t border-border">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-3 px-4 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex-row md:items-center md:px-10">
+          <span>© 2026 Veris Labs · All rights reserved</span>
+          <span className="text-gold">Moonshot 03 — Cognitive Defense</span>
+        </div>
       </div>
     </footer>
   );
