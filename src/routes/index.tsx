@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
@@ -409,5 +409,3 @@ function FooterMicro() {
   );
 }
 
-// Re-export type for ReactNode reference above
-type ReactNode = import("react").ReactNode;
