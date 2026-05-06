@@ -312,78 +312,25 @@ function HeroStat({ label, value }: { label: string; value: string }) {
 function Manifesto() {
   return (
     <section id="mission" className="border-b border-border bg-background">
-      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-32">
-        <div className="grid gap-12 lg:grid-cols-[280px_1fr] lg:gap-20">
-          <aside className="lg:sticky lg:top-28 lg:self-start">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
-            <h2 className="mt-4 font-display text-3xl font-light leading-tight text-ink md:text-4xl">
-              The Problem
-            </h2>
-          </aside>
-          <div className="max-w-2xl space-y-8 text-base leading-[1.75] text-muted-foreground md:text-lg">
+      <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-40">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
+          <div className="mt-10 space-y-10 text-base leading-[1.75] text-muted-foreground md:text-lg">
             <p className="font-display text-3xl font-light leading-[1.15] text-ink md:text-5xl">
-              Today's attacks do not target systems anymore.{" "}
+              Today's attacks no longer target systems.{" "}
               <span className="italic text-gold">They target human cognition.</span>
             </p>
             <p>
-              AI-generated voices, engineered urgency, impersonation, and
-              emotional manipulation bypass every security layer built for a
-              slower world. The attack no longer happens at the firewall. It
-              happens quietly, inside a conversation.
-            </p>
-            <p>
-              Older adults are the most exposed. Not because they are careless,
-              but because modern scams exploit trust, fear, and emotional
-              pressure faster than people can consciously react.
+              AI-generated voices, engineered urgency, and impersonation
+              bypass every security layer built for a slower world. Older
+              adults are the most exposed — not because they are careless, but
+              because modern scams exploit trust faster than people can
+              consciously react.
             </p>
             <PullQuote>Every existing fraud system reacts too late.</PullQuote>
-            <p>
-              Banks monitor transactions after money moves. Spam filters screen
-              calls after the connection is made. Security tools analyze
-              compromise after the attack succeeds. None of them understand the
-              neurological moment where manipulation actually happens.
-            </p>
-            <p className="text-ink">
-              The scam is already working before the victim realizes it.
-            </p>
             <p className="font-display text-2xl font-light text-ink md:text-3xl">
               Veris was built to change that.
             </p>
-            <p>
-              Veris is a whisper-thin titanium ring powered by on-device AI and
-              continuous biosignal sensing. It continuously measures
-              physiological stress signals — heart-rate variability,
-              electrodermal activity, and micro-patterns associated with
-              coercion and engineered urgency.
-            </p>
-            <p>
-              At the same time, lightweight local AI models analyze
-              conversational patterns linked to impersonation, secrecy,
-              emotional pressure, and financial manipulation.
-            </p>
-            <p className="font-display text-xl text-ink md:text-2xl">
-              Body and language are fused together in real time.
-            </p>
-            <p>
-              The result is the first cognitive defense system designed to
-              detect psychological manipulation before irreversible decisions
-              occur.
-            </p>
-            <ul className="space-y-1 font-mono text-sm uppercase tracking-[0.18em] text-ink">
-              <li>— No screens.</li>
-              <li>— No surveillance.</li>
-              <li>— No invasive monitoring.</li>
-            </ul>
-            <p className="text-ink">Just a quiet pulse when something is wrong.</p>
-            <p>
-              When risk escalates, Veris creates a moment of interruption
-              before financial damage occurs. If pressure continues rising,
-              trusted contacts receive intelligent contextual alerts designed
-              to intervene before loss happens.
-            </p>
-            <PullQuote>
-              Because the body reacts before the mind understands.
-            </PullQuote>
           </div>
         </div>
       </div>
@@ -393,7 +340,7 @@ function Manifesto() {
 
 function PullQuote({ children }: { children: ReactNode }) {
   return (
-    <blockquote className="border-l-2 border-gold pl-6 font-display text-2xl font-light italic leading-snug text-ink md:text-3xl">
+    <blockquote className="border-l-2 border-gold pl-6 font-display text-xl font-light italic leading-snug text-ink md:text-2xl">
       {children}
     </blockquote>
   );
@@ -402,26 +349,10 @@ function PullQuote({ children }: { children: ReactNode }) {
 /* ---------- HOW IT WORKS ---------- */
 function HowItWorks() {
   const items = [
-    {
-      n: "01",
-      title: "Detect",
-      desc: "Continuous biosignal and ambient sensing recognize stress, coercion, and manipulation patterns as they happen.",
-    },
-    {
-      n: "02",
-      title: "Analyze",
-      desc: "On-device AI fuses physiological and conversational signals into a real-time cognitive risk score.",
-    },
-    {
-      n: "03",
-      title: "Intervene",
-      desc: "A subtle haptic pulse interrupts engineered urgency and creates a moment of clarity.",
-    },
-    {
-      n: "04",
-      title: "Protect",
-      desc: "Trusted contacts receive context-aware alerts before money is lost.",
-    },
+    { n: "01", title: "Detect", desc: "Continuous biosignal sensing reads stress as it happens." },
+    { n: "02", title: "Analyze", desc: "On-device AI fuses body and language into a real-time risk score." },
+    { n: "03", title: "Intervene", desc: "A quiet haptic pulse breaks engineered urgency." },
+    { n: "04", title: "Protect", desc: "Trusted contacts are alerted before money moves." },
   ];
   return (
     <section id="science" className="border-b border-border">
@@ -436,13 +367,13 @@ function HowItWorks() {
           {items.map((it) => (
             <CornerFrame
               key={it.n}
-              className="group bg-background p-8 transition-colors hover:bg-card md:p-10"
+              className="group bg-background p-6 transition-colors hover:bg-card md:p-10"
             >
               <div className="flex items-baseline justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-gold">{it.n}</span>
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-gold" />
               </div>
-              <h3 className="mt-10 font-display text-2xl font-light text-ink md:text-3xl">
+              <h3 className="mt-10 font-display text-xl font-light text-ink md:text-3xl">
                 {it.title}
               </h3>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
