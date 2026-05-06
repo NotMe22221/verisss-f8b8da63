@@ -703,7 +703,7 @@ function Footer() {
         ))}
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-3 px-4 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex-row md:items-center md:px-10">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-3 px-4 py-6 label-italic text-muted-foreground md:flex-row md:items-center md:px-10">
           <span>© 2026 Veris Labs · All rights reserved</span>
           <span className="text-gold">Moonshot 03 — Cognitive Defense</span>
         </div>
