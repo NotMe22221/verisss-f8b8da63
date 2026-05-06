@@ -321,10 +321,10 @@ function Manifesto() {
 /* ---------- SCIENCE — full-bleed verb rows ---------- */
 function Science() {
   const items = [
-    { n: "01", verb: "Detect", line: "Continuous biosignal sensing reads stress as it happens.", img: ringSensors },
-    { n: "02", verb: "Analyze", line: "On-device AI fuses body and language into a real-time risk score.", img: ringAntenna },
-    { n: "03", verb: "Intervene", line: "A quiet haptic pulse breaks engineered urgency.", img: ringHaptic },
-    { n: "04", verb: "Protect", line: "Trusted contacts are alerted before money moves.", img: ringShell },
+    { n: "01", verb: "Detect", line: "Continuous biosignal sensing reads stress as it happens." },
+    { n: "02", verb: "Analyze", line: "On-device AI fuses body and language into a real-time risk score." },
+    { n: "03", verb: "Intervene", line: "A quiet haptic pulse breaks engineered urgency." },
+    { n: "04", verb: "Protect", line: "Trusted contacts are alerted before money moves." },
   ];
   return (
     <section id="science" className="relative">
@@ -337,8 +337,8 @@ function Science() {
           </h2>
         </div>
         <div className="mt-20 divide-y divide-border border-y border-border">
-          {items.map((it, i) => (
-            <ScienceRow key={it.n} {...it} index={i} />
+          {items.map((it) => (
+            <ScienceRow key={it.n} {...it} />
           ))}
         </div>
       </div>
@@ -347,38 +347,26 @@ function Science() {
 }
 
 function ScienceRow({
-  n, verb, line, img, index,
-}: { n: string; verb: string; line: string; img: string; index: number }) {
+  n, verb, line,
+}: { n: string; verb: string; line: string }) {
   const ref = useReveal<HTMLDivElement>(0.25);
   return (
     <div
       ref={ref}
-      className="reveal grid grid-cols-12 items-center gap-6 py-12 md:gap-10 md:py-20"
+      className="reveal grid grid-cols-12 items-baseline gap-6 py-12 md:gap-10 md:py-20"
     >
       <div className="col-span-12 flex items-center gap-4 md:col-span-1">
         <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">{n}</span>
       </div>
-      <div className="col-span-12 md:col-span-6">
+      <div className="col-span-12 md:col-span-5">
         <h3 className="font-display text-5xl font-extralight italic leading-none tracking-tight text-ink md:text-[7rem]">
           {verb}.
         </h3>
-        <p className="mt-4 max-w-md font-display text-base font-light leading-relaxed text-muted-foreground md:mt-6 md:text-lg">
+      </div>
+      <div className="col-span-12 md:col-span-6">
+        <p className="max-w-md font-display text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
           {line}
         </p>
-      </div>
-      <div className="col-span-12 md:col-span-5">
-        <div className="relative mx-auto aspect-square w-44 md:w-56" style={{ animationDelay: `${index * 80}ms` }}>
-          <div className="frag-glow" aria-hidden />
-          <img
-            src={img}
-            alt=""
-            aria-hidden
-            loading="lazy"
-            width={1024}
-            height={1024}
-            className="float-slow frag-soft h-full w-full object-contain"
-          />
-        </div>
       </div>
     </div>
   );
