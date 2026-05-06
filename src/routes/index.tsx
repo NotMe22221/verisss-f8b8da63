@@ -77,15 +77,17 @@ function VerisLanding() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Toaster />
-      <StatusBar />
       <Nav />
-      <div className="hidden md:block"><TelemetryTicker /></div>
       <main>
         <Hero />
+        <AuthorityStrip />
         <Manifesto />
+        <div className="hidden md:block"><TelemetryTicker /></div>
+        <SectionDivider />
         <HowItWorks />
         <Device />
         <Statement />
+        <SectionDivider />
         <Metrics />
         <EarlyAccess />
       </main>
@@ -93,6 +95,53 @@ function VerisLanding() {
       <LiveConsole />
     </div>
   );
+}
+
+function SectionDivider() {
+  return (
+    <div className="bg-background py-10">
+      <span className="hairline-gold" />
+    </div>
+  );
+}
+
+function AuthorityStrip() {
+  return (
+    <div className="border-y border-border bg-background">
+      <div className="mx-auto flex max-w-[1440px] flex-col items-start gap-3 px-4 py-5 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground md:flex-row md:items-center md:justify-between md:px-10">
+        <span className="text-gold">Backed by research from</span>
+        <span className="flex flex-wrap gap-x-6 gap-y-1 text-ink/80">
+          <span>Stanford HAI</span>
+          <span className="opacity-30">·</span>
+          <span>MIT Media Lab</span>
+          <span className="opacity-30">·</span>
+          <span>AARP Fraud Watch</span>
+        </span>
+        <span className="opacity-60">In private discussion · 2026</span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- REVEAL HOOK ---------- */
+function useReveal<T extends HTMLElement>(threshold = 0.2) {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          el.classList.add("in");
+          io.disconnect();
+        }
+      },
+      { threshold },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+  return ref;
 }
 
 /* ---------- TELEMETRY TICKER ---------- */
