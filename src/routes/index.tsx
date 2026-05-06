@@ -17,8 +17,9 @@ import { submitEarlyAccess } from "@/lib/early-access.functions";
 
 /* ---------- HOOKS ---------- */
 function useNow() {
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
+    setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
@@ -78,7 +79,7 @@ function VerisLanding() {
       <Toaster />
       <StatusBar />
       <Nav />
-      <TelemetryTicker />
+      <div className="hidden md:block"><TelemetryTicker /></div>
       <main>
         <Hero />
         <Manifesto />
@@ -139,7 +140,7 @@ function LiveConsole() {
         <ConsoleRow k="HRV" v={`${hrv.toFixed(1)} ms`} />
         <ConsoleRow k="EDA" v={`${eda.toFixed(2)} µS`} />
         <ConsoleRow k="RISK" v={risk.toFixed(2)} />
-        <ConsoleRow k="UTC" v={now.toISOString().slice(11, 19)} />
+        <ConsoleRow k="UTC" v={now ? now.toISOString().slice(11, 19) : "--:--:--"} />
       </div>
     </div>
   );
@@ -207,7 +208,6 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 
 /* ---------- HERO ---------- */
 function Hero() {
-  const now = useNow();
   return (
     <section className="relative overflow-hidden border-b border-border bg-nebula noise vignette">
       <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
@@ -216,16 +216,15 @@ function Hero() {
           <div className="rise">
             <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
               <span className="h-px w-8 bg-gold" />
-              Moonshot Idea 03 · Cognitive Defense System
+              Moonshot 03 — Cognitive Defense
             </div>
             <h1 className="mt-8 font-display text-5xl font-light leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
               Protection before<br />
               <span className="italic text-gold">the damage.</span>
             </h1>
             <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Veris is the first wearable intelligence system designed to
-              detect coercion, manipulation, and scam pressure in real time —
-              before financial loss occurs.
+              A wearable intelligence system that detects coercion and scam
+              pressure in real time — before loss occurs.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <a
@@ -242,18 +241,15 @@ function Hero() {
                 See How It Works
               </a>
             </div>
-            <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8 sm:grid-cols-4">
-              <HeroStat label="Status" value="Orbital" />
-              <HeroStat label="Participants" value="127" />
+            <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8">
+              <HeroStat label="Families" value="127" />
               <HeroStat label="States" value="9" />
-              <HeroStat label="Mode" value="Private" />
             </div>
           </div>
           <div className="relative">
             <CornerFrame className="aspect-square">
               <div className="absolute inset-0 bg-grid-sm opacity-60" aria-hidden />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.28),transparent_60%)]" aria-hidden />
-              {/* Pulse rings */}
               <div className="absolute inset-[18%] grid place-items-center" aria-hidden>
                 <div className="pulse-ring" />
                 <div className="pulse-ring" style={{ animationDelay: "1.3s" }} />
@@ -266,27 +262,15 @@ function Hero() {
                 height={1024}
                 className="float-slow relative mx-auto h-full w-full object-contain p-6"
               />
-              {/* Scan line */}
               <div className="scan-line" aria-hidden />
-              {/* Corner data callouts */}
               <Callout pos="tl" label="01 · HRV" />
-              <Callout pos="tr" label="02 · EDA" />
-              <Callout pos="bl" label="03 · TEMP" />
               <Callout pos="br" label="04 · IMU" />
-              {/* Footer strip inside frame */}
               <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                 VRS-01 · 04g · Ti
-              </div>
-              <div className="absolute bottom-3 right-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-gold">
-                <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
-                {now.toISOString().slice(11, 19)} UTC
               </div>
             </CornerFrame>
           </div>
         </div>
-        <p className="mt-16 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          127 families · 9 states · on-device AI · private by design
-        </p>
       </div>
     </section>
   );
@@ -328,78 +312,25 @@ function HeroStat({ label, value }: { label: string; value: string }) {
 function Manifesto() {
   return (
     <section id="mission" className="border-b border-border bg-background">
-      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-32">
-        <div className="grid gap-12 lg:grid-cols-[280px_1fr] lg:gap-20">
-          <aside className="lg:sticky lg:top-28 lg:self-start">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
-            <h2 className="mt-4 font-display text-3xl font-light leading-tight text-ink md:text-4xl">
-              The Problem
-            </h2>
-          </aside>
-          <div className="max-w-2xl space-y-8 text-base leading-[1.75] text-muted-foreground md:text-lg">
+      <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-40">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
+          <div className="mt-10 space-y-10 text-base leading-[1.75] text-muted-foreground md:text-lg">
             <p className="font-display text-3xl font-light leading-[1.15] text-ink md:text-5xl">
-              Today's attacks do not target systems anymore.{" "}
+              Today's attacks no longer target systems.{" "}
               <span className="italic text-gold">They target human cognition.</span>
             </p>
             <p>
-              AI-generated voices, engineered urgency, impersonation, and
-              emotional manipulation bypass every security layer built for a
-              slower world. The attack no longer happens at the firewall. It
-              happens quietly, inside a conversation.
-            </p>
-            <p>
-              Older adults are the most exposed. Not because they are careless,
-              but because modern scams exploit trust, fear, and emotional
-              pressure faster than people can consciously react.
+              AI-generated voices, engineered urgency, and impersonation
+              bypass every security layer built for a slower world. Older
+              adults are the most exposed — not because they are careless, but
+              because modern scams exploit trust faster than people can
+              consciously react.
             </p>
             <PullQuote>Every existing fraud system reacts too late.</PullQuote>
-            <p>
-              Banks monitor transactions after money moves. Spam filters screen
-              calls after the connection is made. Security tools analyze
-              compromise after the attack succeeds. None of them understand the
-              neurological moment where manipulation actually happens.
-            </p>
-            <p className="text-ink">
-              The scam is already working before the victim realizes it.
-            </p>
             <p className="font-display text-2xl font-light text-ink md:text-3xl">
               Veris was built to change that.
             </p>
-            <p>
-              Veris is a whisper-thin titanium ring powered by on-device AI and
-              continuous biosignal sensing. It continuously measures
-              physiological stress signals — heart-rate variability,
-              electrodermal activity, and micro-patterns associated with
-              coercion and engineered urgency.
-            </p>
-            <p>
-              At the same time, lightweight local AI models analyze
-              conversational patterns linked to impersonation, secrecy,
-              emotional pressure, and financial manipulation.
-            </p>
-            <p className="font-display text-xl text-ink md:text-2xl">
-              Body and language are fused together in real time.
-            </p>
-            <p>
-              The result is the first cognitive defense system designed to
-              detect psychological manipulation before irreversible decisions
-              occur.
-            </p>
-            <ul className="space-y-1 font-mono text-sm uppercase tracking-[0.18em] text-ink">
-              <li>— No screens.</li>
-              <li>— No surveillance.</li>
-              <li>— No invasive monitoring.</li>
-            </ul>
-            <p className="text-ink">Just a quiet pulse when something is wrong.</p>
-            <p>
-              When risk escalates, Veris creates a moment of interruption
-              before financial damage occurs. If pressure continues rising,
-              trusted contacts receive intelligent contextual alerts designed
-              to intervene before loss happens.
-            </p>
-            <PullQuote>
-              Because the body reacts before the mind understands.
-            </PullQuote>
           </div>
         </div>
       </div>
@@ -409,7 +340,7 @@ function Manifesto() {
 
 function PullQuote({ children }: { children: ReactNode }) {
   return (
-    <blockquote className="border-l-2 border-gold pl-6 font-display text-2xl font-light italic leading-snug text-ink md:text-3xl">
+    <blockquote className="border-l-2 border-gold pl-6 font-display text-xl font-light italic leading-snug text-ink md:text-2xl">
       {children}
     </blockquote>
   );
@@ -418,26 +349,10 @@ function PullQuote({ children }: { children: ReactNode }) {
 /* ---------- HOW IT WORKS ---------- */
 function HowItWorks() {
   const items = [
-    {
-      n: "01",
-      title: "Detect",
-      desc: "Continuous biosignal and ambient sensing recognize stress, coercion, and manipulation patterns as they happen.",
-    },
-    {
-      n: "02",
-      title: "Analyze",
-      desc: "On-device AI fuses physiological and conversational signals into a real-time cognitive risk score.",
-    },
-    {
-      n: "03",
-      title: "Intervene",
-      desc: "A subtle haptic pulse interrupts engineered urgency and creates a moment of clarity.",
-    },
-    {
-      n: "04",
-      title: "Protect",
-      desc: "Trusted contacts receive context-aware alerts before money is lost.",
-    },
+    { n: "01", title: "Detect", desc: "Continuous biosignal sensing reads stress as it happens." },
+    { n: "02", title: "Analyze", desc: "On-device AI fuses body and language into a real-time risk score." },
+    { n: "03", title: "Intervene", desc: "A quiet haptic pulse breaks engineered urgency." },
+    { n: "04", title: "Protect", desc: "Trusted contacts are alerted before money moves." },
   ];
   return (
     <section id="science" className="border-b border-border">
@@ -452,13 +367,13 @@ function HowItWorks() {
           {items.map((it) => (
             <CornerFrame
               key={it.n}
-              className="group bg-background p-8 transition-colors hover:bg-card md:p-10"
+              className="group bg-background p-6 transition-colors hover:bg-card md:p-10"
             >
               <div className="flex items-baseline justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-gold">{it.n}</span>
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-gold" />
               </div>
-              <h3 className="mt-10 font-display text-2xl font-light text-ink md:text-3xl">
+              <h3 className="mt-10 font-display text-xl font-light text-ink md:text-3xl">
                 {it.title}
               </h3>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -511,12 +426,8 @@ function Device() {
               A whisper-thin titanium ring engineered for{" "}
               <span className="italic text-gold">continuous wear.</span>
             </h2>
-            <p className="mt-8 text-base leading-relaxed text-muted-foreground md:text-lg">
-              No conversations are stored. No cloud recordings exist. Audio is
-              processed locally and discarded instantly.
-            </p>
-            <p className="mt-4 font-display text-xl font-light italic text-ink md:text-2xl">
-              Protection without surveillance.
+            <p className="mt-8 font-display text-xl font-light italic text-ink md:text-2xl">
+              No cloud. No recordings. Audio processed locally and discarded.
             </p>
             <dl className="mt-12 grid grid-cols-2 gap-px border border-border bg-border">
               {specs.map((s) => (
@@ -550,13 +461,8 @@ function Statement() {
             <span className="italic text-gold">human-aware.</span>
           </h2>
           <p className="mx-auto mt-10 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-            As AI-generated manipulation scales globally, defending
-            infrastructure alone will no longer be enough. The next generation
-            of security systems must understand human vulnerability in real
-            time.
-          </p>
-          <p className="mt-8 font-display text-2xl font-light text-ink md:text-3xl">
-            Veris is building that layer.
+            Defending infrastructure is no longer enough. Veris is building
+            the layer that understands human vulnerability in real time.
           </p>
         </div>
       </div>
@@ -710,10 +616,6 @@ function EarlyAccess() {
             Give them independence.<br />
             <span className="italic text-gold">Not vulnerability.</span>
           </h2>
-          <p className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            Join the private beta shaping the future of cognitive defense
-            systems.
-          </p>
           <form onSubmit={onSubmit} className="mt-12 grid gap-5">
             <div className="grid gap-5 md:grid-cols-2">
               <Field label="Name" required>
@@ -800,14 +702,14 @@ function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="border-b border-border">
+      <div className="hidden border-b border-border md:block">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
           <span>BUILD 2026.05.06</span>
           <span>NODE veris-01</span>
           <span className="flex items-center gap-2">
             SIGNAL <span className="text-gold">◉◉◉</span><span className="opacity-30">○</span>
           </span>
-          <span className="hidden md:inline">UPLINK · STABLE</span>
+          <span>UPLINK · STABLE</span>
         </div>
       </div>
       <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-4 py-12 md:flex-row md:items-center md:px-10">
