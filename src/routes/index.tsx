@@ -461,10 +461,8 @@ function Statement() {
             <span className="italic text-gold">human-aware.</span>
           </h2>
           <p className="mx-auto mt-10 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-            As AI-generated manipulation scales globally, defending
-            infrastructure alone will no longer be enough. The next generation
-            of security systems must understand human vulnerability in real
-            time.
+            Defending infrastructure is no longer enough. Veris is building
+            the layer that understands human vulnerability in real time.
           </p>
           <p className="mt-8 font-display text-2xl font-light text-ink md:text-3xl">
             Veris is building that layer.
