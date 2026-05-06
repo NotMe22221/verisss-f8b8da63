@@ -352,10 +352,11 @@ function HeroStat({ label, value }: { label: string; value: string }) {
 
 /* ---------- MANIFESTO ---------- */
 function Manifesto() {
+  const ref = useReveal<HTMLDivElement>();
   return (
     <section id="mission" className="bg-background">
       <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-40">
-        <div className="mx-auto max-w-3xl">
+        <div ref={ref} className="reveal mx-auto max-w-3xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
           <div className="mt-10 space-y-10 text-base leading-[1.75] text-muted-foreground md:text-lg">
             <p className="font-display text-3xl font-light leading-[1.15] text-ink md:text-5xl">
