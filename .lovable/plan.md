@@ -1,38 +1,71 @@
-## Veris — Moonshot Hackathon Mission Control
+## Goal
 
-A single-page, dark cinematic landing page for the Veris smart ring, modeled exactly on the reference mockup. Champagne-gold accents on deep navy, serif display headlines, mono/uppercase micro-labels, subtle grid and corner-bracket framing throughout.
+Re-skin the Veris landing page to feel like an X Development (Google moonshot) project brief: bold, scientific, ambitious, with a research-lab tone instead of a consumer wellness product page.
 
-### Page sections (top to bottom)
+## Visual direction
 
-1. **Top nav** — Veris wordmark + V-mark, links (Features, Business, Contacts), Log In, gold "Secure a Spot" CTA.
-2. **Hero — Mission Control**
-   - "MISSION CONTROL" eyebrow, large serif headline "Moonshot Hackathon Mission Control"
-   - Stat row: Status: Orbital · Participants: 127 Teams · Duration: 48 Hrs
-   - Two buttons: gold "Champagne Gold" / outlined "Ghost Style"
-   - Atmospheric nebula background with the floating ring product shot on the right
-   - Carousel selector strip below (Mission Control active, 3 dimmed slots, prev/next arrows)
-3. **Problem section** — "Protection before the damage." with supporting paragraph + two CTAs on the left; 2x2 stat grid on the right ($3.4B lost annually · 127 participants · 25M patients · 480+ duration), each card with corner arrow.
-4. **The Device** — large product image inside a faint blueprint grid panel; right side is a grid of feature cards (Titanium Shell, On-device AI, Haptic Engine, Skin Contact Sensors, Sensor Array x2) plus a stat row (7-Day battery · 4g weight · 100m water resistance).
-5. **Early Access** — bordered panel with corner brackets. Form fields: Name, Email, Team/Organization, gold "Secure Your Spot" submit. Footer microtext line below.
+Move away from the soft warm-ivory wellness palette toward a cinematic "lab notebook in deep space" feel.
 
-### Form behavior
+- **Palette shift** in `src/styles.css`:
+  - Background: deep near-black navy (`oklch(0.14 0.02 250)`) with a subtle off-white (`oklch(0.96 0.005 80)`) "paper" surface for one or two contrasting sections
+  - Foreground: near-white on dark sections, deep navy on light
+  - Accent: keep champagne gold (`#C9A46A`) as the single signal color for CTAs, stat numbers, and key phrases — used sparingly
+  - Add `--grid-line` token (~5% white) for blueprint overlays
+- **Typography**: serif display (Fraunces) for headlines, mono uppercase eyebrows with wide tracking, light-weight body — already have Cormorant-style direction in plan.md, lean into it harder
+- **Motifs**: hairline corner brackets (existing `Frame.tsx`), faint dot/line grid overlays on hero and device sections, mono "MOONSHOT 03 / VERIS / CLASSIFICATION: PRIVATE BETA" status strips, small arrow glyphs
 
-- Lovable Cloud enabled; submissions saved to an `early_access_signups` table (name, email, team, created_at).
-- RLS: public INSERT allowed; SELECT restricted (no public read).
-- Server-side Zod validation (email format, length caps), success toast, duplicate-email handled gracefully.
+## Page structure (rewritten)
 
-### Visual system
+```text
+┌─ Status bar ──────────────────────────────────────────────┐
+│ MOONSHOT 03  •  VERIS  •  PRIVATE BETA  •  EST. 2026     │
+├─ Nav ────────────────────────────────────────────────────┤
+│ Veris       Mission  Science  Device  Access     [CTA]   │
+└──────────────────────────────────────────────────────────┘
 
-- Background: deep navy (~oklch 0.18 0.06 265) with subtle nebula radial glow in hero
-- Accent: champagne gold (~#D9C29A) for primary CTAs and stat numbers
-- Typography: serif display (e.g. Cormorant/Fraunces) for headlines, geometric mono uppercase for labels, clean sans for body
-- Recurring motifs: hairline borders, corner bracket frames on cards, faint dot/line grid overlays, small arrow glyphs in card corners
-- Ring product imagery generated as assets
+Hero — "Mission brief" layout
+  Eyebrow: MOONSHOT IDEA 03 — COGNITIVE DEFENSE SYSTEM
+  Headline: Protection before the damage.
+  Sub: first wearable intelligence system…
+  CTAs: [Join Early Access] [See How It Works]
+  Right: floating ring on nebula glow + corner brackets
+  Footer strip: STATUS / PARTICIPANTS / DURATION / LOCATION
 
-### Technical notes
+Manifesto — "The problem"
+  Large serif statement, lab-report body column, pull quotes
 
-- Single route `src/routes/index.tsx` with section components in `src/components/landing/`
-- Tailwind tokens added for navy/gold/border colors in `src/styles.css`
-- Form submission via `createServerFn` using `supabaseAdmin` for insert-only
-- Generate 2 ring product images (hero floating shot, device blueprint shot) via AI image generation
-- Fully responsive: stat grids collapse to 1-col, hero ring moves below headline on mobile
+How it works — Detect / Analyze / Intervene / Protect
+  Numbered 01–04 cards with corner brackets, mono labels
+
+The Device — blueprint panel
+  Ring on grid background, spec callouts with leader lines feel
+  Spec strip: 7d battery · 4g · IP rating · on-device AI
+
+Statement — "human-aware security"
+  Centered serif, generous whitespace
+
+Metrics — $3.4B / 76% / 0 / 1st
+  Gold numerals, mono captions, hairline dividers
+
+Early Access — bordered panel with corner brackets
+  Form fields, gold "Join Early Access" + ghost "Request Research Access"
+
+Footer — Veris © 2026 • Cognitive defense infrastructure
+```
+
+## Files to change
+
+- `src/styles.css` — swap palette to deep navy + ivory + champagne gold; add `--grid-line`, font stack tokens
+- `src/routes/index.tsx` — restructure all sections to mission-brief layout, mono eyebrows, serif headlines, gold accents, corner-bracket framing
+- `src/components/landing/Frame.tsx` — already exists (`CornerFrame`); reuse on hero, device, and early-access panels; extend with optional `GridOverlay` subcomponent for blueprint backgrounds
+- `index.html` (or root head) — add Fraunces + JetBrains Mono via Google Fonts link tags (not CSS @import, which previously broke the build)
+
+## Tone of copy
+
+Keep the user's exact copy verbatim, but present it with lab-report formatting: numbered sections (01 DETECT, 02 ANALYZE…), classification-style status strips, and pull quotes for the strongest lines ("Because the body reacts before the mind understands.", "The future of security is human-aware.").
+
+## Out of scope
+
+- No new routes, no auth changes, no schema changes
+- Keep existing server function `submitEarlyAccess` and form behavior unchanged
+- Keep existing ring images; only restyle their containers
