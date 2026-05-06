@@ -12,16 +12,17 @@ export const Route = createFileRoute("/")({
   component: VerisLanding,
   head: () => ({
     meta: [
-      { title: "Veris — Quiet intelligence for everyday wellness" },
+      { title: "Veris — Cognitive defense system for the AI era" },
       {
         name: "description",
         content:
-          "The Veris smart ring blends precision biosignals with calm, human design. Track sleep, recovery, and readiness — without the noise.",
+          "Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time — before financial loss occurs.",
       },
-      { property: "og:title", content: "Veris — Quiet intelligence" },
+      { property: "og:title", content: "Veris — Protection before the damage." },
       {
         property: "og:description",
-        content: "Precision wellness in a titanium ring.",
+        content:
+          "A whisper-thin titanium ring with on-device AI that detects manipulation in real time.",
       },
     ],
   }),
@@ -34,8 +35,11 @@ function VerisLanding() {
       <Nav />
       <main>
         <Hero />
+        <Manifesto />
         <Pillars />
         <Device />
+        <Statement />
+        <Metrics />
         <EarlyAccess />
       </main>
       <Footer />
@@ -53,7 +57,7 @@ function Nav() {
           <span className="text-lg font-semibold tracking-tight text-charcoal">Veris</span>
         </a>
         <nav className="hidden items-center gap-1 md:flex">
-          <NavLink href="#pillars" active>Wellness</NavLink>
+          <NavLink href="#how" active>How it works</NavLink>
           <NavLink href="#device">The Ring</NavLink>
           <NavLink href="#early-access">Early Access</NavLink>
         </nav>
@@ -65,7 +69,7 @@ function Nav() {
             href="#early-access"
             className="inline-flex h-10 items-center rounded-full bg-taupe px-5 text-sm text-taupe-foreground transition-colors hover:bg-charcoal"
           >
-            Join waitlist
+            Join Early Access
           </a>
         </div>
       </div>
@@ -95,38 +99,36 @@ function Hero() {
       <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24 lg:py-32">
         <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-periwinkle-soft px-3 py-1 text-xs font-medium text-periwinkle">
+            <span className="inline-flex items-center gap-2 rounded-full bg-periwinkle-soft px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-periwinkle">
               <span className="h-1.5 w-1.5 rounded-full bg-periwinkle" />
-              Now accepting early access
+              Moonshot Idea 03 • Private Beta • Cognitive Defense System
             </span>
             <h1 className="mt-6 text-4xl font-light leading-[1.05] tracking-tight text-charcoal md:text-6xl lg:text-7xl">
-              Quiet intelligence,<br />
-              <span className="text-taupe">worn lightly.</span>
+              Protection before<br />
+              <span className="text-taupe">the damage.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Veris is a titanium smart ring that listens to your body so you
-              don't have to. Sleep, recovery, and readiness — distilled into
-              calm, daily guidance.
+              Veris is the first wearable intelligence system designed to detect
+              coercion, manipulation, and scam pressure in real time — before
+              financial loss occurs.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <a
                 href="#early-access"
                 className="inline-flex h-12 items-center rounded-full bg-periwinkle px-6 text-base text-white transition-opacity hover:opacity-90"
               >
-                Reserve your ring
+                Join Early Access
               </a>
               <a
-                href="#device"
+                href="#how"
                 className="inline-flex h-12 items-center rounded-full border border-taupe px-6 text-base text-taupe transition-colors hover:bg-taupe/10"
               >
-                Explore the ring
+                See How It Works
               </a>
             </div>
-            <dl className="mt-12 grid grid-cols-3 gap-6 border-t border-border pt-8">
-              <Stat value="7d" label="Battery" />
-              <Stat value="4g" label="Weight" />
-              <Stat value="100m" label="Water resistance" />
-            </dl>
+            <p className="mt-10 text-xs uppercase tracking-[0.22em] text-muted-foreground">
+              127 families • 9 states • on-device AI • private by design
+            </p>
           </div>
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-periwinkle-soft blur-3xl opacity-60" />
@@ -144,44 +146,122 @@ function Hero() {
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+/* ---------- MANIFESTO ---------- */
+function Manifesto() {
   return (
-    <div>
-      <dt className="text-3xl font-light text-charcoal">{value}</dt>
-      <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{label}</dd>
-    </div>
+    <section className="border-b border-border bg-card">
+      <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">The problem</p>
+          <h2 className="mt-4 text-3xl font-light leading-tight tracking-tight text-charcoal md:text-5xl">
+            Today's attacks do not target systems anymore.<br />
+            <span className="text-taupe">They target human cognition.</span>
+          </h2>
+          <div className="mt-10 space-y-6 text-base leading-relaxed text-charcoal/80 md:text-lg">
+            <p>
+              AI-generated voices, engineered urgency, impersonation, and
+              emotional manipulation bypass every security layer built for a
+              slower world. The attack no longer happens at the firewall. It
+              happens quietly, inside a conversation.
+            </p>
+            <p>
+              Older adults are the most exposed. Not because they are careless,
+              but because modern scams exploit trust, fear, and emotional
+              pressure faster than people can consciously react.
+            </p>
+            <p className="font-medium text-charcoal">
+              Every existing fraud system reacts too late.
+            </p>
+            <p>
+              Banks monitor transactions after money moves. Spam filters screen
+              calls after the connection is made. Security tools analyze
+              compromise after the attack succeeds. None of them understand the
+              neurological moment where manipulation actually happens.
+            </p>
+            <p className="text-charcoal">
+              The scam is already working before the victim realizes it.
+            </p>
+            <p className="text-2xl font-light text-charcoal md:text-3xl">
+              Veris was built to change that.
+            </p>
+            <p>
+              Veris is a whisper-thin titanium ring powered by on-device AI and
+              continuous biosignal sensing. It continuously measures
+              physiological stress signals — heart-rate variability,
+              electrodermal activity, and micro-patterns associated with
+              coercion and engineered urgency.
+            </p>
+            <p>
+              At the same time, lightweight local AI models analyze
+              conversational patterns linked to impersonation, secrecy,
+              emotional pressure, and financial manipulation.
+            </p>
+            <p className="text-charcoal">
+              Body and language are fused together in real time.
+            </p>
+            <p>
+              The result is the first cognitive defense system designed to
+              detect psychological manipulation before irreversible decisions
+              occur.
+            </p>
+            <ul className="space-y-1 text-charcoal">
+              <li>No screens.</li>
+              <li>No surveillance.</li>
+              <li>No invasive monitoring.</li>
+            </ul>
+            <p className="text-charcoal">
+              Just a quiet pulse when something is wrong.
+            </p>
+            <p>
+              When risk escalates, Veris creates a moment of interruption
+              before financial damage occurs. If pressure continues rising,
+              trusted contacts receive intelligent contextual alerts designed
+              to intervene before loss happens.
+            </p>
+            <p className="text-xl font-light italic text-taupe md:text-2xl">
+              Because the body reacts before the mind understands.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
-/* ---------- PILLARS ---------- */
+/* ---------- PILLARS / HOW IT WORKS ---------- */
 function Pillars() {
   const items = [
     {
-      title: "Sleep",
-      desc: "Stages, latency, and restorative depth tracked with research-grade accuracy — no nightly chart-staring required.",
+      title: "Detect",
+      desc: "Continuous biosignal and ambient sensing recognize stress, coercion, and manipulation patterns as they happen.",
       tone: "bg-card",
     },
     {
-      title: "Recovery",
-      desc: "HRV, resting heart rate, and skin temperature converge into one calm score: ready, take it easy, or rest.",
+      title: "Analyze",
+      desc: "On-device AI fuses physiological and conversational signals into a real-time cognitive risk score.",
       tone: "bg-periwinkle-soft",
     },
     {
-      title: "Readiness",
-      desc: "A single morning signal that respects your context — workouts, illness, travel — without overwhelming you.",
+      title: "Intervene",
+      desc: "A subtle haptic pulse interrupts engineered urgency and creates a moment of clarity.",
       tone: "bg-card",
+    },
+    {
+      title: "Protect",
+      desc: "Trusted contacts receive context-aware alerts before money is lost.",
+      tone: "bg-periwinkle-soft",
     },
   ];
   return (
-    <section id="pillars" className="border-b border-border">
+    <section id="how" className="border-b border-border">
       <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
         <div className="max-w-2xl">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">Three pillars</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">How it works</p>
           <h2 className="mt-4 text-3xl font-light tracking-tight text-charcoal md:text-5xl">
-            One ring. The signals that matter.
+            Four quiet steps. One moment of clarity.
           </h2>
         </div>
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {items.map((it) => (
             <article
               key={it.title}
@@ -205,12 +285,12 @@ function Pillars() {
 /* ---------- DEVICE ---------- */
 function Device() {
   const features = [
-    "Aerospace-grade titanium shell",
-    "On-device AI — your data stays yours",
-    "Continuous biosignal capture",
-    "Whisper-quiet haptics",
-    "7-day battery, 80-min charge",
-    "Water resistant to 100 meters",
+    "7-day battery life",
+    "On-device AI inference",
+    "4-gram titanium shell",
+    "Water resistant",
+    "Private by default",
+    "Audio processed locally, discarded instantly",
   ];
   return (
     <section id="device" className="border-b border-border bg-card">
@@ -231,12 +311,14 @@ function Device() {
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">The Ring</p>
           <h2 className="mt-4 text-3xl font-light tracking-tight text-charcoal md:text-5xl">
-            Engineered to disappear.
+            A whisper-thin titanium ring engineered for continuous wear.
           </h2>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-            Four grams of titanium, sapphire-coated sensors, and a battery that
-            outlasts your week. The ring you forget you're wearing — until it
-            quietly tells you something useful.
+            No conversations are stored. No cloud recordings exist. Audio is
+            processed locally and discarded instantly.
+          </p>
+          <p className="mt-3 text-base font-medium text-charcoal">
+            Protection without surveillance.
           </p>
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
             {features.map((f) => (
@@ -248,6 +330,55 @@ function Device() {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- BIG STATEMENT ---------- */
+function Statement() {
+  return (
+    <section className="border-b border-border bg-background">
+      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-32">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">A new layer</p>
+          <h2 className="mt-6 text-4xl font-light leading-tight tracking-tight text-charcoal md:text-6xl">
+            The future of security is <span className="text-taupe">human-aware.</span>
+          </h2>
+          <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            As AI-generated manipulation scales globally, defending
+            infrastructure alone will no longer be enough. The next generation
+            of security systems must understand human vulnerability in real
+            time.
+          </p>
+          <p className="mt-6 text-lg text-charcoal md:text-xl">
+            Veris is building that layer.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- METRICS ---------- */
+function Metrics() {
+  const stats = [
+    { value: "$3.4B", label: "Lost annually by Americans 60+ to scams" },
+    { value: "76%", label: "Increase in AI-enabled fraud attempts" },
+    { value: "0", label: "Existing systems for real-time cognitive fraud detection" },
+    { value: "1st", label: "Wearable built for manipulation awareness" },
+  ];
+  return (
+    <section className="border-b border-border bg-card">
+      <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {stats.map((s) => (
+            <div key={s.label} className="border-l-2 border-taupe pl-6">
+              <dt className="text-4xl font-light text-charcoal md:text-5xl">{s.value}</dt>
+              <dd className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.label}</dd>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -284,13 +415,13 @@ function EarlyAccess() {
     <section id="early-access" className="bg-background">
       <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
         <div className="mx-auto max-w-3xl rounded-lg bg-taupe p-8 text-taupe-foreground md:p-12">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/60">Early access</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/60">Final call</p>
           <h2 className="mt-4 text-3xl font-light tracking-tight md:text-5xl">
-            Join the first wearers.
+            Give them independence.<br />Not vulnerability.
           </h2>
           <p className="mt-4 max-w-xl text-base text-white/70">
-            Reserve your spot. We'll reach out as production batches open — no
-            spam, no noise.
+            Join the private beta shaping the future of cognitive defense
+            systems.
           </p>
           <form onSubmit={onSubmit} className="mt-10 grid gap-4">
             <div className="grid gap-4 md:grid-cols-2">
@@ -319,13 +450,21 @@ function EarlyAccess() {
                 onChange={(e) => setForm({ ...form, team: e.target.value })}
               />
             </Field>
-            <button
-              type="submit"
-              disabled={loading}
-              className="mt-2 inline-flex h-12 items-center justify-center rounded-full bg-periwinkle px-6 text-base text-white transition-opacity hover:opacity-90 disabled:opacity-60"
-            >
-              {loading ? "Reserving..." : "Reserve my ring"}
-            </button>
+            <div className="mt-2 flex flex-wrap gap-3">
+              <button
+                type="submit"
+                disabled={loading}
+                className="inline-flex h-12 items-center justify-center rounded-full bg-periwinkle px-6 text-base text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+              >
+                {loading ? "Joining..." : "Join Early Access"}
+              </button>
+              <a
+                href="mailto:research@veris.systems"
+                className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 px-6 text-base text-white transition-colors hover:bg-white/10"
+              >
+                Request Research Access
+              </a>
+            </div>
           </form>
         </div>
       </div>
@@ -372,7 +511,7 @@ function Footer() {
           <span className="text-sm text-charcoal">Veris</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Veris. Quiet intelligence for everyday wellness.
+          Veris © {new Date().getFullYear()} • Cognitive defense infrastructure for the AI era.
         </p>
       </div>
     </footer>
