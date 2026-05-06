@@ -616,10 +616,6 @@ function EarlyAccess() {
             Give them independence.<br />
             <span className="italic text-gold">Not vulnerability.</span>
           </h2>
-          <p className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            Join the private beta shaping the future of cognitive defense
-            systems.
-          </p>
           <form onSubmit={onSubmit} className="mt-12 grid gap-5">
             <div className="grid gap-5 md:grid-cols-2">
               <Field label="Name" required>
