@@ -538,9 +538,10 @@ function Device() {
 /* ---------- STATEMENT ---------- */
 function Statement() {
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
+    <section className="relative overflow-hidden border-b border-border vignette">
+      <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
       <div className="absolute inset-0 bg-nebula" aria-hidden />
+      <Constellation />
       <div className="relative mx-auto max-w-[1440px] px-4 py-28 md:px-10 md:py-40">
         <div className="mx-auto max-w-4xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 04 / Thesis</p>
@@ -563,17 +564,52 @@ function Statement() {
   );
 }
 
+function Constellation() {
+  // Faint dot+line mesh, very slow rotate
+  const nodes = [
+    [12, 22], [28, 14], [44, 30], [62, 18], [78, 28], [88, 46],
+    [70, 58], [52, 70], [34, 64], [18, 52], [8, 70], [80, 78],
+    [40, 42], [60, 48],
+  ];
+  const links: Array<[number, number]> = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8],
+    [8, 9], [9, 0], [9, 10], [6, 11], [12, 2], [12, 7], [13, 3], [13, 6],
+    [12, 13],
+  ];
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid slice"
+      className="spin-slow pointer-events-none absolute inset-[-20%] h-[140%] w-[140%] opacity-30"
+    >
+      {links.map(([a, b], i) => (
+        <line
+          key={i}
+          x1={nodes[a][0]} y1={nodes[a][1]}
+          x2={nodes[b][0]} y2={nodes[b][1]}
+          stroke="var(--gold)" strokeWidth="0.08" opacity="0.5"
+        />
+      ))}
+      {nodes.map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="0.4" fill="var(--gold)" />
+      ))}
+    </svg>
+  );
+}
+
 /* ---------- METRICS ---------- */
 function Metrics() {
-  const stats = [
-    { value: "$3.4B", label: "Lost annually by Americans 60+ to scams" },
-    { value: "76%", label: "Increase in AI-enabled fraud attempts" },
+  const stats: Array<{ value: string; label: string; numeric?: { to: number; prefix?: string; suffix?: string; decimals?: number } }> = [
+    { value: "$3.4B", label: "Lost annually by Americans 60+ to scams", numeric: { to: 3.4, prefix: "$", suffix: "B", decimals: 1 } },
+    { value: "76%", label: "Increase in AI-enabled fraud attempts", numeric: { to: 76, suffix: "%" } },
     { value: "0", label: "Existing systems for real-time cognitive fraud detection" },
     { value: "1st", label: "Wearable built for manipulation awareness" },
   ];
+  const [ref, seen] = useInView<HTMLDivElement>();
   return (
     <section className="border-b border-border bg-background">
-      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
+      <div ref={ref} className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
         <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 05 / Field Data</p>
         <div className="mt-12 grid gap-px bg-border md:grid-cols-2 lg:grid-cols-4">
           {stats.map((s, i) => (
@@ -582,7 +618,16 @@ function Metrics() {
                 FIG. {String(i + 1).padStart(2, "0")}
               </div>
               <div className="mt-6 font-display text-5xl font-light text-gold md:text-6xl">
-                {s.value}
+                {s.numeric && seen ? (
+                  <CountUp
+                    to={s.numeric.to}
+                    prefix={s.numeric.prefix}
+                    suffix={s.numeric.suffix}
+                    decimals={s.numeric.decimals ?? 0}
+                  />
+                ) : (
+                  s.value
+                )}
               </div>
               <div className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {s.label}
@@ -592,6 +637,41 @@ function Metrics() {
         </div>
       </div>
     </section>
+  );
+}
+
+function CountUp({
+  to,
+  prefix = "",
+  suffix = "",
+  decimals = 0,
+  duration = 1600,
+}: {
+  to: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  duration?: number;
+}) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    const start = performance.now();
+    let raf = 0;
+    const step = (t: number) => {
+      const p = Math.min(1, (t - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setV(to * eased);
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [to, duration]);
+  return (
+    <span>
+      {prefix}
+      {v.toFixed(decimals)}
+      {suffix}
+    </span>
   );
 }
 
