@@ -196,7 +196,7 @@ function Nav() {
         <a href="#" className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-display italic text-sm">V</span>
           <span className="font-display text-xl tracking-tight text-ink">Veris</span>
-          <span className="ml-3 hidden items-center gap-2 border-l border-border pl-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
+          <span className="ml-3 hidden items-center gap-2 border-l border-border pl-3 label-italic text-muted-foreground md:flex">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
             Moonshot 03 · Private Beta
           </span>
@@ -256,7 +256,7 @@ function HeroStage({ stageRef }: { stageRef: React.RefObject<HTMLElement | null>
         {/* Headline overlay — fades on scroll */}
         <div className="hero-headline">
           <div className="mx-auto max-w-5xl px-6 text-center">
-            <div className="flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em] text-gold">
+            <div className="flex items-center justify-center gap-2 label-italic text-gold">
               <span className="h-1.5 w-1.5 rounded-full bg-gold" />
               Moonshot 03 — Cognitive Defense
             </div>
@@ -355,7 +355,7 @@ function ScienceRow({
       className="reveal grid grid-cols-12 items-baseline gap-6 py-12 md:gap-10 md:py-20"
     >
       <div className="col-span-12 flex items-center gap-4 md:col-span-1">
-        <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">{n}</span>
+        <span className="label-italic text-gold">{n}</span>
       </div>
       <div className="col-span-12 md:col-span-5">
         <h3 className="font-display text-5xl font-extralight italic leading-none tracking-tight text-ink md:text-[7rem]">
@@ -703,7 +703,7 @@ function Footer() {
         ))}
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-3 px-4 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex-row md:items-center md:px-10">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-3 px-4 py-6 label-italic text-muted-foreground md:flex-row md:items-center md:px-10">
           <span>© 2026 Veris Labs · All rights reserved</span>
           <span className="text-gold">Moonshot 03 — Cognitive Defense</span>
         </div>

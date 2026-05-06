@@ -237,7 +237,10 @@
 /* `--hero-progress` (0 → 1) drives every fragment + the assembled ring. */
 .hero-stage {
   position: relative;
-  height: 280vh; /* tall scrolling area for the deconstruction */
+  height: 220vh;
+}
+@media (min-width: 768px) {
+  .hero-stage { height: 280vh; }
 }
 .hero-pin {
   position: sticky;
@@ -249,18 +252,24 @@
 }
 .ring-assembled {
   position: absolute;
-  top: 0;
-  width: min(56vmin, 480px);
+  top: 50%;
+  left: 50%;
+  width: min(70vmin, 520px);
   aspect-ratio: 1;
-  opacity: calc(1 - var(--hero-progress, 0) * 1.4);
+  opacity: calc(0.55 - var(--hero-progress, 0) * 0.9);
   transform:
-    translate3d(0, calc(-8% + var(--hero-progress, 0) * 0px), 0)
+    translate3d(-50%, -50%, 0)
     rotate(calc(var(--hero-progress, 0) * 30deg))
-    scale(calc(1 + var(--hero-progress, 0) * 0.3));
-  filter: drop-shadow(0 30px 80px oklch(0.78 0.10 80 / 0.5));
+    scale(calc(1 + var(--hero-progress, 0) * 0.4));
+  filter: blur(0.5px) drop-shadow(0 30px 80px oklch(0.78 0.10 80 / 0.5));
   -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 45%, transparent 75%);
           mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 45%, transparent 75%);
   transition: opacity 60ms linear;
+  animation: ring-breathe 9s ease-in-out infinite;
+}
+@keyframes ring-breathe {
+  0%, 100% { filter: blur(0.5px) drop-shadow(0 30px 80px oklch(0.78 0.10 80 / 0.4)); }
+  50% { filter: blur(0.5px) drop-shadow(0 40px 120px oklch(0.78 0.10 80 / 0.7)); }
 }
 .ring-fragment {
   position: absolute;
@@ -319,10 +328,13 @@
   display: grid;
   align-items: center;
   justify-items: center;
-  padding-top: clamp(22rem, 48vh, 30rem);
+  padding: 5rem 0 0;
   opacity: calc(1 - var(--hero-progress, 0) * 2.2);
   transform: translate3d(0, calc(var(--hero-progress, 0) * 40px), 0);
   pointer-events: none;
+}
+@media (min-width: 768px) {
+  .hero-headline { padding-top: 0; }
 }
 
 /* Watermark fragments behind downstream sections */
