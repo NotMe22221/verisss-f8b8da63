@@ -207,12 +207,13 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 
 /* ---------- HERO ---------- */
 function Hero() {
+  const now = useNow();
   return (
-    <section className="relative overflow-hidden border-b border-border bg-nebula">
+    <section className="relative overflow-hidden border-b border-border bg-nebula noise vignette">
       <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
       <div className="relative mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28 lg:py-36">
         <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
-          <div>
+          <div className="rise">
             <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
               <span className="h-px w-8 bg-gold" />
               Moonshot Idea 03 · Cognitive Defense System
@@ -229,9 +230,10 @@ function Hero() {
             <div className="mt-10 flex flex-wrap gap-3">
               <a
                 href="#early-access"
-                className="inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
+                className="group inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
               >
-                Join Early Access →
+                Join Early Access
+                <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
               </a>
               <a
                 href="#science"
@@ -250,19 +252,34 @@ function Hero() {
           <div className="relative">
             <CornerFrame className="aspect-square">
               <div className="absolute inset-0 bg-grid-sm opacity-60" aria-hidden />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.25),transparent_60%)]" aria-hidden />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.28),transparent_60%)]" aria-hidden />
+              {/* Pulse rings */}
+              <div className="absolute inset-[18%] grid place-items-center" aria-hidden>
+                <div className="pulse-ring" />
+                <div className="pulse-ring" style={{ animationDelay: "1.3s" }} />
+                <div className="pulse-ring" style={{ animationDelay: "2.6s" }} />
+              </div>
               <img
                 src={ringHero}
                 alt="Veris titanium ring"
                 width={1024}
                 height={1024}
-                className="relative mx-auto h-full w-full object-contain p-6"
+                className="float-slow relative mx-auto h-full w-full object-contain p-6"
               />
+              {/* Scan line */}
+              <div className="scan-line" aria-hidden />
+              {/* Corner data callouts */}
+              <Callout pos="tl" label="01 · HRV" />
+              <Callout pos="tr" label="02 · EDA" />
+              <Callout pos="bl" label="03 · TEMP" />
+              <Callout pos="br" label="04 · IMU" />
+              {/* Footer strip inside frame */}
               <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                 VRS-01 · 04g · Ti
               </div>
-              <div className="absolute bottom-3 right-3 font-mono text-[10px] uppercase tracking-[0.22em] text-gold">
-                ◐ Live Telemetry
+              <div className="absolute bottom-3 right-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-gold">
+                <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
+                {now.toISOString().slice(11, 19)} UTC
               </div>
             </CornerFrame>
           </div>
@@ -272,6 +289,29 @@ function Hero() {
         </p>
       </div>
     </section>
+  );
+}
+
+function Callout({
+  pos,
+  label,
+}: {
+  pos: "tl" | "tr" | "bl" | "br";
+  label: string;
+}) {
+  const map = {
+    tl: "top-6 left-6",
+    tr: "top-6 right-6",
+    bl: "bottom-10 left-6",
+    br: "bottom-10 right-6",
+  } as const;
+  return (
+    <div
+      className={`absolute ${map[pos]} flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground`}
+    >
+      <span className="h-1 w-1 rounded-full bg-gold" />
+      {label}
+    </div>
   );
 }
 
