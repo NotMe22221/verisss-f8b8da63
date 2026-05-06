@@ -203,29 +203,18 @@ function ConsoleRow({ k, v }: { k: string; v: string }) {
   );
 }
 
-/* ---------- STATUS BAR ---------- */
-function StatusBar() {
-  return (
-    <div className="border-b border-border bg-background/80">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
-        <span className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
-          Moonshot 03 · Veris · Classification: Private Beta
-        </span>
-        <span className="hidden md:inline">EST. 2026 · COGNITIVE DEFENSE INFRASTRUCTURE</span>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- NAV ---------- */
 function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 md:px-10">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between gap-4 px-4 md:h-16 md:px-10">
         <a href="#" className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
-          <span className="font-display text-xl tracking-tight text-ink">Veris</span>
+          <span className="font-display text-lg tracking-tight text-ink md:text-xl">Veris</span>
+          <span className="ml-3 hidden items-center gap-2 border-l border-border pl-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
+            Moonshot 03 · Private Beta
+          </span>
         </a>
         <nav className="hidden items-center gap-8 md:flex">
           <NavLink href="#mission">Mission</NavLink>
@@ -235,7 +224,7 @@ function Nav() {
         </nav>
         <a
           href="#early-access"
-          className="inline-flex h-9 items-center border border-gold bg-gold px-4 font-mono text-[11px] uppercase tracking-[0.18em] text-primary-foreground transition-colors hover:bg-transparent hover:text-gold"
+          className="inline-flex h-9 items-center border border-gold bg-gold px-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary-foreground transition-colors hover:bg-transparent hover:text-gold md:text-[11px]"
         >
           Secure a Spot
         </a>
