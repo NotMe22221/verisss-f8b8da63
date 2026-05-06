@@ -208,7 +208,6 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 
 /* ---------- HERO ---------- */
 function Hero() {
-  const now = useNow();
   return (
     <section className="relative overflow-hidden border-b border-border bg-nebula noise vignette">
       <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
@@ -217,16 +216,15 @@ function Hero() {
           <div className="rise">
             <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
               <span className="h-px w-8 bg-gold" />
-              Moonshot Idea 03 · Cognitive Defense System
+              Moonshot 03 — Cognitive Defense
             </div>
             <h1 className="mt-8 font-display text-5xl font-light leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
               Protection before<br />
               <span className="italic text-gold">the damage.</span>
             </h1>
             <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Veris is the first wearable intelligence system designed to
-              detect coercion, manipulation, and scam pressure in real time —
-              before financial loss occurs.
+              A wearable intelligence system that detects coercion and scam
+              pressure in real time — before loss occurs.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <a
@@ -243,18 +241,15 @@ function Hero() {
                 See How It Works
               </a>
             </div>
-            <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8 sm:grid-cols-4">
-              <HeroStat label="Status" value="Orbital" />
-              <HeroStat label="Participants" value="127" />
+            <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8">
+              <HeroStat label="Families" value="127" />
               <HeroStat label="States" value="9" />
-              <HeroStat label="Mode" value="Private" />
             </div>
           </div>
           <div className="relative">
             <CornerFrame className="aspect-square">
               <div className="absolute inset-0 bg-grid-sm opacity-60" aria-hidden />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.28),transparent_60%)]" aria-hidden />
-              {/* Pulse rings */}
               <div className="absolute inset-[18%] grid place-items-center" aria-hidden>
                 <div className="pulse-ring" />
                 <div className="pulse-ring" style={{ animationDelay: "1.3s" }} />
@@ -267,27 +262,15 @@ function Hero() {
                 height={1024}
                 className="float-slow relative mx-auto h-full w-full object-contain p-6"
               />
-              {/* Scan line */}
               <div className="scan-line" aria-hidden />
-              {/* Corner data callouts */}
               <Callout pos="tl" label="01 · HRV" />
-              <Callout pos="tr" label="02 · EDA" />
-              <Callout pos="bl" label="03 · TEMP" />
               <Callout pos="br" label="04 · IMU" />
-              {/* Footer strip inside frame */}
               <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                 VRS-01 · 04g · Ti
-              </div>
-              <div className="absolute bottom-3 right-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-gold">
-                <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
-                {now.toISOString().slice(11, 19)} UTC
               </div>
             </CornerFrame>
           </div>
         </div>
-        <p className="mt-16 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          127 families · 9 states · on-device AI · private by design
-        </p>
       </div>
     </section>
   );
