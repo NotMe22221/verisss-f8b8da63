@@ -10,7 +10,7 @@ const Schema = z.object({
 export const submitEarlyAccess = createServerFn({ method: "POST" })
   .inputValidator((input) => Schema.parse(input))
   .handler(async ({ data }) => {
-    const { error } = await supabaseAdmin.from("early_access_signups").insert({
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       name: data.name,
       email: data.email,
       team: data.team ? data.team : null,
