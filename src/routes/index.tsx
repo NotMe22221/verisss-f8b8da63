@@ -297,14 +297,6 @@ function Manifesto() {
   const ref = useReveal<HTMLDivElement>();
   return (
     <section id="mission" className="relative overflow-hidden">
-      {/* watermark fragment */}
-      <img
-        src={ringShell}
-        alt=""
-        aria-hidden
-        className="section-watermark"
-        style={{ left: "-12%", top: "10%", width: "55vmin" }}
-      />
       <div className="relative mx-auto max-w-[1440px] px-4 py-32 md:px-10 md:py-48">
         <div ref={ref} className="reveal mx-auto max-w-3xl">
           <p className="label-italic text-gold">§ 01 — Mission</p>
