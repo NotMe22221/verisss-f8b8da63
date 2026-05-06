@@ -1,99 +1,87 @@
-## Goal
+## Direction
 
-Bring Veris from "polished moonshot brief" to "industry-level product site" — Humane / Whoop / Rabbit / Apple Vision Pro caliber. Honest gaps and the surgical fixes for each.
+Right now the page reads as a static editorial brief: serif headlines, mono micro-labels, body sans — three voices fighting. No motion in the background. The ring sits still in the hero and never appears again with intent. That's the gap between "design-y landing" and Apple/Humane/Google moonshot.
 
-## 1. Make the product the hero (not the frame)
+Three moves fix it:
 
-- **Enlarge the ring** on mobile: currently ~40% of viewport, push to ~70%. On desktop, let it bleed past the right edge of its grid cell so it feels physical, not contained in a box.
-- **Remove the corner frame around the hero ring.** The frame makes it look like a spec card. Industry hero product shots float on the background — the product *is* the composition.
-- **Drop the 4 corner callouts and the inner pulse rings on mobile** (`hidden md:block`). At 384px they crowd the product. Keep on desktop.
-- **Add a soft radial spotlight** behind the ring (not a grid — gradient). Then keep the grid only as a subtle floor.
+1. **One typographic voice.** Drop the body sans + mono mix on display surfaces. Every headline, body line, and stat uses the **same display family (Fraunces)** at varying weights/sizes/italics. Mono survives only as tiny telemetry chrome (timestamps, fig. numbers). No more 3-font collage.
+2. **The page is alive.** Animated gradient mesh background that drifts slowly behind every section. Subtle film grain on top. Sections fade-cross into each other instead of hard borders. A persistent gold "aurora" follows the scroll position.
+3. **The ring is the protagonist.** It doesn't sit in one image — it **deconstructs as you scroll**. Hero shows the whole ring. As the user scrolls, the ring fractures into 4 orbiting components (shell, sensor array, haptic core, antenna ring) that drift to the sides of the viewport, each becoming the visual anchor for one section. By the Statement section, the parts reassemble.
 
-## 2. Compress the top chrome
+## What gets built
 
-Currently: StatusBar + Nav + TelemetryTicker + Hero eyebrow = 4 horizontal stripes before the user sees "Protection." Industry standard: 1 nav, occasionally 1 announcement bar.
+### 1. Generated visual assets (Lovable AI / nano-banana-pro)
 
-- **Merge StatusBar into Nav** as a small left-side mono indicator (`● MOONSHOT 03`) inside the nav row.
-- **Move TelemetryTicker** from above-the-fold to between Manifesto and HowItWorks as an interstitial — it functions better as a "the system is alive" beat between content blocks.
-- **Eyebrow stays** but loses its leading underline rule (gold dot only).
+Generate 6 new hero-quality renders, all in the same dark-navy/gold palette as `ring-hero.jpg`, all 1024×1024 PNG with transparent or matching backgrounds:
 
-## 3. Hero CTA hierarchy
+- `ring-shell.png` — outer titanium band, isolated, floating, dramatic rim light
+- `ring-sensors.png` — interior sensor array exposed, glowing copper/gold contacts
+- `ring-haptic.png` — haptic core module, exploded view
+- `ring-antenna.png` — inner antenna ring, wireframe-like
+- `ring-macro-1.png` — extreme macro of brushed titanium surface
+- `ring-aurora.png` — abstract gold/navy aurora cloud (used as scroll-following background layer)
 
-- One **primary** filled gold button (`Join Early Access →`).
-- One **text link with arrow** (`See how it works ↓`) — not a second outlined button. Quieter, more confident.
+Saved to `src/assets/`. Each is referenced as the visual anchor for one scroll moment.
 
-## 4. Add a real authority strip (social proof)
+### 2. Hero "deconstruction" sequence (the centerpiece)
 
-Below the hero, a single thin row:
+A pinned scroll-driven sequence built with **pure CSS transforms + scroll progress** (no Framer Motion — keeps bundle lean, fits TanStack SSR). Mechanism: a single `position: sticky` container ~250vh tall holding the ring. A scroll listener (rAF-throttled) writes a `--progress` CSS variable from 0 → 1 onto the container. CSS uses `--progress` to:
 
-```
-BACKED BY RESEARCH FROM    Stanford HAI · MIT Media Lab · AARP    [in private discussions]
-```
+- Rotate the whole ring assembly slowly (0 → 90deg)
+- Translate each fragment outward along its own vector (`translate(calc(var(--progress)*-40vw), …)` etc.)
+- Fade the original `ring-hero.jpg` opacity 1 → 0 while the 4 fragments fade 0 → 1
+- Scale each fragment 0.6 → 1.4 as it leaves
+- Drift the gold aurora behind it from center → top-right
 
-Mono caps, low-contrast, no logos needed (we don't have rights). Reads as credible without overclaiming. One line, one border, done. This is what every serious moonshot page has and Veris currently doesn't.
+By the time the user has scrolled past the hero, the four fragments are parked at the four corners of the viewport. Each downstream section (Manifesto, Science, Device, Statement) gets a faint, blurred fragment as its background watermark — the ring is "with you" the whole way down. In the Statement section, the same scroll variable runs in reverse and the fragments fly back together to reform the ring as a closing image.
 
-## 5. Scroll-driven moments (3 places, restrained)
+### 3. Motion background system
 
-Use `IntersectionObserver` (already in the project via `useInView`) to add subtle reveal:
+- **Animated mesh gradient**: a fixed full-viewport canvas behind everything, two large radial gold + teal blobs that drift sinusoidally (CSS keyframes on `background-position` of stacked radial-gradients, 40s loop). Already partially exists as `.bg-nebula` — extend it to `position: fixed; inset: 0; z-index: -1` and animate.
+- **Grain layer**: existing `.noise` lifted to a fixed top layer at 4% opacity.
+- **Section transitions**: replace every `border-y` between sections with a 200px gradient fade (current section bg → next section bg). Page becomes one continuous surface.
+- **Scroll-linked aurora**: a soft gold blob that translates with `window.scrollY` so it always sits ~40% down the viewport, giving every section a warm focal point.
 
-- **Manifesto opening line** fades up + the gold word reveals 200ms later.
-- **Statement headline** scales from 0.96 → 1.0 with opacity 0 → 1 on enter.
-- **Metrics row** staggers card entry (50ms delay each) — the numbers already count up; this makes the cards arrive too.
+### 4. Typography unification
 
-No new library — pure CSS + the existing hook.
+- Body copy switches from Inter to **Fraunces** at 300 weight, generous leading. Inter is removed from the loaded fonts (smaller bundle, one voice).
+- Hierarchy comes from size + weight + italic, not from family swap:
+  - Display XL: Fraunces 200, 5-7rem, tight tracking, italic accent words in gold
+  - Display L: Fraunces 300, 3-4rem
+  - Body: Fraunces 300, 1.05rem, 1.7 leading
+  - Caption / chrome: JetBrains Mono 400, 10px, used **only** for: timestamps in console, FIG. numbers, build strip, telemetry ticker
+- Section labels (`§ 01 / Mission`) move from mono to Fraunces small-caps italic — same family, different register.
+- All `font-mono` on headlines, CTAs, and labels gets removed. The "Join Early Access" button text becomes Fraunces italic instead of mono caps.
 
-## 6. Section transitions with personality
+### 5. Section restructure
 
-Right now every section is `border-b border-border` and identical padding. Vary the seams:
+- **Hero** keeps the headline but drops the corner callouts and stat row — those move into Manifesto. Hero becomes pure: ring + headline + one CTA.
+- **Manifesto** absorbs the 127/9 stats inline as a single sentence: *"127 families. 9 states. One quiet system."* in display italic.
+- **HowItWorks** loses the 4 boxed cards. Becomes 4 full-width rows, each with: huge italic verb (Detect / Analyze / Intervene / Protect), one-line description, and one of the ring fragments parked next to it.
+- **Device** drops the spec table grid box. Specs become a single line of numerals separated by gold dots: *"7 days · 4g · titanium · on-device · resistant · local-only"*.
+- **Statement** is where the ring reassembles — full-bleed, headline overlaid.
+- **Metrics** stays but the 4-up grid becomes a horizontal scroll-snap track of large numerals.
+- **EarlyAccess** form becomes single-column, inputs without boxes (just hairline underlines, current `LabInput` is already close).
 
-- Hero → Manifesto: no border, gradient fade from nebula to bg-background.
-- Manifesto → HowItWorks: hairline gold rule (1px, 64px wide, centered) instead of full-width border.
-- HowItWorks → Device: full-width hairline + Device gets a darker `bg-card`.
-- Device → Statement: no border, Statement opens full-bleed nebula.
-- Statement → Metrics: hairline gold rule again.
-- Metrics → EarlyAccess: full-width border.
+### 6. Polish layer
 
-Result: the page reads as composed chapters, not stacked blocks.
+- Cursor: subtle gold dot follower on desktop only (12px circle, mix-blend-difference).
+- Scroll progress: 1px gold bar fixed at top, width = scroll %.
+- All button hovers get a slow gold underline draw instead of opacity flicker.
 
-## 7. Device section: add detail photography placeholder grid
+## Honest scope notes
 
-Below the existing blueprint + spec table, a 3-up grid of macro detail tiles (use the existing `ringHero` and `ringDevice` images cropped via `object-position` + a third synthesized macro tile using a CSS gradient over the ring). Captions: `01 · TITANIUM SHELL`, `02 · INTERIOR SENSORS`, `03 · INDUCTIVE CHARGE`. Even with two source images, three cropped tiles look like a real product gallery.
-
-## 8. Industry-grade footer
-
-Replace the single-line footer with a 4-column structure (1-col on mobile):
-
-- Col 1: V mark + tagline + copyright
-- Col 2: Product (Device, Science, Access)
-- Col 3: Company (Mission, Press, Research, Contact)
-- Col 4: Legal (Privacy, Terms, Responsible Disclosure)
-
-Plus the existing build/uplink strip on desktop. This single change is the difference between "landing page" and "company".
-
-## 9. Polish layer
-
-- **Favicon**: replace default with a gold "V" mark (inline SVG in `__root.tsx` head).
-- **OG image**: add `og:image` meta pointing to `ringHero` so social shares look intentional.
-- **Smooth scroll**: `html { scroll-behavior: smooth }` for the in-page anchors.
-- **Selection color**: `::selection { background: var(--gold); color: var(--background); }` — small detail, very industry.
-
-## 10. Quietly fix the two lingering hydration warnings
-
-The previous edits to copy don't break anything in production but the dev SSR cache still mismatches. The real fix is the same `useNow` mount-guard pattern applied anywhere `Date` is rendered — already done. The two warnings shown are stale dev artifacts from the previous render and clear on next build; no further action needed.
+- **No real video file.** Embedded MP4s on a hero are a known performance + LCP killer and don't fit the SSR/edge runtime. The "motion background" and "ring deconstruction" deliver the same *feeling* using CSS transforms on generated PNGs — it will read as a film without being one. If a true video is required later, it should be a separate request and likely a Remotion render delivered as a poster + `<video>` swap.
+- **No Framer Motion / GSAP.** A single rAF scroll listener writing a CSS variable handles everything. Keeps the bundle small and SSR-clean.
+- **Image generation will run during implementation** via `imagegen--edit_image` against the existing `ring-hero.jpg` so all six new renders match the ring's exact lighting, finish, and color.
 
 ## Files touched
 
-- `src/routes/index.tsx` — Hero restructure, Nav merge, ticker relocation, AuthorityStrip component, scroll-reveal classes, section seams, Device gallery, new Footer.
-- `src/styles.css` — `.reveal` keyframe + observer class, `::selection` rule, smooth scroll, gold hairline utility.
-- `src/routes/__root.tsx` — favicon SVG, `og:image`, theme-color meta.
-
-## Out of scope
-
-- No new product photography (we work with the two existing renders).
-- No new copy invented (only restructured).
-- No animation libraries (Framer Motion etc.) — pure CSS + existing hook.
-- No backend / schema changes.
+- `src/styles.css` — animated mesh gradient, fade-section utility, scroll-progress variables, font stack reduced to Fraunces + JetBrains Mono only.
+- `src/routes/index.tsx` — Hero rebuilt as sticky scroll-deconstruction container, all sections re-typeset, fragment watermarks wired into Manifesto/Science/Device/Statement, Metrics → snap track, Footer trimmed.
+- `src/routes/__root.tsx` — drop Inter from font preconnect/link, keep Fraunces + JetBrains Mono.
+- `src/assets/` — six new generated PNGs.
 
 ## Result
 
-Goes from "moonshot brief that looks great" to a site that could plausibly sit alongside humane.com, whoop.com, or rabbit.tech without feeling like a tier below — without inventing fake logos, fake press, or fake imagery.
+A page that feels like one continuous moving surface, with the ring as a character that comes apart and reforms as you read its story — written in a single typographic voice. That is the difference between "good landing page" and "Google X reveal."
