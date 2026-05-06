@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowUpRight, Check } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { CornerFrame } from "@/components/landing/Frame";
 import ringHero from "@/assets/ring-hero.jpg";
 import ringDevice from "@/assets/ring-device.jpg";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
@@ -12,17 +13,17 @@ export const Route = createFileRoute("/")({
   component: VerisLanding,
   head: () => ({
     meta: [
-      { title: "Veris — Cognitive defense system for the AI era" },
+      { title: "Veris — Moonshot 03 · Cognitive Defense System" },
       {
         name: "description",
         content:
-          "Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time — before financial loss occurs.",
+          "A moonshot project. Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time — before financial loss occurs.",
       },
       { property: "og:title", content: "Veris — Protection before the damage." },
       {
         property: "og:description",
         content:
-          "A whisper-thin titanium ring with on-device AI that detects manipulation in real time.",
+          "Cognitive defense infrastructure for the AI era. A whisper-thin titanium ring with on-device AI.",
       },
     ],
   }),
@@ -32,11 +33,12 @@ function VerisLanding() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Toaster />
+      <StatusBar />
       <Nav />
       <main>
         <Hero />
         <Manifesto />
-        <Pillars />
+        <HowItWorks />
         <Device />
         <Statement />
         <Metrics />
@@ -47,45 +49,52 @@ function VerisLanding() {
   );
 }
 
+/* ---------- STATUS BAR ---------- */
+function StatusBar() {
+  return (
+    <div className="border-b border-border bg-background/80">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
+        <span className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
+          Moonshot 03 · Veris · Classification: Private Beta
+        </span>
+        <span className="hidden md:inline">EST. 2026 · COGNITIVE DEFENSE INFRASTRUCTURE</span>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- NAV ---------- */
 function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 md:px-10">
-        <a href="#" className="flex items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-taupe text-taupe-foreground text-sm font-semibold">V</span>
-          <span className="text-lg font-semibold tracking-tight text-charcoal">Veris</span>
+        <a href="#" className="flex items-center gap-3">
+          <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
+          <span className="font-display text-xl tracking-tight text-ink">Veris</span>
         </a>
-        <nav className="hidden items-center gap-1 md:flex">
-          <NavLink href="#how" active>How it works</NavLink>
-          <NavLink href="#device">The Ring</NavLink>
-          <NavLink href="#early-access">Early Access</NavLink>
+        <nav className="hidden items-center gap-8 md:flex">
+          <NavLink href="#mission">Mission</NavLink>
+          <NavLink href="#science">Science</NavLink>
+          <NavLink href="#device">Device</NavLink>
+          <NavLink href="#early-access">Access</NavLink>
         </nav>
-        <div className="flex items-center gap-3">
-          <button className="hidden text-sm text-muted-foreground hover:text-charcoal sm:inline">
-            Sign in
-          </button>
-          <a
-            href="#early-access"
-            className="inline-flex h-10 items-center rounded-full bg-taupe px-5 text-sm text-taupe-foreground transition-colors hover:bg-charcoal"
-          >
-            Join Early Access
-          </a>
-        </div>
+        <a
+          href="#early-access"
+          className="inline-flex h-9 items-center border border-gold bg-gold px-4 font-mono text-[11px] uppercase tracking-[0.18em] text-primary-foreground transition-colors hover:bg-transparent hover:text-gold"
+        >
+          Secure a Spot
+        </a>
       </div>
     </header>
   );
 }
 
-function NavLink({ href, children, active }: { href: string; children: ReactNode; active?: boolean }) {
+function NavLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <a
       href={href}
-      className={`px-4 py-3 text-sm transition-colors ${
-        active
-          ? "text-charcoal border-b-2 border-taupe"
-          : "text-muted-foreground border-b-2 border-transparent hover:text-charcoal"
-      }`}
+      className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-ink"
     >
       {children}
     </a>
@@ -95,69 +104,99 @@ function NavLink({ href, children, active }: { href: string; children: ReactNode
 /* ---------- HERO ---------- */
 function Hero() {
   return (
-    <section className="border-b border-border bg-background">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24 lg:py-32">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
+    <section className="relative overflow-hidden border-b border-border bg-nebula">
+      <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
+      <div className="relative mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28 lg:py-36">
+        <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-periwinkle-soft px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-periwinkle">
-              <span className="h-1.5 w-1.5 rounded-full bg-periwinkle" />
-              Moonshot Idea 03 • Private Beta • Cognitive Defense System
-            </span>
-            <h1 className="mt-6 text-4xl font-light leading-[1.05] tracking-tight text-charcoal md:text-6xl lg:text-7xl">
+            <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
+              <span className="h-px w-8 bg-gold" />
+              Moonshot Idea 03 · Cognitive Defense System
+            </div>
+            <h1 className="mt-8 font-display text-5xl font-light leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
               Protection before<br />
-              <span className="text-taupe">the damage.</span>
+              <span className="italic text-gold">the damage.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Veris is the first wearable intelligence system designed to detect
-              coercion, manipulation, and scam pressure in real time — before
-              financial loss occurs.
+            <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              Veris is the first wearable intelligence system designed to
+              detect coercion, manipulation, and scam pressure in real time —
+              before financial loss occurs.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <a
                 href="#early-access"
-                className="inline-flex h-12 items-center rounded-full bg-periwinkle px-6 text-base text-white transition-opacity hover:opacity-90"
+                className="inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
               >
-                Join Early Access
+                Join Early Access →
               </a>
               <a
-                href="#how"
-                className="inline-flex h-12 items-center rounded-full border border-taupe px-6 text-base text-taupe transition-colors hover:bg-taupe/10"
+                href="#science"
+                className="inline-flex h-12 items-center border border-ink/30 px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-ink transition-colors hover:border-gold hover:text-gold"
               >
                 See How It Works
               </a>
             </div>
-            <p className="mt-10 text-xs uppercase tracking-[0.22em] text-muted-foreground">
-              127 families • 9 states • on-device AI • private by design
-            </p>
+            <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8 sm:grid-cols-4">
+              <HeroStat label="Status" value="Orbital" />
+              <HeroStat label="Participants" value="127" />
+              <HeroStat label="States" value="9" />
+              <HeroStat label="Mode" value="Private" />
+            </div>
           </div>
           <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-periwinkle-soft blur-3xl opacity-60" />
-            <img
-              src={ringHero}
-              alt="Veris titanium smart ring"
-              width={1024}
-              height={1024}
-              className="relative mx-auto w-full max-w-md"
-            />
+            <CornerFrame className="aspect-square">
+              <div className="absolute inset-0 bg-grid-sm opacity-60" aria-hidden />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.25),transparent_60%)]" aria-hidden />
+              <img
+                src={ringHero}
+                alt="Veris titanium ring"
+                width={1024}
+                height={1024}
+                className="relative mx-auto h-full w-full object-contain p-6"
+              />
+              <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                VRS-01 · 04g · Ti
+              </div>
+              <div className="absolute bottom-3 right-3 font-mono text-[10px] uppercase tracking-[0.22em] text-gold">
+                ◐ Live Telemetry
+              </div>
+            </CornerFrame>
           </div>
         </div>
+        <p className="mt-16 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+          127 families · 9 states · on-device AI · private by design
+        </p>
       </div>
     </section>
+  );
+}
+
+function HeroStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{label}</p>
+      <p className="mt-2 font-display text-2xl font-light text-ink">{value}</p>
+    </div>
   );
 }
 
 /* ---------- MANIFESTO ---------- */
 function Manifesto() {
   return (
-    <section className="border-b border-border bg-card">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
-        <div className="mx-auto max-w-3xl">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">The problem</p>
-          <h2 className="mt-4 text-3xl font-light leading-tight tracking-tight text-charcoal md:text-5xl">
-            Today's attacks do not target systems anymore.<br />
-            <span className="text-taupe">They target human cognition.</span>
-          </h2>
-          <div className="mt-10 space-y-6 text-base leading-relaxed text-charcoal/80 md:text-lg">
+    <section id="mission" className="border-b border-border bg-background">
+      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-32">
+        <div className="grid gap-12 lg:grid-cols-[280px_1fr] lg:gap-20">
+          <aside className="lg:sticky lg:top-28 lg:self-start">
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 01 / Mission</p>
+            <h2 className="mt-4 font-display text-3xl font-light leading-tight text-ink md:text-4xl">
+              The Problem
+            </h2>
+          </aside>
+          <div className="max-w-2xl space-y-8 text-base leading-[1.75] text-muted-foreground md:text-lg">
+            <p className="font-display text-3xl font-light leading-[1.15] text-ink md:text-5xl">
+              Today's attacks do not target systems anymore.{" "}
+              <span className="italic text-gold">They target human cognition.</span>
+            </p>
             <p>
               AI-generated voices, engineered urgency, impersonation, and
               emotional manipulation bypass every security layer built for a
@@ -169,19 +208,17 @@ function Manifesto() {
               but because modern scams exploit trust, fear, and emotional
               pressure faster than people can consciously react.
             </p>
-            <p className="font-medium text-charcoal">
-              Every existing fraud system reacts too late.
-            </p>
+            <PullQuote>Every existing fraud system reacts too late.</PullQuote>
             <p>
               Banks monitor transactions after money moves. Spam filters screen
               calls after the connection is made. Security tools analyze
               compromise after the attack succeeds. None of them understand the
               neurological moment where manipulation actually happens.
             </p>
-            <p className="text-charcoal">
+            <p className="text-ink">
               The scam is already working before the victim realizes it.
             </p>
-            <p className="text-2xl font-light text-charcoal md:text-3xl">
+            <p className="font-display text-2xl font-light text-ink md:text-3xl">
               Veris was built to change that.
             </p>
             <p>
@@ -196,7 +233,7 @@ function Manifesto() {
               conversational patterns linked to impersonation, secrecy,
               emotional pressure, and financial manipulation.
             </p>
-            <p className="text-charcoal">
+            <p className="font-display text-xl text-ink md:text-2xl">
               Body and language are fused together in real time.
             </p>
             <p>
@@ -204,23 +241,21 @@ function Manifesto() {
               detect psychological manipulation before irreversible decisions
               occur.
             </p>
-            <ul className="space-y-1 text-charcoal">
-              <li>No screens.</li>
-              <li>No surveillance.</li>
-              <li>No invasive monitoring.</li>
+            <ul className="space-y-1 font-mono text-sm uppercase tracking-[0.18em] text-ink">
+              <li>— No screens.</li>
+              <li>— No surveillance.</li>
+              <li>— No invasive monitoring.</li>
             </ul>
-            <p className="text-charcoal">
-              Just a quiet pulse when something is wrong.
-            </p>
+            <p className="text-ink">Just a quiet pulse when something is wrong.</p>
             <p>
               When risk escalates, Veris creates a moment of interruption
               before financial damage occurs. If pressure continues rising,
               trusted contacts receive intelligent contextual alerts designed
               to intervene before loss happens.
             </p>
-            <p className="text-xl font-light italic text-taupe md:text-2xl">
+            <PullQuote>
               Because the body reacts before the mind understands.
-            </p>
+            </PullQuote>
           </div>
         </div>
       </div>
@@ -228,53 +263,64 @@ function Manifesto() {
   );
 }
 
-/* ---------- PILLARS / HOW IT WORKS ---------- */
-function Pillars() {
+function PullQuote({ children }: { children: ReactNode }) {
+  return (
+    <blockquote className="border-l-2 border-gold pl-6 font-display text-2xl font-light italic leading-snug text-ink md:text-3xl">
+      {children}
+    </blockquote>
+  );
+}
+
+/* ---------- HOW IT WORKS ---------- */
+function HowItWorks() {
   const items = [
     {
+      n: "01",
       title: "Detect",
       desc: "Continuous biosignal and ambient sensing recognize stress, coercion, and manipulation patterns as they happen.",
-      tone: "bg-card",
     },
     {
+      n: "02",
       title: "Analyze",
       desc: "On-device AI fuses physiological and conversational signals into a real-time cognitive risk score.",
-      tone: "bg-periwinkle-soft",
     },
     {
+      n: "03",
       title: "Intervene",
       desc: "A subtle haptic pulse interrupts engineered urgency and creates a moment of clarity.",
-      tone: "bg-card",
     },
     {
+      n: "04",
       title: "Protect",
       desc: "Trusted contacts receive context-aware alerts before money is lost.",
-      tone: "bg-periwinkle-soft",
     },
   ];
   return (
-    <section id="how" className="border-b border-border">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
-        <div className="max-w-2xl">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">How it works</p>
-          <h2 className="mt-4 text-3xl font-light tracking-tight text-charcoal md:text-5xl">
-            Four quiet steps. One moment of clarity.
+    <section id="science" className="border-b border-border">
+      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
+        <div className="max-w-3xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 02 / Science</p>
+          <h2 className="mt-4 font-display text-4xl font-light leading-tight tracking-tight text-ink md:text-6xl">
+            Four quiet steps. <span className="italic text-gold">One moment of clarity.</span>
           </h2>
         </div>
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid gap-px bg-border md:grid-cols-2 lg:grid-cols-4">
           {items.map((it) => (
-            <article
-              key={it.title}
-              className={`rounded-lg p-6 md:p-8 ${it.tone} transition-transform hover:-translate-y-1`}
+            <CornerFrame
+              key={it.n}
+              className="group bg-background p-8 transition-colors hover:bg-card md:p-10"
             >
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-charcoal">{it.title}</h3>
-                <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+              <div className="flex items-baseline justify-between">
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-gold">{it.n}</span>
+                <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-gold" />
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-charcoal/80">
+              <h3 className="mt-10 font-display text-2xl font-light text-ink md:text-3xl">
+                {it.title}
+              </h3>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {it.desc}
               </p>
-            </article>
+            </CornerFrame>
           ))}
         </div>
       </div>
@@ -284,75 +330,87 @@ function Pillars() {
 
 /* ---------- DEVICE ---------- */
 function Device() {
-  const features = [
-    "7-day battery life",
-    "On-device AI inference",
-    "4-gram titanium shell",
-    "Water resistant",
-    "Private by default",
-    "Audio processed locally, discarded instantly",
+  const specs = [
+    { k: "Battery", v: "7 days" },
+    { k: "Mass", v: "4 grams" },
+    { k: "Shell", v: "Titanium" },
+    { k: "Compute", v: "On-device" },
+    { k: "Water", v: "Resistant" },
+    { k: "Audio", v: "Local · Discarded" },
   ];
   return (
     <section id="device" className="border-b border-border bg-card">
-      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 py-16 md:px-10 md:py-24 lg:grid-cols-2 lg:items-center">
-        <div className="relative overflow-hidden rounded-lg bg-background p-8 md:p-12">
-          <img
-            src={ringDevice}
-            alt="Veris ring detail"
-            width={1024}
-            height={1024}
-            loading="lazy"
-            className="mx-auto aspect-square w-full max-w-md object-contain"
-          />
-          <p className="mt-6 text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            VRS-01 · Brushed Titanium
-          </p>
-        </div>
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">The Ring</p>
-          <h2 className="mt-4 text-3xl font-light tracking-tight text-charcoal md:text-5xl">
-            A whisper-thin titanium ring engineered for continuous wear.
-          </h2>
-          <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-            No conversations are stored. No cloud recordings exist. Audio is
-            processed locally and discarded instantly.
-          </p>
-          <p className="mt-3 text-base font-medium text-charcoal">
-            Protection without surveillance.
-          </p>
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-            {features.map((f) => (
-              <li key={f} className="flex items-start gap-3 text-sm text-charcoal">
-                <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-sage/15 text-sage">
-                  <Check className="h-3 w-3" />
-                </span>
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
+      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+          <CornerFrame className="relative aspect-square overflow-hidden bg-background">
+            <div className="absolute inset-0 bg-grid-sm opacity-70" aria-hidden />
+            <div className="absolute inset-x-6 top-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              <span>VRS-01</span>
+              <span className="text-gold">Brushed Ti</span>
+            </div>
+            <img
+              src={ringDevice}
+              alt="Veris ring blueprint"
+              width={1024}
+              height={1024}
+              loading="lazy"
+              className="relative mx-auto h-full w-full object-contain p-12"
+            />
+            <div className="absolute inset-x-6 bottom-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              <span>Ø 22.4mm</span>
+              <span>04g</span>
+            </div>
+          </CornerFrame>
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 03 / Device</p>
+            <h2 className="mt-4 font-display text-4xl font-light leading-tight tracking-tight text-ink md:text-6xl">
+              A whisper-thin titanium ring engineered for{" "}
+              <span className="italic text-gold">continuous wear.</span>
+            </h2>
+            <p className="mt-8 text-base leading-relaxed text-muted-foreground md:text-lg">
+              No conversations are stored. No cloud recordings exist. Audio is
+              processed locally and discarded instantly.
+            </p>
+            <p className="mt-4 font-display text-xl font-light italic text-ink md:text-2xl">
+              Protection without surveillance.
+            </p>
+            <dl className="mt-12 grid grid-cols-2 gap-px border border-border bg-border">
+              {specs.map((s) => (
+                <div key={s.k} className="bg-background p-5">
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    {s.k}
+                  </dt>
+                  <dd className="mt-2 font-display text-lg font-light text-ink">{s.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------- BIG STATEMENT ---------- */
+/* ---------- STATEMENT ---------- */
 function Statement() {
   return (
-    <section className="border-b border-border bg-background">
-      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-32">
+    <section className="relative overflow-hidden border-b border-border">
+      <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
+      <div className="absolute inset-0 bg-nebula" aria-hidden />
+      <div className="relative mx-auto max-w-[1440px] px-4 py-28 md:px-10 md:py-40">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sage">A new layer</p>
-          <h2 className="mt-6 text-4xl font-light leading-tight tracking-tight text-charcoal md:text-6xl">
-            The future of security is <span className="text-taupe">human-aware.</span>
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 04 / Thesis</p>
+          <h2 className="mt-8 font-display text-5xl font-light leading-[1.05] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
+            The future of security is{" "}
+            <span className="italic text-gold">human-aware.</span>
           </h2>
-          <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mx-auto mt-10 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             As AI-generated manipulation scales globally, defending
             infrastructure alone will no longer be enough. The next generation
             of security systems must understand human vulnerability in real
             time.
           </p>
-          <p className="mt-6 text-lg text-charcoal md:text-xl">
+          <p className="mt-8 font-display text-2xl font-light text-ink md:text-3xl">
             Veris is building that layer.
           </p>
         </div>
@@ -370,13 +428,21 @@ function Metrics() {
     { value: "1st", label: "Wearable built for manipulation awareness" },
   ];
   return (
-    <section className="border-b border-border bg-card">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s) => (
-            <div key={s.label} className="border-l-2 border-taupe pl-6">
-              <dt className="text-4xl font-light text-charcoal md:text-5xl">{s.value}</dt>
-              <dd className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.label}</dd>
+    <section className="border-b border-border bg-background">
+      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 05 / Field Data</p>
+        <div className="mt-12 grid gap-px bg-border md:grid-cols-2 lg:grid-cols-4">
+          {stats.map((s, i) => (
+            <div key={s.label} className="bg-background p-8 md:p-10">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                FIG. {String(i + 1).padStart(2, "0")}
+              </div>
+              <div className="mt-6 font-display text-5xl font-light text-gold md:text-6xl">
+                {s.value}
+              </div>
+              <div className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                {s.label}
+              </div>
             </div>
           ))}
         </div>
@@ -400,7 +466,7 @@ function EarlyAccess() {
       if (res.duplicate) {
         toast.success("You're already on the list — we'll be in touch.");
       } else {
-        toast.success("You're in. Welcome to Veris.");
+        toast.success("You're in. Welcome to the Veris private beta.");
       }
       setForm({ name: "", email: "", team: "" });
     } catch (err) {
@@ -413,20 +479,21 @@ function EarlyAccess() {
 
   return (
     <section id="early-access" className="bg-background">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 md:px-10 md:py-24">
-        <div className="mx-auto max-w-3xl rounded-lg bg-taupe p-8 text-taupe-foreground md:p-12">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/60">Final call</p>
-          <h2 className="mt-4 text-3xl font-light tracking-tight md:text-5xl">
-            Give them independence.<br />Not vulnerability.
+      <div className="mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28">
+        <CornerFrame className="mx-auto max-w-3xl bg-card p-8 md:p-14">
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 06 / Access</p>
+          <h2 className="mt-4 font-display text-4xl font-light leading-tight tracking-tight text-ink md:text-6xl">
+            Give them independence.<br />
+            <span className="italic text-gold">Not vulnerability.</span>
           </h2>
-          <p className="mt-4 max-w-xl text-base text-white/70">
+          <p className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
             Join the private beta shaping the future of cognitive defense
             systems.
           </p>
-          <form onSubmit={onSubmit} className="mt-10 grid gap-4">
-            <div className="grid gap-4 md:grid-cols-2">
+          <form onSubmit={onSubmit} className="mt-12 grid gap-5">
+            <div className="grid gap-5 md:grid-cols-2">
               <Field label="Name" required>
-                <DarkInput
+                <LabInput
                   required
                   maxLength={100}
                   value={form.name}
@@ -434,7 +501,7 @@ function EarlyAccess() {
                 />
               </Field>
               <Field label="Email" required>
-                <DarkInput
+                <LabInput
                   required
                   type="email"
                   maxLength={255}
@@ -444,29 +511,32 @@ function EarlyAccess() {
               </Field>
             </div>
             <Field label="Team or organization (optional)">
-              <DarkInput
+              <LabInput
                 maxLength={150}
                 value={form.team}
                 onChange={(e) => setForm({ ...form, team: e.target.value })}
               />
             </Field>
-            <div className="mt-2 flex flex-wrap gap-3">
+            <div className="mt-4 flex flex-wrap gap-3">
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex h-12 items-center justify-center rounded-full bg-periwinkle px-6 text-base text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                className="inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
               >
-                {loading ? "Joining..." : "Join Early Access"}
+                {loading ? "Securing..." : "Join Early Access →"}
               </button>
               <a
                 href="mailto:research@veris.systems"
-                className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 px-6 text-base text-white transition-colors hover:bg-white/10"
+                className="inline-flex h-12 items-center border border-ink/30 px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-ink transition-colors hover:border-gold hover:text-gold"
               >
                 Request Research Access
               </a>
             </div>
           </form>
-        </div>
+          <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            Submissions reviewed weekly · No spam · Beta cohorts open quarterly
+          </p>
+        </CornerFrame>
       </div>
     </section>
   );
@@ -483,20 +553,20 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-sm font-semibold text-white/85">
+      <span className="block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
         {label}
-        {required && <span className="text-periwinkle-soft"> *</span>}
+        {required && <span className="text-gold"> *</span>}
       </span>
       <div className="mt-2">{children}</div>
     </label>
   );
 }
 
-function DarkInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className="h-10 w-full rounded-lg bg-charcoal/40 px-5 text-base text-white placeholder:text-white/50 outline-none ring-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] focus:shadow-[inset_0_2px_0_0_rgba(255,255,255,0.12)]"
+      className="h-11 w-full border-b border-border bg-transparent px-0 font-display text-lg text-ink placeholder:text-muted-foreground/50 outline-none transition-colors focus:border-gold"
     />
   );
 }
@@ -505,13 +575,13 @@ function DarkInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-4 px-4 py-10 md:flex-row md:items-center md:px-10">
-        <div className="flex items-center gap-2">
-          <span className="grid h-7 w-7 place-items-center rounded-full bg-taupe text-taupe-foreground text-xs font-semibold">V</span>
-          <span className="text-sm text-charcoal">Veris</span>
+      <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-4 py-12 md:flex-row md:items-center md:px-10">
+        <div className="flex items-center gap-3">
+          <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
+          <span className="font-display text-base text-ink">Veris</span>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Veris © {new Date().getFullYear()} • Cognitive defense infrastructure for the AI era.
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          Veris © {new Date().getFullYear()} · Cognitive Defense Infrastructure for the AI Era
         </p>
       </div>
     </footer>

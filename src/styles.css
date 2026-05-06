@@ -5,11 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 24px;
-  --radius-2xl: 48px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 12px;
+  --radius-2xl: 24px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -29,49 +29,47 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-taupe: var(--taupe);
-  --color-taupe-foreground: var(--taupe-foreground);
-  --color-cream: var(--cream);
-  --color-sage: var(--sage);
-  --color-periwinkle: var(--periwinkle);
-  --color-periwinkle-soft: var(--periwinkle-soft);
-  --color-charcoal: var(--charcoal);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-paper: var(--paper);
+  --color-paper-foreground: var(--paper-foreground);
+  --color-ink: var(--ink);
+  --color-grid: var(--grid-line);
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-display: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Fraunces", "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 :root {
-  --radius: 0.5rem;
-  /* Slate Blue / Champagne palette */
-  --background: oklch(0.95 0.012 80);              /* Warm Ivory #F4EFE6 */
-  --foreground: oklch(0.32 0.04 230);              /* Deep Slate Blue #1B3A4B */
-  --card: oklch(0.98 0.006 80);
-  --card-foreground: oklch(0.32 0.04 230);
-  --popover: oklch(0.98 0.006 80);
-  --popover-foreground: oklch(0.32 0.04 230);
-  --primary: oklch(0.32 0.04 230);                 /* Deep Slate Blue #1B3A4B */
-  --primary-foreground: oklch(0.95 0.012 80);
-  --secondary: oklch(0.6 0.05 220);                /* Muted Teal Blue #5B8C99 */
-  --secondary-foreground: oklch(0.98 0.006 80);
-  --muted: oklch(0.9 0.008 240);
-  --muted-foreground: oklch(0.62 0.02 240);        /* Dusty Blue Gray #8A9BA8 */
-  --accent: oklch(0.76 0.09 80);                   /* Champagne Gold #C9A46A */
-  --accent-foreground: oklch(0.32 0.04 230);
+  --radius: 0.25rem;
+  /* Moonshot lab palette: deep navy, ivory paper, champagne gold */
+  --background: oklch(0.16 0.025 255);              /* Deep navy near-black */
+  --foreground: oklch(0.96 0.005 80);               /* Off-white ivory */
+  --card: oklch(0.20 0.028 255);                    /* Slightly raised navy */
+  --card-foreground: oklch(0.96 0.005 80);
+  --popover: oklch(0.20 0.028 255);
+  --popover-foreground: oklch(0.96 0.005 80);
+  --primary: oklch(0.78 0.10 80);                   /* Champagne gold #C9A46A */
+  --primary-foreground: oklch(0.16 0.025 255);
+  --secondary: oklch(0.55 0.04 230);                /* Muted teal */
+  --secondary-foreground: oklch(0.96 0.005 80);
+  --muted: oklch(0.24 0.02 255);
+  --muted-foreground: oklch(0.66 0.02 240);
+  --accent: oklch(0.78 0.10 80);
+  --accent-foreground: oklch(0.16 0.025 255);
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.88 0.012 240);
-  --input: oklch(0.88 0.012 240);
-  --ring: oklch(0.76 0.09 80);
+  --border: oklch(0.96 0.005 80 / 0.10);
+  --input: oklch(0.96 0.005 80 / 0.12);
+  --ring: oklch(0.78 0.10 80);
 
-  /* Semantic aliases used across the page */
-  --taupe: oklch(0.32 0.04 230);                   /* Deep Slate Blue */
-  --taupe-foreground: oklch(0.95 0.012 80);        /* Warm Ivory */
-  --cream: oklch(0.95 0.012 80);
-  --sage: oklch(0.6 0.05 220);                     /* Muted Teal Blue */
-  --periwinkle: oklch(0.76 0.09 80);               /* Champagne Gold (primary CTA) */
-  --periwinkle-soft: oklch(0.92 0.04 80);          /* Soft champagne tint */
-  --charcoal: oklch(0.32 0.04 230);                /* Deep Slate Blue */
+  /* Semantic aliases */
+  --gold: oklch(0.78 0.10 80);
+  --gold-soft: oklch(0.78 0.10 80 / 0.15);
+  --paper: oklch(0.96 0.008 80);                    /* Ivory paper */
+  --paper-foreground: oklch(0.16 0.025 255);
+  --ink: oklch(0.96 0.005 80);
+  --grid-line: oklch(0.96 0.005 80 / 0.06);
 }
 
 @layer base {
@@ -81,5 +79,25 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
   }
+}
+
+/* Blueprint grid overlay */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.bg-grid-sm {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.bg-nebula {
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 30%, oklch(0.78 0.10 80 / 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 20% 80%, oklch(0.55 0.10 260 / 0.18), transparent 60%);
 }
