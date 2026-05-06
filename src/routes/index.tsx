@@ -130,7 +130,7 @@ function LiveConsole() {
   const risk = useLiveSignal(0.12, 0.05, 1100);
   const now = useNow();
   return (
-    <div className="pointer-events-none fixed bottom-4 left-4 z-40 hidden border border-gold/30 bg-background/85 p-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur md:block">
+    <div className="pointer-events-none fixed bottom-4 right-4 z-40 hidden border border-gold/30 bg-background/85 p-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur lg:block">
       <div className="mb-2 flex items-center gap-2 text-gold">
         <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
         VERIS · LIVE
