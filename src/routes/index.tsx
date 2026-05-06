@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent, type ReactNode } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowUpRight } from "lucide-react";
 import { toast } from "sonner";
@@ -8,6 +14,43 @@ import { CornerFrame } from "@/components/landing/Frame";
 import ringHero from "@/assets/ring-hero.jpg";
 import ringDevice from "@/assets/ring-device.jpg";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
+
+/* ---------- HOOKS ---------- */
+function useNow() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  return now;
+}
+
+function useLiveSignal(base: number, jitter: number, interval = 1500) {
+  const [v, setV] = useState(base);
+  useEffect(() => {
+    const t = setInterval(() => {
+      setV(base + (Math.random() - 0.5) * jitter * 2);
+    }, interval);
+    return () => clearInterval(t);
+  }, [base, jitter, interval]);
+  return v;
+}
+
+function useInView<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || seen) return;
+    const io = new IntersectionObserver(
+      ([e]) => e.isIntersecting && setSeen(true),
+      { threshold: 0.3 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [seen]);
+  return [ref, seen] as const;
+}
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
