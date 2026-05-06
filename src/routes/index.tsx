@@ -800,6 +800,16 @@ function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 function Footer() {
   return (
     <footer className="border-t border-border">
+      <div className="border-b border-border">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:px-10">
+          <span>BUILD 2026.05.06</span>
+          <span>NODE veris-01</span>
+          <span className="flex items-center gap-2">
+            SIGNAL <span className="text-gold">◉◉◉</span><span className="opacity-30">○</span>
+          </span>
+          <span className="hidden md:inline">UPLINK · STABLE</span>
+        </div>
+      </div>
       <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-4 py-12 md:flex-row md:items-center md:px-10">
         <div className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-mono text-xs">V</span>
