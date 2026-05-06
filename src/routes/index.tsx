@@ -464,9 +464,6 @@ function Statement() {
             Defending infrastructure is no longer enough. Veris is building
             the layer that understands human vulnerability in real time.
           </p>
-          <p className="mt-8 font-display text-2xl font-light text-ink md:text-3xl">
-            Veris is building that layer.
-          </p>
         </div>
       </div>
     </section>
