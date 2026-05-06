@@ -491,13 +491,14 @@ function Device() {
 
 /* ---------- STATEMENT ---------- */
 function Statement() {
+  const ref = useReveal<HTMLDivElement>();
   return (
     <section className="relative overflow-hidden vignette">
       <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
       <div className="absolute inset-0 bg-nebula" aria-hidden />
       <Constellation />
       <div className="relative mx-auto max-w-[1440px] px-4 py-28 md:px-10 md:py-40">
-        <div className="mx-auto max-w-4xl text-center">
+        <div ref={ref} className="reveal-scale mx-auto max-w-4xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">§ 04 / Thesis</p>
           <h2 className="mt-8 font-display text-5xl font-light leading-[1.05] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
             The future of security is{" "}
