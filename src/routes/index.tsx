@@ -247,24 +247,33 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 /* ---------- HERO ---------- */
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border bg-nebula noise vignette">
-      <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-      <div className="relative mx-auto max-w-[1440px] px-4 py-20 md:px-10 md:py-28 lg:py-36">
-        <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
-          <div className="rise">
-            <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
-              <span className="h-px w-8 bg-gold" />
+    <section className="relative overflow-hidden bg-nebula noise">
+      <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 70% 45%, oklch(0.78 0.10 80 / 0.22), transparent 55%)",
+        }}
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" aria-hidden />
+      <div className="relative mx-auto max-w-[1440px] px-4 pt-16 md:px-10 md:pt-24 lg:pt-32">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+          <div className="rise order-2 lg:order-1">
+            <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
               Moonshot 03 — Cognitive Defense
             </div>
-            <h1 className="mt-8 font-display text-5xl font-light leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
+            <h1 className="mt-6 font-display text-[2.75rem] font-light leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[5.5rem]">
               Protection before<br />
               <span className="italic text-gold">the damage.</span>
             </h1>
-            <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:mt-8 md:text-lg">
               A wearable intelligence system that detects coercion and scam
               pressure in real time — before loss occurs.
             </p>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-6 md:mt-10">
               <a
                 href="#early-access"
                 className="group inline-flex h-12 items-center bg-gold px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
@@ -274,21 +283,23 @@ function Hero() {
               </a>
               <a
                 href="#science"
-                className="inline-flex h-12 items-center border border-ink/30 px-7 font-mono text-[12px] uppercase tracking-[0.2em] text-ink transition-colors hover:border-gold hover:text-gold"
+                className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-ink transition-colors hover:text-gold"
               >
-                See How It Works
+                See how it works
+                <span className="transition-transform group-hover:translate-y-0.5">↓</span>
               </a>
             </div>
-            <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8">
+            <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-6 md:mt-14 md:pt-8">
               <HeroStat label="Families" value="127" />
               <HeroStat label="States" value="9" />
             </div>
           </div>
-          <div className="relative">
-            <CornerFrame className="aspect-square">
-              <div className="absolute inset-0 bg-grid-sm opacity-60" aria-hidden />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,oklch(0.78_0.10_80/0.28),transparent_60%)]" aria-hidden />
-              <div className="absolute inset-[18%] grid place-items-center" aria-hidden>
+          <div className="relative order-1 lg:order-2">
+            <div className="pointer-events-none absolute inset-0 -z-10">
+              <div className="absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.78_0.10_80/0.32),transparent_60%)] blur-2xl" />
+            </div>
+            <div className="relative aspect-square">
+              <div className="absolute inset-[15%] hidden place-items-center md:grid" aria-hidden>
                 <div className="pulse-ring" />
                 <div className="pulse-ring" style={{ animationDelay: "1.3s" }} />
                 <div className="pulse-ring" style={{ animationDelay: "2.6s" }} />
@@ -298,15 +309,14 @@ function Hero() {
                 alt="Veris titanium ring"
                 width={1024}
                 height={1024}
-                className="float-slow relative mx-auto h-full w-full object-contain p-6"
+                className="float-slow relative mx-auto h-full w-full object-contain"
+                style={{ filter: "drop-shadow(0 30px 60px oklch(0.78 0.10 80 / 0.25))" }}
               />
-              <div className="scan-line" aria-hidden />
-              <Callout pos="tl" label="01 · HRV" />
-              <Callout pos="br" label="04 · IMU" />
-              <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                VRS-01 · 04g · Ti
+              <div className="hidden md:block">
+                <Callout pos="tl" label="01 · HRV" />
+                <Callout pos="br" label="04 · IMU" />
               </div>
-            </CornerFrame>
+            </div>
           </div>
         </div>
       </div>
@@ -314,28 +324,6 @@ function Hero() {
   );
 }
 
-function Callout({
-  pos,
-  label,
-}: {
-  pos: "tl" | "tr" | "bl" | "br";
-  label: string;
-}) {
-  const map = {
-    tl: "top-6 left-6",
-    tr: "top-6 right-6",
-    bl: "bottom-10 left-6",
-    br: "bottom-10 right-6",
-  } as const;
-  return (
-    <div
-      className={`absolute ${map[pos]} flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground`}
-    >
-      <span className="h-1 w-1 rounded-full bg-gold" />
-      {label}
-    </div>
-  );
-}
 
 function HeroStat({ label, value }: { label: string; value: string }) {
   return (
