@@ -149,5 +149,21 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
   }
+}
+
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+.bg-grid {
+  background-image:
+    linear-gradient(to right, oklch(0.97 0.01 250 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.97 0.01 250 / 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.nebula {
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 45%, oklch(0.55 0.15 220 / 0.45), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 30% 60%, oklch(0.4 0.12 240 / 0.35), transparent 70%);
 }
