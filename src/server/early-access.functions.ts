@@ -11,6 +11,7 @@ export const submitEarlyAccess = createServerFn({ method: "POST" })
   .inputValidator((input) => Schema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("early_access_signups").insert({
       name: data.name,
       email: data.email,
       team: data.team ? data.team : null,
