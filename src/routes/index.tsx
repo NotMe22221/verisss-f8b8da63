@@ -355,7 +355,7 @@ function ScienceRow({
       className="reveal grid grid-cols-12 items-baseline gap-6 py-12 md:gap-10 md:py-20"
     >
       <div className="col-span-12 flex items-center gap-4 md:col-span-1">
-        <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold">{n}</span>
+        <span className="label-italic text-gold">{n}</span>
       </div>
       <div className="col-span-12 md:col-span-5">
         <h3 className="font-display text-5xl font-extralight italic leading-none tracking-tight text-ink md:text-[7rem]">
