@@ -196,7 +196,7 @@ function Nav() {
         <a href="#" className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-display italic text-sm">V</span>
           <span className="font-display text-xl tracking-tight text-ink">Veris</span>
-          <span className="ml-3 hidden items-center gap-2 border-l border-border pl-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
+          <span className="ml-3 hidden items-center gap-2 border-l border-border pl-3 label-italic text-muted-foreground md:flex">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
             Moonshot 03 · Private Beta
           </span>
