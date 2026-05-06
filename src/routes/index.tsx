@@ -150,7 +150,6 @@ function VerisLanding() {
         <Science />
         <Device />
         <Statement />
-        <Metrics />
         <EarlyAccess />
       </main>
       <Footer />
