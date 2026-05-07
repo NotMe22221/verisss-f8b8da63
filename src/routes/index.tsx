@@ -95,7 +95,7 @@ function HeroSection() {
             <br />
             the damage.
           </h1>
-          <p className="text-[#1B3A4B]/70 text-base md:text-lg max-w-md mb-8 leading-relaxed">
+          <p className="text-[#1B3A4B] text-base md:text-lg max-w-md mb-8 leading-relaxed font-medium">
             Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time — before financial loss occurs.
           </p>
           <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
