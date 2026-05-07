@@ -1,521 +1,343 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  useState,
-  useEffect,
-  useRef,
-  type FormEvent,
-  type ReactNode,
-} from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
-import ringHero from "@/assets/ring-hero-cinematic.jpg";
-import ringDevice from "@/assets/ring-device-studio.jpg";
-import { submitEarlyAccess } from "@/lib/early-access.functions";
-
-/* ---------- HOOKS ---------- */
-function useReveal<T extends HTMLElement>(threshold = 0.15) {
-  const ref = useRef<T | null>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          el.classList.add("in");
-          io.disconnect();
-        }
-      },
-      { threshold },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [threshold]);
-  return ref;
-}
-
-function useInView<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [seen, setSeen] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || seen) return;
-    const io = new IntersectionObserver(
-      ([e]) => e.isIntersecting && setSeen(true),
-      { threshold: 0.3 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [seen]);
-  return [ref, seen] as const;
-}
+import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  component: VerisLanding,
+  component: HaloLanding,
   head: () => ({
     meta: [
-      { title: "Veris — Cognitive defense for the AI era" },
+      { title: "Halo — Your Wealth Works" },
       {
         name: "description",
         content:
-          "A titanium ring with on-device AI that detects coercion in real time and intervenes before financial loss.",
+          "USD Halo is an automated, reward-powered digital dollar built for native passive earnings and effortless connection into DeFi.",
       },
-      { property: "og:title", content: "Veris — Protection before the damage." },
-      {
-        property: "og:description",
-        content:
-          "Cognitive defense infrastructure. A wearable that reads manipulation as it happens.",
-      },
-      { property: "og:image", content: ringHero },
-      { name: "twitter:image", content: ringHero },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
 
-function VerisLanding() {
+/* ---------- LOGO ---------- */
+function LogoIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <div className="relative min-h-screen bg-background text-foreground">
-      <Toaster />
-      <Nav />
-      <main>
-        <Hero />
-        <Mission />
-        <HowItWorks />
-        <Device />
-        <Intervention />
-        <Numbers />
-        <EarlyAccess />
-      </main>
-      <Footer />
+    <svg
+      viewBox="0 0 256 256"
+      className={className}
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M 128.005 191.173 C 128.448 156.208 156.93 128 192 128 L 192 64 L 128 64 C 128 99.346 99.346 128 64 128 L 64 192 L 128 192 Z M 192 256 L 64 256 C 28.654 256 0 227.346 0 192 L 0 64 L 64 64 L 64 0 L 192 0 C 227.346 0 256 28.654 256 64 L 256 192 L 192 192 Z" />
+    </svg>
+  );
+}
+
+/* ---------- NAVBAR ---------- */
+function Navbar() {
+  const links = ["Network", "Ecosystem", "Rewards", "Help", "News"];
+  return (
+    <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-5">
+      <div className="max-w-[88rem] mx-auto flex items-center justify-between">
+        <a href="#" className="flex items-center gap-2 text-black">
+          <LogoIcon className="w-7 h-7" />
+          <span className="text-2xl font-medium tracking-tight">Halo</span>
+        </a>
+        <div className="hidden md:flex items-center gap-8">
+          {links.map((l) => (
+            <a
+              key={l}
+              href="#"
+              className="text-base text-gray-700 hover:text-black font-medium transition-colors duration-200"
+            >
+              {l}
+            </a>
+          ))}
+        </div>
+        <button className="bg-black text-white text-base font-medium px-7 py-2.5 rounded-full hover:bg-gray-800 transition-colors duration-200">
+          Open Wallet
+        </button>
+      </div>
+    </nav>
+  );
+}
+
+/* ---------- BRAND MARQUEE (hero) ---------- */
+const heroBrands: Array<{ name: string; style: React.CSSProperties }> = [
+  { name: "Stripe", style: { fontFamily: "Georgia, serif", fontWeight: 700, letterSpacing: "-0.02em", fontSize: 15 } },
+  { name: "COINBASE", style: { fontFamily: "Arial, sans-serif", fontWeight: 900, letterSpacing: "0.08em", fontSize: 13, textTransform: "uppercase" } },
+  { name: "Uniswap", style: { fontFamily: "'Trebuchet MS', sans-serif", fontWeight: 600, letterSpacing: "0.01em", fontSize: 15, fontStyle: "italic" } },
+  { name: "AAVE", style: { fontFamily: "'Courier New', monospace", fontWeight: 700, letterSpacing: "0.12em", fontSize: 13, textTransform: "uppercase" } },
+  { name: "Compound", style: { fontFamily: "Palatino, 'Book Antiqua', serif", fontWeight: 400, letterSpacing: "-0.01em", fontSize: 16 } },
+  { name: "MakerDAO", style: { fontFamily: "Impact, 'Arial Narrow', sans-serif", fontWeight: 400, letterSpacing: "0.04em", fontSize: 14 } },
+  { name: "Chainlink", style: { fontFamily: "Verdana, sans-serif", fontWeight: 700, letterSpacing: "-0.03em", fontSize: 13 } },
+];
+
+function HeroMarquee() {
+  return (
+    <div className="mt-24 w-full max-w-md overflow-hidden">
+      <style>{`
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-track { display: flex; width: max-content; animation: marquee 22s linear infinite; }
+      `}</style>
+      <div className="marquee-track">
+        {[...heroBrands, ...heroBrands].map((b, i) => (
+          <span
+            key={i}
+            className="mx-7 shrink-0 text-black/60 whitespace-nowrap"
+            style={b.style}
+          >
+            {b.name}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
 
-/* ---------- NAV ---------- */
-function Nav() {
-  return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-      <div className="container-x flex h-14 items-center justify-between md:h-16">
-        <a href="#" className="flex items-center gap-2">
-          <span className="grid h-7 w-7 place-items-center rounded-full border border-foreground/40 text-[13px] font-semibold tracking-tight">V</span>
-          <span className="text-[15px] font-semibold tracking-tight">Veris</span>
-        </a>
-        <nav className="hidden items-center gap-9 md:flex">
-          <NavLink href="#mission">Mission</NavLink>
-          <NavLink href="#how">How it works</NavLink>
-          <NavLink href="#device">Device</NavLink>
-          <NavLink href="#access">Access</NavLink>
-        </nav>
-        <a href="#access" className="btn-primary !h-9 !px-4 text-[13px]">
-          Request access
-        </a>
-      </div>
-    </header>
-  );
-}
-function NavLink({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <a href={href} className="text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground">
-      {children}
-    </a>
-  );
-}
-
 /* ---------- HERO ---------- */
-function Hero() {
+function HeroSection() {
   return (
-    <section className="relative isolate overflow-hidden bg-black text-[#F4EFE6]">
-      <div className="relative h-screen min-h-[640px] w-full">
+    <section className="flex-1 px-6 pt-20 pb-6 flex items-end">
+      <div
+        className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto"
+        style={{ height: "calc(100vh - 96px)" }}
+      >
         <video
           autoPlay
-          loop
           muted
+          loop
           playsInline
-          preload="auto"
-          className="absolute inset-0 z-0 h-full w-full object-cover"
+          className="object-cover absolute inset-0 w-full h-full"
         >
           <source
-            src="https://res.cloudinary.com/dfonotyfb/video/upload/v1775585556/dds3_1_rqhg7x.mp4"
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4"
             type="video/mp4"
           />
         </video>
-        {/* gradient legibility wash */}
-        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black via-black/50 to-black/20" />
-        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-black/70 via-transparent to-transparent" />
-
-        <div className="container-x relative z-10 flex h-full flex-col justify-end pb-16 md:pb-24">
-          <p className="eyebrow mb-5 !text-[#C9A46A]">Veris · Cognitive Defense</p>
-          <h1 className="display-xl max-w-[14ch]">
-            Protection before<br />the damage.
+        <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36">
+          <h1
+            className="text-black text-5xl md:text-6xl font-medium leading-tight max-w-xl mb-4"
+            style={{ letterSpacing: "-0.04em" }}
+          >
+            Your Wealth
+            <br />
+            Works
           </h1>
-          <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-[#F4EFE6]/70 md:text-lg">
-            A titanium ring with on-device AI that reads coercion as it happens — and intervenes before money moves.
+          <p
+            className="text-black/70 text-base md:text-lg max-w-md mb-8 leading-relaxed"
+            style={{ fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif" }}
+          >
+            An automated, reward-powered digital dollar built for native passive
+            earnings and effortless connection into DeFi.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a href="#access" className="inline-flex h-11 items-center gap-2 rounded-full bg-[#C9A46A] px-5 text-[14px] font-medium text-[#1B3A4B] transition-colors hover:bg-[#d4b27a]">
-              Request access
-              <span aria-hidden>→</span>
-            </a>
-            <a href="#how" className="inline-flex h-11 items-center gap-2 rounded-full border border-[#F4EFE6]/30 px-5 text-[14px] font-medium text-[#F4EFE6] transition-colors hover:border-[#F4EFE6]">
-              See how it works
-            </a>
-          </div>
+          <button className="inline-flex items-center gap-3 bg-black text-white text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200">
+            Join us
+            <span className="bg-white rounded-full p-2">
+              <ArrowRight className="w-5 h-5 text-black" />
+            </span>
+          </button>
+          <HeroMarquee />
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------- MISSION (paper) ---------- */
-function Mission() {
-  const ref = useReveal<HTMLDivElement>();
+/* ---------- INFO SECTION ---------- */
+function InfoSection() {
   return (
-    <section id="mission" className="paper section">
-      <div className="container-x">
-        <div ref={ref} className="reveal mx-auto max-w-4xl">
-          <p className="eyebrow">Mission</p>
-          <h2 className="display-lg mt-6 text-[--paper-foreground]">
-            Today's attacks no longer target systems.
-            <span className="opacity-50"> They target human cognition.</span>
-          </h2>
-          <p className="mt-8 max-w-2xl body-lg">
-            Synthetic voices. Engineered urgency. Impersonation that bypasses every security layer built for a slower world. Veris is the first wearable built to defend the human in the loop.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- HOW IT WORKS ---------- */
-function HowItWorks() {
-  const steps = [
-    { n: "01", title: "Detect", body: "Continuous biosignal sensing reads autonomic stress as it happens — HRV, EDA, micro-tension." },
-    { n: "02", title: "Decide", body: "On-device AI fuses physiology with conversation context into a real-time risk score. Nothing leaves the ring." },
-    { n: "03", title: "Defend", body: "A quiet haptic breaks engineered urgency. Trusted contacts are alerted before money moves." },
-  ];
-  const ref = useReveal<HTMLDivElement>();
-  return (
-    <section id="how" className="section">
-      <div className="container-x">
-        <div className="max-w-3xl">
-          <p className="eyebrow">How it works</p>
-          <h2 className="display-lg mt-6">Three steps. Under one second.</h2>
-        </div>
-        <div ref={ref} className="reveal mt-16 grid gap-px bg-border md:mt-24 md:grid-cols-3">
-          {steps.map((s) => (
-            <div key={s.n} className="bg-background p-8 md:p-10">
-              <div className="flex items-baseline gap-3">
-                <span className="text-[12px] font-mono text-muted-foreground">{s.n}</span>
-                <span className="hairline flex-1" />
-              </div>
-              <h3 className="display-md mt-8">{s.title}</h3>
-              <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-muted-foreground">
-                {s.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- DEVICE ---------- */
-function Device() {
-  const ref = useReveal<HTMLDivElement>();
-  const specs = [
-    ["Material", "Aerospace titanium"],
-    ["Weight", "4 grams"],
-    ["Battery", "7-day continuous"],
-    ["Compute", "On-device NPU"],
-    ["Sensors", "PPG · EDA · IMU · mic"],
-    ["Privacy", "Local-only · no cloud"],
-  ];
-  return (
-    <section id="device" className="section border-t border-border">
-      <div className="container-x">
-        <div ref={ref} className="reveal grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-card">
-            <img
-              src={ringDevice}
-              alt="Veris ring, three-quarter view"
-              width={1080}
-              height={1350}
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          </div>
+    <section className="bg-[#F5F5F5] px-6 py-24">
+      <div className="max-w-[88rem] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-start">
           <div>
-            <p className="eyebrow">Device</p>
-            <h2 className="display-lg mt-6">Engineered for continuous wear.</h2>
-            <p className="mt-6 max-w-md body-lg">
-              Titanium shell. Sensor band integrated on the inner surface. All inference runs locally — audio is processed and discarded.
-            </p>
-            <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6">
-              {specs.map(([k, v]) => (
-                <div key={k}>
-                  <dt className="eyebrow">{k}</dt>
-                  <dd className="mt-2 text-[15px] font-medium tracking-tight md:text-base">{v}</dd>
-                </div>
-              ))}
-            </dl>
+            <h2
+              className="text-black text-4xl md:text-5xl font-medium leading-tight mb-8"
+              style={{ letterSpacing: "-0.03em" }}
+            >
+              Meet USD Halo.
+            </h2>
+            <button className="inline-flex items-center gap-3 bg-black text-white text-base font-medium pl-8 pr-2 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200">
+              Discover it
+              <span className="bg-white rounded-full p-2">
+                <ArrowRight className="w-5 h-5 text-black" />
+              </span>
+            </button>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- INTERVENTION ---------- */
-function Intervention() {
-  const ref = useReveal<HTMLDivElement>();
-  return (
-    <section className="section border-t border-border">
-      <div className="container-x">
-        <div className="max-w-3xl">
-          <p className="eyebrow">The intervention</p>
-          <h2 className="display-lg mt-6">
-            One quiet pulse — at the moment it matters.
-          </h2>
-        </div>
-        <div ref={ref} className="reveal mt-16 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-16">
-          <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
-            <div className="mb-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-              <span className="haptic-dot" aria-hidden />
-              <span>Live transcript · Veris on-device</span>
-            </div>
-            <pre className="terminal whitespace-pre-wrap break-words font-mono">
-{`14:02:11  caller   "This is Officer Reyes. Your account is compromised."
-14:02:18  caller   "I need you to transfer $4,200 to a secure holding."
-14:02:24  veris    `}<span className="sig">HRV ↓ 38ms · EDA ↑ 2.7µS · urgency markers detected</span>{`
-14:02:25  veris    `}<span className="alert">RISK 0.91 — coercion pattern</span>{`
-14:02:26  veris    `}<span className="alert">→ haptic pulse · trusted contact notified</span>{`
-14:02:31  user     "Wait. I'm going to call my daughter first."`}
-            </pre>
-          </div>
-          <div className="flex flex-col justify-center">
-            <p className="body-lg">
-              Veris doesn't block your call. It doesn't read transcripts to a server. It interrupts the autonomic loop the attacker is exploiting — long enough for the rational mind to come back.
-            </p>
-            <div className="mt-8 hairline" />
-            <p className="eyebrow mt-6">Median intervention latency</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight">
-              <span className="text-[color:var(--signal)]">0.84s</span>
-              <span className="ml-2 text-muted-foreground text-base font-normal">from detection to pulse</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- NUMBERS ---------- */
-function Numbers() {
-  const stats = [
-    { to: 3.4, prefix: "$", suffix: "B", decimals: 1, label: "Lost annually by Americans 60+ to scams" },
-    { to: 76, suffix: "%", decimals: 0, label: "Increase in AI-enabled fraud, year over year" },
-    { to: 0, suffix: "", decimals: 0, label: "Real-time cognitive fraud defenses in market" },
-    { to: 1, suffix: "st", decimals: 0, label: "Wearable built for manipulation awareness" },
-  ];
-  const [ref, seen] = useInView<HTMLDivElement>();
-  return (
-    <section ref={ref} className="section border-t border-border">
-      <div className="container-x">
-        <p className="eyebrow">Field data</p>
-        <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
-          {stats.map((s) => (
-            <div key={s.label}>
-              <div className="display-md font-semibold tracking-tight">
-                {seen ? <CountUp {...s} /> : `${s.prefix ?? ""}0${s.suffix ?? ""}`}
-              </div>
-              <p className="mt-4 max-w-[18ch] text-[14px] leading-snug text-muted-foreground">
-                {s.label}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CountUp({
-  to, prefix = "", suffix = "", decimals = 0, duration = 1400,
-}: {
-  to: number; prefix?: string; suffix?: string; decimals?: number; duration?: number;
-}) {
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    const start = performance.now();
-    let raf = 0;
-    const step = (t: number) => {
-      const p = Math.min(1, (t - start) / duration);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setV(to * eased);
-      if (p < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [to, duration]);
-  return <span>{prefix}{v.toFixed(decimals)}{suffix}</span>;
-}
-
-/* ---------- EARLY ACCESS ---------- */
-function EarlyAccess() {
-  const submit = useServerFn(submitEarlyAccess);
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", team: "" });
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
-    try {
-      const res = await submit({ data: form });
-      if (res.duplicate) {
-        toast.success("You're already on the list — we'll be in touch.");
-      } else {
-        toast.success("You're in. Welcome to the Veris private beta.");
-      }
-      setForm({ name: "", email: "", team: "" });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Something went wrong.";
-      toast.error(msg);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <section id="access" className="section border-t border-border">
-      <div className="container-x">
-        <div className="mx-auto max-w-2xl">
-          <p className="eyebrow">Access</p>
-          <h2 className="display-lg mt-6">Give them independence. Not vulnerability.</h2>
-          <p className="mt-6 body-lg">
-            Veris is in private beta with families, clinicians, and security researchers. Request an invitation.
+          <p className="text-black/70 text-2xl md:text-3xl leading-relaxed">
+            USD Halo is a reward-earning dollar coin that lets your savings grow
+            while remaining tied to the U.S. dollar.
           </p>
-          <form onSubmit={onSubmit} className="mt-12 grid gap-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <Field label="Name" required>
-                <LabInput
-                  required maxLength={100}
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-              </Field>
-              <Field label="Email" required>
-                <LabInput
-                  required type="email" maxLength={255}
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                />
-              </Field>
-            </div>
-            <Field label="Organization (optional)">
-              <LabInput
-                maxLength={150}
-                value={form.team}
-                onChange={(e) => setForm({ ...form, team: e.target.value })}
-              />
-            </Field>
-            <div className="mt-4 flex flex-wrap items-center gap-4">
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary disabled:opacity-60"
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div
+            className="lg:col-span-2 rounded-2xl p-7 min-h-80 flex flex-col justify-between"
+            style={{
+              backgroundImage:
+                "url(https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260423_164207_f243351d-ed59-48ec-83a0-a5e996bdbe3c.png&w=1280&q=85)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <h3
+              className="text-black text-2xl font-medium leading-snug"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              Savings that bloom
+            </h3>
+            <p className="text-black/70 text-base max-w-xs">
+              Gain steady returns as your dollar tokens are routed into
+              top-performing DeFi strategies.
+            </p>
+          </div>
+
+          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#2B2644]">
+            <h3
+              className="text-white text-2xl font-medium leading-snug"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              Always fluid,
+              <br />
+              always pegged.
+            </h3>
+            <p className="text-white/60 text-base">
+              Keep fully dollar-anchored with on-demand access to funds — no
+              lockups or waits.
+            </p>
+          </div>
+
+          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#2B2644]">
+            <h3
+              className="text-white text-2xl font-medium leading-snug"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              Fully
+              <br />
+              automated
+            </h3>
+            <p className="text-white/60 text-base">
+              Skip the task of tuning positions yourself. USD Halo runs in the
+              background for you.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- BACKED BY ---------- */
+const backers: Array<{ name: string; style: React.CSSProperties }> = [
+  { name: "Fundamental Labs", style: { fontFamily: "'Times New Roman', serif", fontWeight: 400, letterSpacing: "0.02em", fontSize: 14 } },
+  { name: "KUCOIN", style: { fontFamily: "'Arial Black', sans-serif", fontWeight: 900, letterSpacing: "0.08em", fontSize: 16 } },
+  { name: "NGC", style: { fontFamily: "Impact, sans-serif", fontWeight: 700, letterSpacing: "0.05em", fontSize: 18 } },
+  { name: "NxGen", style: { fontFamily: "Georgia, serif", fontWeight: 600, letterSpacing: "-0.02em", fontSize: 17 } },
+  { name: "Matter Labs", style: { fontFamily: "Helvetica, sans-serif", fontWeight: 700, letterSpacing: "-0.01em", fontSize: 15 } },
+  { name: "DEXTOOLS", style: { fontFamily: "Verdana, sans-serif", fontWeight: 700, letterSpacing: "0.06em", fontSize: 14, textTransform: "uppercase" } },
+  { name: "NGRAVE", style: { fontFamily: "'Courier New', monospace", fontWeight: 700, letterSpacing: "0.18em", fontSize: 14 } },
+  { name: "Polychain", style: { fontFamily: "Palatino, serif", fontWeight: 500, letterSpacing: "0.03em", fontSize: 15 } },
+];
+
+function BackedBySection() {
+  return (
+    <section className="bg-[#F5F5F5] px-6">
+      <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
+        <p className="text-black/70 text-base leading-relaxed">
+          Funded by premier partners
+          <br />
+          and forward-thinking leaders.
+        </p>
+        <div className="md:col-span-3 overflow-hidden">
+          <style>{`
+            @keyframes backers-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+            .backers-track { display: flex; width: max-content; animation: backers-marquee 30s linear infinite; }
+          `}</style>
+          <div className="backers-track">
+            {[...backers, ...backers].map((b, i) => (
+              <span
+                key={i}
+                className="mx-10 shrink-0 text-black/50 whitespace-nowrap"
+                style={b.style}
               >
-                {loading ? "Sending…" : "Request access"}
-                <span aria-hidden>→</span>
-              </button>
-              <a href="mailto:research@veris.systems" className="text-[14px] text-muted-foreground hover:text-foreground">
-                Research inquiries →
-              </a>
-            </div>
-          </form>
+                {b.name}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Field({
-  label, required, children,
-}: { label: string; required?: boolean; children: ReactNode }) {
+/* ---------- USE CASES ---------- */
+function UseCasesSection() {
   return (
-    <label className="block">
-      <span className="eyebrow block">
-        {label}{required && <span className="text-foreground"> *</span>}
-      </span>
-      <div className="mt-3">{children}</div>
-    </label>
-  );
-}
-
-function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      {...props}
-      className="h-11 w-full border-b border-border bg-transparent px-0 text-base font-medium tracking-tight text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:border-foreground"
-    />
-  );
-}
-
-/* ---------- FOOTER ---------- */
-function Footer() {
-  const cols = [
-    { title: "Product", links: [
-      { label: "Device", href: "#device" },
-      { label: "How it works", href: "#how" },
-      { label: "Access", href: "#access" },
-    ]},
-    { title: "Company", links: [
-      { label: "Mission", href: "#mission" },
-      { label: "Press", href: "mailto:press@veris.systems" },
-      { label: "Research", href: "mailto:research@veris.systems" },
-    ]},
-    { title: "Legal", links: [
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
-      { label: "Disclosure", href: "mailto:security@veris.systems" },
-    ]},
-  ];
-  return (
-    <footer className="border-t border-border">
-      <div className="container-x grid gap-10 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:py-20">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="grid h-7 w-7 place-items-center rounded-full border border-foreground/40 text-[13px] font-semibold">V</span>
-            <span className="text-[15px] font-semibold tracking-tight">Veris</span>
-          </div>
-          <p className="mt-5 max-w-xs text-[14px] leading-relaxed text-muted-foreground">
-            Cognitive defense infrastructure for the AI era.
+    <section className="bg-[#F5F5F5] px-6 py-24">
+      <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="md:pr-12 md:pt-2">
+          <p className="text-black/60 text-sm mb-2">USD Halo in Practice</p>
+          <h2
+            className="text-black text-5xl md:text-6xl font-medium leading-none mb-6"
+            style={{ letterSpacing: "-0.04em" }}
+          >
+            Use modes
+          </h2>
+          <p className="text-black/60 text-base leading-relaxed max-w-sm">
+            USD Halo powers a wide range of modes for builders, companies and
+            treasuries wanting safe and rewarding stablecoin integrations plus
+            more
           </p>
         </div>
-        {cols.map((c) => (
-          <div key={c.title}>
-            <p className="eyebrow">{c.title}</p>
-            <ul className="mt-5 space-y-3">
-              {c.links.map((l) => (
-                <li key={l.label}>
-                  <a href={l.href} className="text-[14px] text-foreground/80 transition-colors hover:text-foreground">
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+
+        <div className="relative rounded-3xl overflow-hidden min-h-[720px]">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="object-cover absolute inset-0 w-full h-full"
+          >
+            <source
+              src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_183428_ab5e672a-f608-4dcb-b319-f3e040f02e2d.mp4"
+              type="video/mp4"
+            />
+          </video>
+          <div className="relative z-10 p-10 md:p-12">
+            <h3
+              className="text-black text-4xl md:text-5xl font-medium leading-tight mb-5"
+              style={{ letterSpacing: "-0.03em" }}
+            >
+              Commerce
+            </h3>
+            <p className="text-black/70 text-base max-w-md mb-8">
+              Lift customer retention by offering USD Halo, a trusted
+              dollar-backed stablecoin with strong yields, letting your patrons
+              earn with zero effort on your platform.
+            </p>
+            <a
+              href="#"
+              className="group inline-flex items-center gap-3 text-black text-base font-medium"
+            >
+              <span className="w-9 h-9 rounded-full bg-white/80 backdrop-blur flex items-center justify-center group-hover:bg-white transition-colors">
+                <ArrowRight className="w-4 h-4 text-black" />
+              </span>
+              Know more
+            </a>
           </div>
-        ))}
-      </div>
-      <div className="border-t border-border">
-        <div className="container-x flex flex-col items-start justify-between gap-2 py-5 text-[12px] text-muted-foreground md:flex-row md:items-center">
-          <span>© 2026 Veris Labs · San Francisco</span>
-          <span>Cognitive defense — built for the AI era.</span>
         </div>
       </div>
-    </footer>
+    </section>
+  );
+}
+
+/* ---------- PAGE ---------- */
+function HaloLanding() {
+  return (
+    <div className="flex flex-col bg-[#F5F5F5]">
+      <div className="h-screen flex flex-col overflow-hidden relative">
+        <Navbar />
+        <HeroSection />
+      </div>
+      <InfoSection />
+      <BackedBySection />
+      <UseCasesSection />
+    </div>
   );
 }
