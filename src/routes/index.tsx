@@ -9,11 +9,11 @@ export const Route = createFileRoute("/")({
   component: VerisLanding,
   head: () => ({
     meta: [
-      { title: "Veris — Every fraud tool reacts. Veris intervenes." },
+      { title: "Veris, Every fraud tool reacts. Veris intervenes." },
       {
         name: "description",
         content:
-          "Veris is a wearable cognitive defense system. Biosignals, voice, and on-device AI fused in a ring — to interrupt manipulation the second it happens, before money is ever lost.",
+          "Veris is a wearable cognitive defense system. Biosignals, voice, and on-device AI fused in a ring, to interrupt manipulation the second it happens, before money is ever lost.",
       },
     ],
   }),
@@ -99,7 +99,7 @@ function HeroSection() {
             Veris intervenes.
           </h1>
           <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl xl:text-2xl max-w-lg lg:max-w-2xl mb-8 lg:mb-10 leading-relaxed font-medium">
-            Biosignals, voice, and on-device AI — fused in a ring — to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
+            Biosignals, voice, and on-device AI, fused in a ring, to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
           <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
             Join the beta
@@ -130,7 +130,7 @@ function ProblemSection() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
           <p className="text-[#1B3A4B]/80 text-xl md:text-2xl leading-relaxed font-medium">
-            Banks freeze the transfer after it clears. Apps flag the call after it ends. Family finds out after the regret. By then the damage is done — financially, and to the trust an older person has in their own judgment.
+            Banks freeze the transfer after it clears. Apps flag the call after it ends. Family finds out after the regret. By then the damage is done, financially, and to the trust an older person has in their own judgment.
           </p>
           <div className="flex flex-col divide-y divide-[#1B3A4B]/15">
             {stats.map((s) => (
@@ -150,9 +150,9 @@ function ProblemSection() {
 /* ---------- HOW IT WORKS ---------- */
 const steps = [
   { n: "01", title: "Sense.", body: "The ring continuously reads heart-rate variability, skin conductance, and micro-stress signatures." },
-  { n: "02", title: "Listen.", body: "On-device AI analyzes the conversation locally — for scripted scam patterns, urgency, impersonation cues, emotional coercion." },
+  { n: "02", title: "Listen.", body: "On-device AI analyzes the conversation locally, for scripted scam patterns, urgency, impersonation cues, emotional coercion." },
   { n: "03", title: "Interrupt.", body: "When manipulation is detected, a quiet haptic pulse breaks the spell. A single moment to think." },
-  { n: "04", title: "Alert.", body: "If pressure continues, a trusted family contact gets a discreet notification — never a recording, never a transcript." },
+  { n: "04", title: "Alert.", body: "If pressure continues, a trusted family contact gets a discreet notification, never a recording, never a transcript." },
 ];
 
 function HowItWorksSection() {
@@ -189,7 +189,7 @@ function AudienceSection() {
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">Who It's For</p>
         <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-12 lg:mb-20" style={{ letterSpacing: "-0.04em" }}>
-          Built for the people doing the worrying — and the people they worry about.
+          Built for the people doing the worrying, and the people they worry about.
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6]">
@@ -310,7 +310,7 @@ function ManifestoBand() {
       <div className="max-w-5xl lg:max-w-7xl mx-auto">
         <p className="text-[#F4EFE6]/40 text-xs font-medium tracking-[0.18em] uppercase mb-6">Manifesto</p>
         <p className="text-[#F4EFE6] text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.03em" }}>
-          Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision — because that's the only second that matters.
+          Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision, because that's the only second that matters.
         </p>
       </div>
     </section>
@@ -352,7 +352,7 @@ function CTASection() {
             Be early. Be the reason it doesn't happen to them.
           </h2>
           <p className="text-[#F4EFE6]/70 text-base md:text-lg lg:text-xl max-w-xl lg:max-w-2xl mb-10 lg:mb-14 leading-relaxed">
-            We're shipping the first cohort of rings to 127 families across 9 states. Request access — we read every email.
+            We're shipping the first cohort of rings to 127 families across 9 states. Request access, we read every email.
           </p>
 
           {done ? (
@@ -405,7 +405,7 @@ function Footer() {
         <div className="flex items-center gap-3 text-[#1B3A4B]">
           <LogoIcon className="w-6 h-6" />
           <span className="text-xl font-medium tracking-tight">Veris</span>
-          <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta — by invitation, with care.</span>
+          <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta, by invitation, with care.</span>
         </div>
         <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
           {links.map((l) => (
