@@ -81,9 +81,11 @@ function HeroSection() {
   return (
     <section className="flex-1 px-6 pt-20 pb-6 flex items-end">
       <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto" style={{ height: "calc(100vh - 96px)" }}>
-        <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full">
+        <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full" style={{ filter: "grayscale(1) contrast(1.05) brightness(1.02)" }}>
           <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
         </video>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36">
           <p className="text-[#1B3A4B]/70 text-xs font-medium tracking-[0.18em] uppercase mb-6">
             Private Beta · Cognitive Defense
