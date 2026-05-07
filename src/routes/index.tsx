@@ -157,10 +157,10 @@ const steps = [
 
 function HowItWorksSection() {
   return (
-    <section className="bg-[#1B3A4B] px-6 py-24">
+    <section className="bg-[#1B3A4B] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#F4EFE6]/50 text-sm mb-3">How It Works</p>
-        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl font-medium leading-[1.05] max-w-4xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
           Four signals. One second. Before the decision.
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#F4EFE6]/10 rounded-2xl overflow-hidden">
