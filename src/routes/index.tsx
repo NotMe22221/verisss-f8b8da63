@@ -270,7 +270,7 @@ function VerisLanding() {
       <InfoSection />
       <DeviceSection />
       <BackedBySection />
-      <UseCasesSection />
+      
       
     </div>
   );
