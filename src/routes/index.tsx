@@ -432,7 +432,7 @@ function VerisLanding() {
       <DeviceSection />
       <ScienceSection />
       <ManifestoBand />
-      <CTASection />
+      
       <Footer />
     </div>
   );
