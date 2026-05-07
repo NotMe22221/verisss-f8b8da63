@@ -39,30 +39,30 @@
 
 :root {
   --radius: 0.25rem;
-  --background: #F4EFE6;
-  --foreground: #1B3A4B;
-  --card: #ffffff;
-  --card-foreground: #1B3A4B;
-  --popover: #ffffff;
-  --popover-foreground: #1B3A4B;
-  --primary: #1B3A4B;
-  --primary-foreground: #F4EFE6;
+  --background: #1B3A4B;
+  --foreground: #F4EFE6;
+  --card: #142C3A;
+  --card-foreground: #F4EFE6;
+  --popover: #142C3A;
+  --popover-foreground: #F4EFE6;
+  --primary: #F4EFE6;
+  --primary-foreground: #1B3A4B;
   --secondary: #5B8C99;
   --secondary-foreground: #F4EFE6;
-  --muted: #ECE5D8;
-  --muted-foreground: #5B8C99;
+  --muted: #22465A;
+  --muted-foreground: #8A9BA8;
   --accent: #C9A46A;
   --accent-foreground: #1B3A4B;
   --destructive: #B4452F;
   --destructive-foreground: #ffffff;
-  --border: rgba(27, 58, 75, 0.14);
-  --input: rgba(27, 58, 75, 0.18);
+  --border: rgba(244, 239, 230, 0.12);
+  --input: rgba(244, 239, 230, 0.16);
   --ring: #C9A46A;
 
-  --signal: #B4452F;
-  /* "paper" is the inverted dark section in this palette */
-  --paper: #1B3A4B;
-  --paper-foreground: #F4EFE6;
+  --signal: #C9A46A;
+  /* "paper" is the inverted light panel in this palette */
+  --paper: #F4EFE6;
+  --paper-foreground: #1B3A4B;
 }
 
 @layer base {
