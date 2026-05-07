@@ -257,47 +257,6 @@ function BackedBySection() {
   );
 }
 
-/* ---------- WHO IT PROTECTS ---------- */
-function UseCasesSection() {
-  return (
-    <section className="bg-[#F4EFE6] px-6 py-24">
-      <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        <div className="md:pr-12 md:pt-2">
-          <p className="text-[#1B3A4B]/60 text-sm mb-2">Veris in the Field</p>
-          <h2 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-none mb-6" style={{ letterSpacing: "-0.04em" }}>
-            Who it protects
-          </h2>
-          <p className="text-[#1B3A4B]/60 text-base leading-relaxed max-w-sm">
-            Veris is being deployed first to the people most targeted by
-            financial coercion: aging parents, isolated adults, and high-risk
-            individuals living independently.
-          </p>
-        </div>
-        <div className="relative rounded-3xl overflow-hidden min-h-[720px]">
-          <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full">
-            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_183428_ab5e672a-f608-4dcb-b319-f3e040f02e2d.mp4" type="video/mp4" />
-          </video>
-          <div className="relative z-10 p-10 md:p-12">
-            <h3 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-tight mb-5" style={{ letterSpacing: "-0.03em" }}>
-              Families
-            </h3>
-            <p className="text-[#1B3A4B]/70 text-base max-w-md mb-8">
-              127 families across 9 states are piloting Veris today — quietly
-              defending parents and grandparents from the scams that strip
-              fortunes in a single phone call.
-            </p>
-            <a href="#early-access" className="group inline-flex items-center gap-3 text-[#1B3A4B] text-base font-medium">
-              <span className="w-9 h-9 rounded-full bg-[#F4EFE6]/80 backdrop-blur flex items-center justify-center group-hover:bg-[#F4EFE6] transition-colors">
-                <ArrowRight className="w-4 h-4 text-[#1B3A4B]" />
-              </span>
-              Join the pilot
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 
 /* ---------- PAGE ---------- */
