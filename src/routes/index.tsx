@@ -31,13 +31,13 @@ function Navbar() {
   return (
     <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-5">
       <div className="max-w-[88rem] mx-auto flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 text-black">
+        <a href="#" className="flex items-center gap-2 text-[#1B3A4B]">
           <LogoIcon className="w-7 h-7" />
           <span className="text-2xl font-medium tracking-tight">Veris</span>
         </a>
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
-            <a key={l} href="#" className="text-base text-gray-700 hover:text-black font-medium transition-colors duration-200">
+            <a key={l} href="#" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
               {l}
             </a>
           ))}
@@ -67,7 +67,7 @@ function HeroMarquee() {
       `}</style>
       <div className="marquee-track">
         {[...heroBrands, ...heroBrands].map((b, i) => (
-          <span key={i} className="mx-7 shrink-0 text-black/60 whitespace-nowrap" style={b.style}>
+          <span key={i} className="mx-7 shrink-0 text-[#1B3A4B]/60 whitespace-nowrap" style={b.style}>
             {b.name}
           </span>
         ))}
@@ -85,21 +85,21 @@ function HeroSection() {
           <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
         </video>
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36">
-          <p className="text-black/70 text-xs font-medium tracking-[0.18em] uppercase mb-6">
+          <p className="text-[#1B3A4B]/70 text-xs font-medium tracking-[0.18em] uppercase mb-6">
             Moonshot Idea 03 · Private Beta · Cognitive Defense
           </p>
-          <h1 className="text-black text-5xl md:text-6xl font-medium leading-tight max-w-xl mb-4" style={{ letterSpacing: "-0.04em" }}>
+          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-tight max-w-xl mb-4" style={{ letterSpacing: "-0.04em" }}>
             Protection before
             <br />
             the damage.
           </h1>
-          <p className="text-black/70 text-base md:text-lg max-w-md mb-8 leading-relaxed">
+          <p className="text-[#1B3A4B]/70 text-base md:text-lg max-w-md mb-8 leading-relaxed">
             Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time — before financial loss occurs.
           </p>
-          <a href="#early-access" className="inline-flex items-center gap-3 bg-black text-white text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200">
+          <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
             Join the beta
-            <span className="bg-white rounded-full p-2">
-              <ArrowRight className="w-5 h-5 text-black" />
+            <span className="bg-[#F4EFE6] rounded-full p-2">
+              <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
             </span>
           </a>
           <HeroMarquee />
@@ -112,55 +112,55 @@ function HeroSection() {
 /* ---------- INFO / PROBLEM ---------- */
 function InfoSection() {
   return (
-    <section className="bg-[#F5F5F5] px-6 py-24">
+    <section className="bg-[#F4EFE6] px-6 py-24">
       <div className="max-w-[88rem] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-start">
           <div>
-            <p className="text-black/60 text-sm mb-3">The Problem</p>
-            <h2 className="text-black text-4xl md:text-5xl font-medium leading-tight mb-8" style={{ letterSpacing: "-0.03em" }}>
+            <p className="text-[#1B3A4B]/60 text-sm mb-3">The Problem</p>
+            <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-tight mb-8" style={{ letterSpacing: "-0.03em" }}>
               Meet Veris.
             </h2>
-            <a href="#device" className="inline-flex items-center gap-3 bg-black text-white text-base font-medium pl-8 pr-2 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200">
+            <a href="#device" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
               See the device
-              <span className="bg-white rounded-full p-2">
-                <ArrowRight className="w-5 h-5 text-black" />
+              <span className="bg-[#F4EFE6] rounded-full p-2">
+                <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
               </span>
             </a>
           </div>
-          <p className="text-black/70 text-2xl md:text-3xl leading-relaxed">
+          <p className="text-[#1B3A4B]/70 text-2xl md:text-3xl leading-relaxed">
             $3.4B is lost annually to elder fraud, romance scams, and coercive
             financial pressure. Veris stops the damage before it happens.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="lg:col-span-2 rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#2B2644]">
-            <h3 className="text-white text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
+          <div className="lg:col-span-2 rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
+            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
               Detects coercion in real time
             </h3>
-            <p className="text-white/60 text-base max-w-xs">
+            <p className="text-[#F4EFE6]/60 text-base max-w-xs">
               On-device AI listens for stress signatures, scripted pressure, and
               the physiological fingerprint of duress.
             </p>
           </div>
-          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#2B2644]">
-            <h3 className="text-white text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
+          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
+            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
               Private
               <br />
               by design
             </h3>
-            <p className="text-white/60 text-base">
+            <p className="text-[#F4EFE6]/60 text-base">
               Nothing leaves the ring. No cloud, no recording, no surveillance —
               just a quiet haptic when something is wrong.
             </p>
           </div>
-          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#2B2644]">
-            <h3 className="text-white text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
+          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
+            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
               Built for
               <br />
               the moment
             </h3>
-            <p className="text-white/60 text-base">
+            <p className="text-[#F4EFE6]/60 text-base">
               127 families across 9 states. A 7-day battery. A defense system
               that lives on your finger.
             </p>
@@ -186,29 +186,29 @@ const deviceStats = [
 
 function DeviceSection() {
   return (
-    <section id="device" className="bg-[#F5F5F5] px-6 py-24">
+    <section id="device" className="bg-[#F4EFE6] px-6 py-24">
       <div className="max-w-[88rem] mx-auto">
-        <p className="text-black/60 text-sm mb-3">The Device</p>
-        <h2 className="text-black text-5xl md:text-6xl font-medium leading-none mb-12" style={{ letterSpacing: "-0.04em" }}>
+        <p className="text-[#1B3A4B]/60 text-sm mb-3">The Device</p>
+        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-none mb-12" style={{ letterSpacing: "-0.04em" }}>
           The Device
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-          <div className="rounded-2xl overflow-hidden bg-[#2B2644] min-h-[520px] relative">
+          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] relative">
             <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {deviceFeatures.map((f) => (
-              <div key={f.title} className="rounded-2xl bg-[#2B2644] p-6 min-h-40 flex flex-col justify-between">
-                <h3 className="text-white text-lg font-medium" style={{ letterSpacing: "-0.02em" }}>{f.title}</h3>
-                <p className="text-white/60 text-sm">{f.body}</p>
+              <div key={f.title} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
+                <h3 className="text-[#F4EFE6] text-lg font-medium" style={{ letterSpacing: "-0.02em" }}>{f.title}</h3>
+                <p className="text-[#F4EFE6]/60 text-sm">{f.body}</p>
               </div>
             ))}
             {deviceStats.map((s) => (
-              <div key={s.label} className="rounded-2xl bg-[#2B2644] p-6 min-h-40 flex flex-col justify-between">
-                <p className="text-white text-4xl font-medium" style={{ letterSpacing: "-0.03em" }}>
-                  {s.value}<span className="text-white/70 text-xl ml-1">{s.unit}</span>
+              <div key={s.label} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
+                <p className="text-[#F4EFE6] text-4xl font-medium" style={{ letterSpacing: "-0.03em" }}>
+                  {s.value}<span className="text-[#F4EFE6]/70 text-xl ml-1">{s.unit}</span>
                 </p>
-                <p className="text-white/60 text-sm uppercase tracking-wider">{s.label}</p>
+                <p className="text-[#F4EFE6]/60 text-sm uppercase tracking-wider">{s.label}</p>
               </div>
             ))}
           </div>
@@ -232,9 +232,9 @@ const backers: Array<{ name: string; style: React.CSSProperties }> = [
 
 function BackedBySection() {
   return (
-    <section className="bg-[#F5F5F5] px-6 py-12">
+    <section className="bg-[#F4EFE6] px-6 py-12">
       <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
-        <p className="text-black/70 text-base leading-relaxed">
+        <p className="text-[#1B3A4B]/70 text-base leading-relaxed">
           Funded by premier partners
           <br />
           and forward-thinking leaders.
@@ -246,7 +246,7 @@ function BackedBySection() {
           `}</style>
           <div className="backers-track">
             {[...backers, ...backers].map((b, i) => (
-              <span key={i} className="mx-10 shrink-0 text-black/50 whitespace-nowrap" style={b.style}>
+              <span key={i} className="mx-10 shrink-0 text-[#1B3A4B]/50 whitespace-nowrap" style={b.style}>
                 {b.name}
               </span>
             ))}
@@ -260,14 +260,14 @@ function BackedBySection() {
 /* ---------- WHO IT PROTECTS ---------- */
 function UseCasesSection() {
   return (
-    <section className="bg-[#F5F5F5] px-6 py-24">
+    <section className="bg-[#F4EFE6] px-6 py-24">
       <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         <div className="md:pr-12 md:pt-2">
-          <p className="text-black/60 text-sm mb-2">Veris in the Field</p>
-          <h2 className="text-black text-5xl md:text-6xl font-medium leading-none mb-6" style={{ letterSpacing: "-0.04em" }}>
+          <p className="text-[#1B3A4B]/60 text-sm mb-2">Veris in the Field</p>
+          <h2 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-none mb-6" style={{ letterSpacing: "-0.04em" }}>
             Who it protects
           </h2>
-          <p className="text-black/60 text-base leading-relaxed max-w-sm">
+          <p className="text-[#1B3A4B]/60 text-base leading-relaxed max-w-sm">
             Veris is being deployed first to the people most targeted by
             financial coercion: aging parents, isolated adults, and high-risk
             individuals living independently.
@@ -278,17 +278,17 @@ function UseCasesSection() {
             <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_183428_ab5e672a-f608-4dcb-b319-f3e040f02e2d.mp4" type="video/mp4" />
           </video>
           <div className="relative z-10 p-10 md:p-12">
-            <h3 className="text-black text-4xl md:text-5xl font-medium leading-tight mb-5" style={{ letterSpacing: "-0.03em" }}>
+            <h3 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-tight mb-5" style={{ letterSpacing: "-0.03em" }}>
               Families
             </h3>
-            <p className="text-black/70 text-base max-w-md mb-8">
+            <p className="text-[#1B3A4B]/70 text-base max-w-md mb-8">
               127 families across 9 states are piloting Veris today — quietly
               defending parents and grandparents from the scams that strip
               fortunes in a single phone call.
             </p>
-            <a href="#early-access" className="group inline-flex items-center gap-3 text-black text-base font-medium">
-              <span className="w-9 h-9 rounded-full bg-white/80 backdrop-blur flex items-center justify-center group-hover:bg-white transition-colors">
-                <ArrowRight className="w-4 h-4 text-black" />
+            <a href="#early-access" className="group inline-flex items-center gap-3 text-[#1B3A4B] text-base font-medium">
+              <span className="w-9 h-9 rounded-full bg-[#F4EFE6]/80 backdrop-blur flex items-center justify-center group-hover:bg-[#F4EFE6] transition-colors">
+                <ArrowRight className="w-4 h-4 text-[#1B3A4B]" />
               </span>
               Join the pilot
             </a>
@@ -303,7 +303,7 @@ function UseCasesSection() {
 /* ---------- PAGE ---------- */
 function VerisLanding() {
   return (
-    <div className="flex flex-col bg-[#F5F5F5]">
+    <div className="flex flex-col bg-[#F4EFE6]">
       <div className="h-screen flex flex-col overflow-hidden relative">
         <Navbar />
         <HeroSection />
