@@ -235,17 +235,17 @@ const deviceStats = [
 
 function DeviceSection() {
   return (
-    <section id="device" className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+    <section id="device" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">The Device</p>
-        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-none mb-12" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-none mb-12 lg:mb-20" style={{ letterSpacing: "-0.04em" }}>
           The Device
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-start">
+          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative">
             <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
             {deviceFeatures.map((f) => (
               <div key={f.title} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
                 <h3 className="text-[#F4EFE6] text-lg font-medium" style={{ letterSpacing: "-0.02em" }}>{f.title}</h3>
