@@ -63,7 +63,7 @@ const heroBrands: Array<{ name: string; style: React.CSSProperties }> = [
 
 function HeroMarquee() {
   return (
-    <div className="mt-24 w-full max-w-md overflow-hidden">
+    <div className="mt-16 lg:mt-24 w-full max-w-md lg:max-w-2xl overflow-hidden">
       <style>{`
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .marquee-track { display: flex; width: max-content; animation: marquee 22s linear infinite; }
@@ -89,19 +89,19 @@ function HeroSection() {
         </video>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
-        <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-20 md:p-12 md:pt-36">
-          <p className="text-[#1B3A4B]/70 text-xs font-medium tracking-[0.18em] uppercase mb-6">
+        <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-20 md:p-12 md:pt-28 lg:p-16 lg:pt-32 xl:p-20 xl:pt-36">
+          <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-6">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-[1.02] max-w-xl mb-5" style={{ letterSpacing: "-0.04em" }}>
+          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-6 lg:mb-8" style={{ letterSpacing: "-0.04em" }}>
             Every fraud tool reacts.
             <br />
             Veris intervenes.
           </h1>
-          <p className="text-[#1B3A4B] text-base md:text-lg max-w-lg mb-8 leading-relaxed font-medium">
+          <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl xl:text-2xl max-w-lg lg:max-w-2xl mb-8 lg:mb-10 leading-relaxed font-medium">
             Biosignals, voice, and on-device AI — fused in a ring — to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
-          <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
+          <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
             Join the beta
             <span className="bg-[#F4EFE6] rounded-full p-2">
               <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
@@ -122,10 +122,10 @@ function ProblemSection() {
     { value: "$35,000", label: "average loss per incident" },
   ];
   return (
-    <section className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">The Problem</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl font-medium leading-[1.05] max-w-4xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
           Every fraud system in the world reacts after the money is gone.
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
@@ -157,19 +157,19 @@ const steps = [
 
 function HowItWorksSection() {
   return (
-    <section className="bg-[#1B3A4B] px-6 py-24">
+    <section className="bg-[#1B3A4B] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#F4EFE6]/50 text-sm mb-3">How It Works</p>
-        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl font-medium leading-[1.05] max-w-4xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
           Four signals. One second. Before the decision.
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#F4EFE6]/10 rounded-2xl overflow-hidden">
           {steps.map((s) => (
-            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 min-h-56 flex flex-col justify-between">
+            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 lg:p-10 min-h-56 lg:min-h-72 flex flex-col justify-between">
               <p className="text-[#F4EFE6]/40 text-sm font-medium tracking-wider">{s.n}</p>
               <div>
-                <h3 className="text-[#F4EFE6] text-2xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{s.title}</h3>
-                <p className="text-[#F4EFE6]/60 text-base leading-relaxed">{s.body}</p>
+                <h3 className="text-[#F4EFE6] text-2xl lg:text-3xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{s.title}</h3>
+                <p className="text-[#F4EFE6]/60 text-base lg:text-lg leading-relaxed">{s.body}</p>
               </div>
             </div>
           ))}
@@ -185,13 +185,13 @@ function HowItWorksSection() {
 /* ---------- AUDIENCE ---------- */
 function AudienceSection() {
   return (
-    <section className="bg-[#F4EFE6] px-6 py-24">
+    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">Who It's For</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-[1.05] max-w-3xl mb-12" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-12 lg:mb-20" style={{ letterSpacing: "-0.04em" }}>
           Built for the people doing the worrying — and the people they worry about.
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6]">
             <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For families</p>
             <div>
@@ -235,17 +235,17 @@ const deviceStats = [
 
 function DeviceSection() {
   return (
-    <section id="device" className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+    <section id="device" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">The Device</p>
-        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-none mb-12" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-none mb-12 lg:mb-20" style={{ letterSpacing: "-0.04em" }}>
           The Device
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-start">
+          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative">
             <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
             {deviceFeatures.map((f) => (
               <div key={f.title} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
                 <h3 className="text-[#F4EFE6] text-lg font-medium" style={{ letterSpacing: "-0.02em" }}>{f.title}</h3>
@@ -284,17 +284,17 @@ function ScienceSection() {
     },
   ];
   return (
-    <section className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">Science & Trust</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-[1.05] max-w-3xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
           A moonshot, built like medicine.
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-16">
           {cols.map((c) => (
             <div key={c.eyebrow}>
-              <p className="text-[#1B3A4B] text-lg font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{c.eyebrow}</p>
-              <p className="text-[#1B3A4B]/70 text-base leading-relaxed">{c.body}</p>
+              <p className="text-[#1B3A4B] text-lg lg:text-xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{c.eyebrow}</p>
+              <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed">{c.body}</p>
             </div>
           ))}
         </div>
@@ -306,10 +306,10 @@ function ScienceSection() {
 /* ---------- MANIFESTO BAND ---------- */
 function ManifestoBand() {
   return (
-    <section className="bg-[#1B3A4B] px-6 py-28 md:py-36">
-      <div className="max-w-5xl mx-auto">
+    <section className="bg-[#1B3A4B] px-6 lg:px-12 py-28 md:py-36 lg:py-48">
+      <div className="max-w-5xl lg:max-w-7xl mx-auto">
         <p className="text-[#F4EFE6]/40 text-xs font-medium tracking-[0.18em] uppercase mb-6">Manifesto</p>
-        <p className="text-[#F4EFE6] text-3xl md:text-5xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.03em" }}>
+        <p className="text-[#F4EFE6] text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.03em" }}>
           Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision — because that's the only second that matters.
         </p>
       </div>
@@ -344,14 +344,14 @@ function CTASection() {
   }
 
   return (
-    <section id="early-access" className="bg-[#F4EFE6] px-6 py-24">
+    <section id="early-access" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
-        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 py-16 md:py-24">
+        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 lg:px-24 py-16 md:py-24 lg:py-32">
           <p className="text-[#F4EFE6]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6">Private Beta</p>
-          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl font-medium leading-[1.05] max-w-3xl mb-6" style={{ letterSpacing: "-0.04em" }}>
+          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-6 lg:mb-8" style={{ letterSpacing: "-0.04em" }}>
             Be early. Be the reason it doesn't happen to them.
           </h2>
-          <p className="text-[#F4EFE6]/70 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
+          <p className="text-[#F4EFE6]/70 text-base md:text-lg lg:text-xl max-w-xl lg:max-w-2xl mb-10 lg:mb-14 leading-relaxed">
             We're shipping the first cohort of rings to 127 families across 9 states. Request access — we read every email.
           </p>
 
