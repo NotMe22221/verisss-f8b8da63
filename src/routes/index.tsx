@@ -284,17 +284,17 @@ function ScienceSection() {
     },
   ];
   return (
-    <section className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">Science & Trust</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-[1.05] max-w-3xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
           A moonshot, built like medicine.
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-16">
           {cols.map((c) => (
             <div key={c.eyebrow}>
-              <p className="text-[#1B3A4B] text-lg font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{c.eyebrow}</p>
-              <p className="text-[#1B3A4B]/70 text-base leading-relaxed">{c.body}</p>
+              <p className="text-[#1B3A4B] text-lg lg:text-xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{c.eyebrow}</p>
+              <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed">{c.body}</p>
             </div>
           ))}
         </div>
