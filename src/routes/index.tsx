@@ -468,6 +468,7 @@ function VerisLanding() {
       <DeviceSection />
       <ScienceSection />
       <ManifestoBand />
+      <AboutSection />
       
       <Footer />
     </div>
