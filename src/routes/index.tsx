@@ -132,7 +132,7 @@ function Hero() {
           loop
           muted
           playsInline
-          poster={ringHero}
+          preload="auto"
           className="absolute inset-0 z-0 h-full w-full object-cover"
         >
           <source
