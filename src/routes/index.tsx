@@ -165,11 +165,11 @@ function HowItWorksSection() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#F4EFE6]/10 rounded-2xl overflow-hidden">
           {steps.map((s) => (
-            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 min-h-56 flex flex-col justify-between">
+            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 lg:p-10 min-h-56 lg:min-h-72 flex flex-col justify-between">
               <p className="text-[#F4EFE6]/40 text-sm font-medium tracking-wider">{s.n}</p>
               <div>
-                <h3 className="text-[#F4EFE6] text-2xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{s.title}</h3>
-                <p className="text-[#F4EFE6]/60 text-base leading-relaxed">{s.body}</p>
+                <h3 className="text-[#F4EFE6] text-2xl lg:text-3xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{s.title}</h3>
+                <p className="text-[#F4EFE6]/60 text-base lg:text-lg leading-relaxed">{s.body}</p>
               </div>
             </div>
           ))}
