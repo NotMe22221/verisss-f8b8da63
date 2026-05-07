@@ -1,16 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import ringDevice from "@/assets/ring-device-studio.png";
+import { submitEarlyAccess } from "@/lib/early-access.functions";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
   head: () => ({
     meta: [
-      { title: "Veris — Protection before the damage." },
+      { title: "Veris — Every fraud tool reacts. Veris intervenes." },
       {
         name: "description",
         content:
-          "Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time before financial loss occurs.",
+          "Veris is a wearable cognitive defense system. Biosignals, voice, and on-device AI fused in a ring — to interrupt manipulation the second it happens, before money is ever lost.",
       },
     ],
   }),
@@ -111,61 +114,105 @@ function HeroSection() {
   );
 }
 
-/* ---------- INFO / PROBLEM ---------- */
-function InfoSection() {
+/* ---------- PROBLEM ---------- */
+function ProblemSection() {
+  const stats = [
+    { value: "$3.4B", label: "lost annually to elder fraud (FTC, 2024)" },
+    { value: "1 in 10", label: "adults 65+ targeted every year" },
+    { value: "$35,000", label: "average loss per incident" },
+  ];
+  return (
+    <section className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+      <div className="max-w-[88rem] mx-auto">
+        <p className="text-[#1B3A4B]/60 text-sm mb-3">The Problem</p>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl font-medium leading-[1.05] max-w-4xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+          Every fraud system in the world reacts after the money is gone.
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
+          <p className="text-[#1B3A4B]/80 text-xl md:text-2xl leading-relaxed font-medium">
+            Banks freeze the transfer after it clears. Apps flag the call after it ends. Family finds out after the regret. By then the damage is done — financially, and to the trust an older person has in their own judgment.
+          </p>
+          <div className="flex flex-col divide-y divide-[#1B3A4B]/15">
+            {stats.map((s) => (
+              <div key={s.value} className="py-5 first:pt-0">
+                <p className="text-[#1B3A4B] text-4xl md:text-5xl font-medium" style={{ letterSpacing: "-0.04em" }}>{s.value}</p>
+                <p className="text-[#1B3A4B]/60 text-sm md:text-base mt-1">{s.label}</p>
+              </div>
+            ))}
+            <p className="pt-5 text-[#1B3A4B]/40 text-[11px] tracking-wide uppercase">Sources: FTC · FBI IC3 · AARP</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- HOW IT WORKS ---------- */
+const steps = [
+  { n: "01", title: "Sense.", body: "The ring continuously reads heart-rate variability, skin conductance, and micro-stress signatures." },
+  { n: "02", title: "Listen.", body: "On-device AI analyzes the conversation locally — for scripted scam patterns, urgency, impersonation cues, emotional coercion." },
+  { n: "03", title: "Interrupt.", body: "When manipulation is detected, a quiet haptic pulse breaks the spell. A single moment to think." },
+  { n: "04", title: "Alert.", body: "If pressure continues, a trusted family contact gets a discreet notification — never a recording, never a transcript." },
+];
+
+function HowItWorksSection() {
+  return (
+    <section className="bg-[#1B3A4B] px-6 py-24">
+      <div className="max-w-[88rem] mx-auto">
+        <p className="text-[#F4EFE6]/50 text-sm mb-3">How It Works</p>
+        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl font-medium leading-[1.05] max-w-4xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+          Four signals. One second. Before the decision.
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#F4EFE6]/10 rounded-2xl overflow-hidden">
+          {steps.map((s) => (
+            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 min-h-56 flex flex-col justify-between">
+              <p className="text-[#F4EFE6]/40 text-sm font-medium tracking-wider">{s.n}</p>
+              <div>
+                <h3 className="text-[#F4EFE6] text-2xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{s.title}</h3>
+                <p className="text-[#F4EFE6]/60 text-base leading-relaxed">{s.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-[#F4EFE6]/60 italic text-base md:text-lg mt-10 max-w-2xl">
+          Nothing leaves the ring unless it has to. No cameras. No surveillance. No loss of independence.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- AUDIENCE ---------- */
+function AudienceSection() {
   return (
     <section className="bg-[#F4EFE6] px-6 py-24">
       <div className="max-w-[88rem] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-start">
-          <div>
-            <p className="text-[#1B3A4B]/60 text-sm mb-3">The Problem</p>
-            <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-tight mb-8" style={{ letterSpacing: "-0.03em" }}>
-              Meet Veris.
-            </h2>
-            <a href="#device" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
-              See the device
-              <span className="bg-[#F4EFE6] rounded-full p-2">
-                <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
-              </span>
-            </a>
+        <p className="text-[#1B3A4B]/60 text-sm mb-3">Who It's For</p>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-[1.05] max-w-3xl mb-12" style={{ letterSpacing: "-0.04em" }}>
+          Built for the people doing the worrying — and the people they worry about.
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6]">
+            <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For families</p>
+            <div>
+              <h3 className="text-[#1B3A4B] text-3xl md:text-4xl font-medium mb-4 leading-tight" style={{ letterSpacing: "-0.03em" }}>
+                Peace of mind, without surveillance.
+              </h3>
+              <p className="text-[#1B3A4B]/70 text-base md:text-lg leading-relaxed">
+                No cameras in your parents' home. No asking them to hand over their phone. Just a quiet alert if something is wrong.
+              </p>
+            </div>
           </div>
-          <p className="text-[#1B3A4B]/70 text-2xl md:text-3xl leading-relaxed">
-            $3.4B is lost annually to elder fraud, romance scams, and coercive
-            financial pressure. Veris stops the damage before it happens.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="lg:col-span-2 rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
-            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
-              Detects coercion in real time
-            </h3>
-            <p className="text-[#F4EFE6]/60 text-base max-w-xs">
-              On-device AI listens for stress signatures, scripted pressure, and
-              the physiological fingerprint of duress.
-            </p>
-          </div>
-          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
-            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
-              Private
-              <br />
-              by design
-            </h3>
-            <p className="text-[#F4EFE6]/60 text-base">
-              Nothing leaves the ring. No cloud, no recording, no surveillance —
-              just a quiet haptic when something is wrong.
-            </p>
-          </div>
-          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
-            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
-              Built for
-              <br />
-              the moment
-            </h3>
-            <p className="text-[#F4EFE6]/60 text-base">
-              127 families across 9 states. A 7-day battery. A defense system
-              that lives on your finger.
-            </p>
+          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6]">
+            <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For older adults</p>
+            <div>
+              <h3 className="text-[#1B3A4B] text-3xl md:text-4xl font-medium mb-4 leading-tight" style={{ letterSpacing: "-0.03em" }}>
+                Protection that respects you.
+              </h3>
+              <p className="text-[#1B3A4B]/70 text-base md:text-lg leading-relaxed">
+                The ring stays on your finger. The decision stays yours. We just give you back the second you need to make it.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -188,7 +235,7 @@ const deviceStats = [
 
 function DeviceSection() {
   return (
-    <section id="device" className="bg-[#F4EFE6] px-6 py-24">
+    <section id="device" className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">The Device</p>
         <h2 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-none mb-12" style={{ letterSpacing: "-0.04em" }}>
@@ -220,8 +267,156 @@ function DeviceSection() {
   );
 }
 
+/* ---------- SCIENCE & TRUST ---------- */
+function ScienceSection() {
+  const cols = [
+    {
+      eyebrow: "Built on peer-reviewed signals",
+      body: "Heart-rate variability and voice-stress markers are among the most studied indicators of acute psychological pressure. Veris fuses both, in real time, on your finger.",
+    },
+    {
+      eyebrow: "Privacy by architecture",
+      body: "On-device inference. No cloud transcripts. No audio ever leaves the ring. Even we can't hear what your parents say.",
+    },
+    {
+      eyebrow: "In pilot with",
+      body: "AARP Labs early-access cohort. MIT Media Lab affiliated researchers. A clinical advisory board of geriatricians and behavioral economists.",
+    },
+  ];
+  return (
+    <section className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+      <div className="max-w-[88rem] mx-auto">
+        <p className="text-[#1B3A4B]/60 text-sm mb-3">Science & Trust</p>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-[1.05] max-w-3xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+          A moonshot, built like medicine.
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+          {cols.map((c) => (
+            <div key={c.eyebrow}>
+              <p className="text-[#1B3A4B] text-lg font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{c.eyebrow}</p>
+              <p className="text-[#1B3A4B]/70 text-base leading-relaxed">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
+/* ---------- MANIFESTO BAND ---------- */
+function ManifestoBand() {
+  return (
+    <section className="bg-[#1B3A4B] px-6 py-28 md:py-36">
+      <div className="max-w-5xl mx-auto">
+        <p className="text-[#F4EFE6]/40 text-xs font-medium tracking-[0.18em] uppercase mb-6">Manifesto</p>
+        <p className="text-[#F4EFE6] text-3xl md:text-5xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.03em" }}>
+          Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision — because that's the only second that matters.
+        </p>
+      </div>
+    </section>
+  );
+}
 
+/* ---------- CTA / EARLY ACCESS ---------- */
+function CTASection() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState<null | "new" | "duplicate">(null);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (submitting) return;
+    if (!name.trim() || !email.trim()) {
+      toast.error("Please add your name and email.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await submitEarlyAccess({ data: { name: name.trim(), email: email.trim(), team: "" } });
+      setDone(res.duplicate ? "duplicate" : "new");
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <section id="early-access" className="bg-[#F4EFE6] px-6 py-24">
+      <div className="max-w-[88rem] mx-auto">
+        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 py-16 md:py-24">
+          <p className="text-[#F4EFE6]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6">Private Beta</p>
+          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl font-medium leading-[1.05] max-w-3xl mb-6" style={{ letterSpacing: "-0.04em" }}>
+            Be early. Be the reason it doesn't happen to them.
+          </h2>
+          <p className="text-[#F4EFE6]/70 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
+            We're shipping the first cohort of rings to 127 families across 9 states. Request access — we read every email.
+          </p>
+
+          {done ? (
+            <div className="rounded-xl border border-[#F4EFE6]/20 bg-[#F4EFE6]/5 p-6 max-w-xl">
+              <p className="text-[#F4EFE6] text-lg font-medium mb-1">
+                {done === "duplicate" ? "You're already on the list." : "You're in."}
+              </p>
+              <p className="text-[#F4EFE6]/60 text-sm">
+                We'll be in touch as soon as the next cohort opens.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl">
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="flex-1 bg-[#F4EFE6]/10 border border-[#F4EFE6]/20 text-[#F4EFE6] placeholder:text-[#F4EFE6]/40 rounded-full px-5 py-3 outline-none focus:border-[#F4EFE6]/50 transition-colors"
+              />
+              <input
+                type="email"
+                placeholder="you@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 bg-[#F4EFE6]/10 border border-[#F4EFE6]/20 text-[#F4EFE6] placeholder:text-[#F4EFE6]/40 rounded-full px-5 py-3 outline-none focus:border-[#F4EFE6]/50 transition-colors"
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center justify-center gap-2 bg-[#F4EFE6] text-[#1B3A4B] font-medium px-6 py-3 rounded-full hover:bg-white transition-colors disabled:opacity-60"
+              >
+                {submitting ? "Sending…" : "Request access"}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- FOOTER ---------- */
+function Footer() {
+  const links = ["Mission", "Manifesto", "Privacy", "Contact"];
+  return (
+    <footer className="bg-[#F4EFE6] px-6 py-12 border-t border-[#1B3A4B]/10">
+      <div className="max-w-[88rem] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="flex items-center gap-3 text-[#1B3A4B]">
+          <LogoIcon className="w-6 h-6" />
+          <span className="text-xl font-medium tracking-tight">Veris</span>
+          <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta — by invitation, with care.</span>
+        </div>
+        <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
+          {links.map((l) => (
+            <a key={l} href="#" className="hover:text-[#1B3A4B] transition-colors">{l}</a>
+          ))}
+          <span className="text-[#1B3A4B]/40">© 2026</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
 
 /* ---------- PAGE ---------- */
 function VerisLanding() {
@@ -231,11 +426,14 @@ function VerisLanding() {
         <Navbar />
         <HeroSection />
       </div>
-      <InfoSection />
+      <ProblemSection />
+      <HowItWorksSection />
+      <AudienceSection />
       <DeviceSection />
-      
-      
-      
+      <ScienceSection />
+      <ManifestoBand />
+      <CTASection />
+      <Footer />
     </div>
   );
 }
