@@ -125,18 +125,24 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 /* ---------- HERO ---------- */
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-[#0d1f2a] text-[#F4EFE6]">
-      <div className="relative h-[88vh] min-h-[640px] w-full">
-        <img
-          src={ringHero}
-          alt="Veris titanium ring"
-          width={1920}
-          height={1088}
-          className="hero-img absolute inset-0 h-full w-full object-cover opacity-95"
-        />
+    <section className="relative isolate overflow-hidden bg-black text-[#F4EFE6]">
+      <div className="relative h-screen min-h-[640px] w-full">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={ringHero}
+          className="absolute inset-0 z-0 h-full w-full object-cover"
+        >
+          <source
+            src="https://res.cloudinary.com/dfonotyfb/video/upload/v1775585556/dds3_1_rqhg7x.mp4"
+            type="video/mp4"
+          />
+        </video>
         {/* gradient legibility wash */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0d1f2a] via-[#0d1f2a]/40 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0d1f2a]/80 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black via-black/50 to-black/20" />
+        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-black/70 via-transparent to-transparent" />
 
         <div className="container-x relative z-10 flex h-full flex-col justify-end pb-16 md:pb-24">
           <p className="eyebrow mb-5 !text-[#C9A46A]">Veris · Cognitive Defense</p>
