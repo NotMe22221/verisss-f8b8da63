@@ -1,11 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useState, type FormEvent } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 import ringDevice from "@/assets/ring-device-studio.jpg";
-import { submitEarlyAccess } from "@/lib/early-access.functions";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
