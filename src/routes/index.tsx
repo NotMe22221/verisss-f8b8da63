@@ -9,53 +9,12 @@ import {
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import ringHero from "@/assets/ring-hero.jpg";
-import ringShell from "@/assets/ring-shell.png";
-import ringSensors from "@/assets/ring-sensors.png";
-import ringHaptic from "@/assets/ring-haptic.png";
-import ringAntenna from "@/assets/ring-antenna.png";
-import ringDevice from "@/assets/ring-device.jpg";
+import ringHero from "@/assets/ring-hero-cinematic.jpg";
+import ringDevice from "@/assets/ring-device-studio.jpg";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
 
 /* ---------- HOOKS ---------- */
-function useNow() {
-  const [now, setNow] = useState<Date | null>(null);
-  useEffect(() => {
-    setNow(new Date());
-    const t = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
-  return now;
-}
-
-function useLiveSignal(base: number, jitter: number, interval = 1500) {
-  const [v, setV] = useState(base);
-  useEffect(() => {
-    const t = setInterval(() => {
-      setV(base + (Math.random() - 0.5) * jitter * 2);
-    }, interval);
-    return () => clearInterval(t);
-  }, [base, jitter, interval]);
-  return v;
-}
-
-function useInView<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [seen, setSeen] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || seen) return;
-    const io = new IntersectionObserver(
-      ([e]) => e.isIntersecting && setSeen(true),
-      { threshold: 0.3 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [seen]);
-  return [ref, seen] as const;
-}
-
-function useReveal<T extends HTMLElement>(threshold = 0.2) {
+function useReveal<T extends HTMLElement>(threshold = 0.15) {
   const ref = useRef<T | null>(null);
   useEffect(() => {
     const el = ref.current;
@@ -75,115 +34,60 @@ function useReveal<T extends HTMLElement>(threshold = 0.2) {
   return ref;
 }
 
-/* Drives global --scroll variable + a per-element --hero-progress (0→1)
-   while a sentinel "stage" element passes through the viewport. */
-function useScrollDriver(stageRef: React.RefObject<HTMLElement | null>) {
+function useInView<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [seen, setSeen] = useState(false);
   useEffect(() => {
-    let raf = 0;
-    const root = document.documentElement;
-    const tick = () => {
-      const docH = document.documentElement.scrollHeight - window.innerHeight;
-      const s = docH > 0 ? Math.min(1, Math.max(0, window.scrollY / docH)) : 0;
-      root.style.setProperty("--scroll", s.toFixed(4));
-
-      const stage = stageRef.current;
-      if (stage) {
-        const rect = stage.getBoundingClientRect();
-        const total = stage.offsetHeight - window.innerHeight;
-        const past = Math.min(total, Math.max(0, -rect.top));
-        const p = total > 0 ? past / total : 0;
-        stage.style.setProperty("--hero-progress", p.toFixed(4));
-      }
-      raf = 0;
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
-    tick();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [stageRef]);
+    const el = ref.current;
+    if (!el || seen) return;
+    const io = new IntersectionObserver(
+      ([e]) => e.isIntersecting && setSeen(true),
+      { threshold: 0.3 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [seen]);
+  return [ref, seen] as const;
 }
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
   head: () => ({
     meta: [
-      { title: "Veris — Moonshot 03 · Cognitive Defense System" },
+      { title: "Veris — Cognitive defense for the AI era" },
       {
         name: "description",
         content:
-          "A wearable intelligence system that detects coercion and scam pressure in real time — before financial loss occurs.",
+          "A titanium ring with on-device AI that detects coercion in real time and intervenes before financial loss.",
       },
       { property: "og:title", content: "Veris — Protection before the damage." },
       {
         property: "og:description",
         content:
-          "Cognitive defense infrastructure for the AI era. A whisper-thin titanium ring with on-device AI.",
+          "Cognitive defense infrastructure. A wearable that reads manipulation as it happens.",
       },
+      { property: "og:image", content: ringHero },
+      { name: "twitter:image", content: ringHero },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
 
 function VerisLanding() {
-  const stageRef = useRef<HTMLElement | null>(null);
-  useScrollDriver(stageRef);
-
   return (
     <div className="relative min-h-screen bg-background text-foreground">
       <Toaster />
-      <div className="living-bg" aria-hidden />
-      <div className="living-grid" aria-hidden />
-      <div className="scroll-aurora" aria-hidden />
-      <div className="scroll-progress" aria-hidden />
-      <div className="living-grain" aria-hidden />
-
       <Nav />
       <main>
-        <HeroStage stageRef={stageRef} />
-        <Manifesto />
-        <Science />
+        <Hero />
+        <Mission />
+        <HowItWorks />
         <Device />
-        <Statement />
+        <Intervention />
+        <Numbers />
         <EarlyAccess />
       </main>
       <Footer />
-      <LiveConsole />
-    </div>
-  );
-}
-
-/* ---------- LIVE CONSOLE ---------- */
-function LiveConsole() {
-  const hrv = useLiveSignal(62, 4, 1400);
-  const eda = useLiveSignal(1.4, 0.3, 1700);
-  const risk = useLiveSignal(0.12, 0.05, 1100);
-  const now = useNow();
-  return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-40 hidden border border-gold/30 bg-background/85 p-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur lg:block">
-      <div className="mb-2 flex items-center gap-2 text-gold">
-        <span className="blink h-1.5 w-1.5 rounded-full bg-gold" />
-        Veris · Live
-      </div>
-      <div className="grid gap-1">
-        <ConsoleRow k="HRV" v={`${hrv.toFixed(1)} ms`} />
-        <ConsoleRow k="EDA" v={`${eda.toFixed(2)} µS`} />
-        <ConsoleRow k="RISK" v={risk.toFixed(2)} />
-        <ConsoleRow k="UTC" v={now ? now.toISOString().slice(11, 19) : "--:--:--"} />
-      </div>
-    </div>
-  );
-}
-function ConsoleRow({ k, v }: { k: string; v: string }) {
-  return (
-    <div className="flex items-center justify-between gap-6">
-      <span>{k}</span>
-      <span className="text-ink">{v}</span>
     </div>
   );
 }
@@ -191,99 +95,65 @@ function ConsoleRow({ k, v }: { k: string; v: string }) {
 /* ---------- NAV ---------- */
 function Nav() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/70 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between gap-4 px-4 md:h-16 md:px-10">
-        <a href="#" className="flex items-center gap-3">
-          <span className="grid h-7 w-7 place-items-center border border-gold text-gold font-display italic text-sm">V</span>
-          <span className="font-display text-xl tracking-tight text-ink">Veris</span>
-          <span className="ml-3 hidden items-center gap-2 border-l border-border pl-3 label-italic text-muted-foreground md:flex">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
-            Moonshot 03 · Private Beta
-          </span>
+    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+      <div className="container-x flex h-14 items-center justify-between md:h-16">
+        <a href="#" className="flex items-center gap-2">
+          <span className="grid h-7 w-7 place-items-center rounded-full border border-foreground/40 text-[13px] font-semibold tracking-tight">V</span>
+          <span className="text-[15px] font-semibold tracking-tight">Veris</span>
         </a>
-        <nav className="hidden items-center gap-10 md:flex">
+        <nav className="hidden items-center gap-9 md:flex">
           <NavLink href="#mission">Mission</NavLink>
-          <NavLink href="#science">Science</NavLink>
+          <NavLink href="#how">How it works</NavLink>
           <NavLink href="#device">Device</NavLink>
           <NavLink href="#access">Access</NavLink>
         </nav>
-        <a
-          href="#access"
-          className="group inline-flex h-9 items-center gap-2 border border-gold bg-gold px-4 font-display italic text-sm text-primary-foreground transition-colors hover:bg-transparent hover:text-gold"
-        >
-          Secure a spot
-          <span className="transition-transform group-hover:translate-x-0.5">→</span>
+        <a href="#access" className="btn-primary !h-9 !px-4 text-[13px]">
+          Request access
         </a>
       </div>
     </header>
   );
 }
-
 function NavLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <a
-      href={href}
-      className="font-display italic text-sm text-muted-foreground transition-colors hover:text-ink"
-    >
+    <a href={href} className="text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground">
       {children}
     </a>
   );
 }
 
-/* ---------- HERO STAGE — RING DECONSTRUCTION ---------- */
-function HeroStage({ stageRef }: { stageRef: React.RefObject<HTMLElement | null> }) {
+/* ---------- HERO ---------- */
+function Hero() {
   return (
-    <section
-      ref={stageRef as React.RefObject<HTMLElement>}
-      className="hero-stage"
-    >
-      <div className="hero-pin">
-        {/* Assembled ring — fades & rotates away */}
+    <section className="relative isolate overflow-hidden">
+      <div className="relative h-[88vh] min-h-[640px] w-full">
         <img
           src={ringHero}
           alt="Veris titanium ring"
-          width={1024}
-          height={1024}
-          className="ring-assembled"
+          width={1920}
+          height={1088}
+          className="hero-img absolute inset-0 h-full w-full object-cover"
         />
+        {/* gradient legibility wash */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-transparent" />
 
-        {/* Four fragments — fly outward as you scroll */}
-        <img src={ringShell} alt="" aria-hidden className="ring-fragment frag-shell" />
-        <img src={ringSensors} alt="" aria-hidden className="ring-fragment frag-sensors" />
-        <img src={ringHaptic} alt="" aria-hidden className="ring-fragment frag-haptic" />
-        <img src={ringAntenna} alt="" aria-hidden className="ring-fragment frag-antenna" />
-
-        {/* Headline overlay — fades on scroll */}
-        <div className="hero-headline">
-          <div className="mx-auto max-w-5xl px-6 text-center">
-            <div className="flex items-center justify-center gap-2 label-italic text-gold">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-              Moonshot 03 — Cognitive Defense
-            </div>
-            <h1 className="mt-6 font-display text-[3.25rem] font-extralight leading-[0.98] tracking-[-0.02em] text-ink md:text-[6rem] lg:text-[7.5rem]">
-              Protection before<br />
-              <span className="italic font-light text-gold">the damage.</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-xl font-display text-base font-light italic leading-relaxed text-muted-foreground md:text-lg">
-              A wearable intelligence that reads coercion as it happens —
-              and intervenes before loss occurs.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-8 pointer-events-auto">
-              <a
-                href="#access"
-                className="group inline-flex h-12 items-center bg-gold px-8 font-display italic text-base text-primary-foreground transition-opacity hover:opacity-90"
-              >
-                Join early access
-                <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
-              </a>
-              <a
-                href="#mission"
-                className="group inline-flex items-center gap-2 font-display italic text-base text-ink transition-colors hover:text-gold"
-              >
-                See how it works
-                <span className="transition-transform group-hover:translate-y-0.5">↓</span>
-              </a>
-            </div>
+        <div className="container-x relative z-10 flex h-full flex-col justify-end pb-16 md:pb-24">
+          <p className="eyebrow mb-5 text-foreground/70">Veris · Cognitive Defense</p>
+          <h1 className="display-xl max-w-[14ch]">
+            Protection before<br />the damage.
+          </h1>
+          <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-muted-foreground md:text-lg">
+            A titanium ring with on-device AI that reads coercion as it happens — and intervenes before money moves.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <a href="#access" className="btn-primary">
+              Request access
+              <span aria-hidden>→</span>
+            </a>
+            <a href="#how" className="btn-ghost">
+              See how it works
+            </a>
           </div>
         </div>
       </div>
@@ -291,25 +161,20 @@ function HeroStage({ stageRef }: { stageRef: React.RefObject<HTMLElement | null>
   );
 }
 
-/* ---------- MANIFESTO ---------- */
-function Manifesto() {
+/* ---------- MISSION (paper) ---------- */
+function Mission() {
   const ref = useReveal<HTMLDivElement>();
   return (
-    <section id="mission" className="relative overflow-hidden">
-      <div className="relative mx-auto max-w-[1440px] px-4 py-32 md:px-10 md:py-48">
-        <div ref={ref} className="reveal mx-auto max-w-3xl">
-          <p className="label-italic text-gold">§ 01 — Mission</p>
-          <p className="mt-12 font-display text-3xl font-extralight leading-[1.15] tracking-tight text-ink md:text-6xl">
-            Today's attacks no longer target systems.{" "}
-            <span className="italic font-light text-gold">They target human cognition.</span>
-          </p>
-          <p className="mt-12 font-display text-lg font-light italic leading-[1.75] text-muted-foreground md:text-xl">
-            AI-generated voices. Engineered urgency. Impersonation that bypasses
-            every security layer built for a slower world. Veris was built to
-            change that.
-          </p>
-          <p className="mt-16 font-display text-2xl font-light italic text-ink md:text-3xl">
-            127 families. <span className="text-gold">9 states.</span> One quiet system.
+    <section id="mission" className="paper section">
+      <div className="container-x">
+        <div ref={ref} className="reveal mx-auto max-w-4xl">
+          <p className="eyebrow">Mission</p>
+          <h2 className="display-lg mt-6 text-[--paper-foreground]">
+            Today's attacks no longer target systems.
+            <span className="opacity-50"> They target human cognition.</span>
+          </h2>
+          <p className="mt-8 max-w-2xl body-lg">
+            Synthetic voices. Engineered urgency. Impersonation that bypasses every security layer built for a slower world. Veris is the first wearable built to defend the human in the loop.
           </p>
         </div>
       </div>
@@ -317,27 +182,33 @@ function Manifesto() {
   );
 }
 
-/* ---------- SCIENCE — full-bleed verb rows ---------- */
-function Science() {
-  const items = [
-    { n: "01", verb: "Detect", line: "Continuous biosignal sensing reads stress as it happens." },
-    { n: "02", verb: "Analyze", line: "On-device AI fuses body and language into a real-time risk score." },
-    { n: "03", verb: "Intervene", line: "A quiet haptic pulse breaks engineered urgency." },
-    { n: "04", verb: "Protect", line: "Trusted contacts are alerted before money moves." },
+/* ---------- HOW IT WORKS ---------- */
+function HowItWorks() {
+  const steps = [
+    { n: "01", title: "Detect", body: "Continuous biosignal sensing reads autonomic stress as it happens — HRV, EDA, micro-tension." },
+    { n: "02", title: "Decide", body: "On-device AI fuses physiology with conversation context into a real-time risk score. Nothing leaves the ring." },
+    { n: "03", title: "Defend", body: "A quiet haptic breaks engineered urgency. Trusted contacts are alerted before money moves." },
   ];
+  const ref = useReveal<HTMLDivElement>();
   return (
-    <section id="science" className="relative">
-      <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-32">
+    <section id="how" className="section">
+      <div className="container-x">
         <div className="max-w-3xl">
-          <p className="label-italic text-gold">§ 02 — Science</p>
-          <h2 className="mt-6 font-display text-4xl font-extralight leading-[1.05] tracking-tight text-ink md:text-7xl">
-            Four quiet steps.<br />
-            <span className="italic font-light text-gold">One moment of clarity.</span>
-          </h2>
+          <p className="eyebrow">How it works</p>
+          <h2 className="display-lg mt-6">Three steps. Under one second.</h2>
         </div>
-        <div className="mt-20 divide-y divide-border border-y border-border">
-          {items.map((it) => (
-            <ScienceRow key={it.n} {...it} />
+        <div ref={ref} className="reveal mt-16 grid gap-px bg-border md:mt-24 md:grid-cols-3">
+          {steps.map((s) => (
+            <div key={s.n} className="bg-background p-8 md:p-10">
+              <div className="flex items-baseline gap-3">
+                <span className="text-[12px] font-mono text-muted-foreground">{s.n}</span>
+                <span className="hairline flex-1" />
+              </div>
+              <h3 className="display-md mt-8">{s.title}</h3>
+              <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-muted-foreground">
+                {s.body}
+              </p>
+            </div>
           ))}
         </div>
       </div>
@@ -345,67 +216,88 @@ function Science() {
   );
 }
 
-function ScienceRow({
-  n, verb, line,
-}: { n: string; verb: string; line: string }) {
-  const ref = useReveal<HTMLDivElement>(0.25);
-  return (
-    <div
-      ref={ref}
-      className="reveal grid grid-cols-12 items-baseline gap-6 py-12 md:gap-10 md:py-20"
-    >
-      <div className="col-span-12 flex items-center gap-4 md:col-span-1">
-        <span className="label-italic text-gold">{n}</span>
-      </div>
-      <div className="col-span-12 md:col-span-5">
-        <h3 className="font-display text-5xl font-extralight italic leading-none tracking-tight text-ink md:text-[7rem]">
-          {verb}.
-        </h3>
-      </div>
-      <div className="col-span-12 md:col-span-6">
-        <p className="max-w-md font-display text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
-          {line}
-        </p>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- DEVICE ---------- */
 function Device() {
-  const specs = ["7 days", "4 grams", "Titanium", "On-device", "Resistant", "Local-only"];
   const ref = useReveal<HTMLDivElement>();
+  const specs = [
+    ["Material", "Aerospace titanium"],
+    ["Weight", "4 grams"],
+    ["Battery", "7-day continuous"],
+    ["Compute", "On-device NPU"],
+    ["Sensors", "PPG · EDA · IMU · mic"],
+    ["Privacy", "Local-only · no cloud"],
+  ];
   return (
-    <section id="device" className="relative overflow-hidden">
-      <div className="relative mx-auto max-w-[1440px] px-4 py-28 md:px-10 md:py-40">
-        <div ref={ref} className="reveal grid items-center gap-16 lg:grid-cols-[1.05fr_1fr]">
-          <div className="relative aspect-square">
+    <section id="device" className="section border-t border-border">
+      <div className="container-x">
+        <div ref={ref} className="reveal grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-card">
             <img
               src={ringDevice}
-              alt="Veris ring blueprint"
-              width={1024}
-              height={1024}
+              alt="Veris ring, three-quarter view"
+              width={1080}
+              height={1350}
               loading="lazy"
-              className="float-slow relative mx-auto h-full w-full object-contain"
-              style={{ filter: "drop-shadow(0 30px 80px oklch(0.78 0.10 80 / 0.30))" }}
+              className="h-full w-full object-cover"
             />
           </div>
           <div>
-            <p className="label-italic text-gold">§ 03 — Device</p>
-            <h2 className="mt-6 font-display text-4xl font-extralight leading-tight tracking-tight text-ink md:text-7xl">
-              A whisper-thin titanium ring,<br />
-              <span className="italic font-light text-gold">engineered for continuous wear.</span>
-            </h2>
-            <p className="mt-10 font-display text-lg font-light italic text-muted-foreground md:text-xl">
-              No cloud. No recordings. Audio processed locally and discarded.
+            <p className="eyebrow">Device</p>
+            <h2 className="display-lg mt-6">Engineered for continuous wear.</h2>
+            <p className="mt-6 max-w-md body-lg">
+              Titanium shell. Sensor band integrated on the inner surface. All inference runs locally — audio is processed and discarded.
             </p>
-            <p className="mt-12 font-display text-xl font-light leading-loose text-ink md:text-2xl">
-              {specs.map((s, i) => (
-                <span key={s}>
-                  {s}
-                  {i < specs.length - 1 && <span className="mx-3 text-gold">·</span>}
-                </span>
+            <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6">
+              {specs.map(([k, v]) => (
+                <div key={k}>
+                  <dt className="eyebrow">{k}</dt>
+                  <dd className="mt-2 text-[15px] font-medium tracking-tight md:text-base">{v}</dd>
+                </div>
               ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- INTERVENTION ---------- */
+function Intervention() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section className="section border-t border-border">
+      <div className="container-x">
+        <div className="max-w-3xl">
+          <p className="eyebrow">The intervention</p>
+          <h2 className="display-lg mt-6">
+            One quiet pulse — at the moment it matters.
+          </h2>
+        </div>
+        <div ref={ref} className="reveal mt-16 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-16">
+          <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
+            <div className="mb-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+              <span className="haptic-dot" aria-hidden />
+              <span>Live transcript · Veris on-device</span>
+            </div>
+            <pre className="terminal whitespace-pre-wrap break-words font-mono">
+{`14:02:11  caller   "This is Officer Reyes. Your account is compromised."
+14:02:18  caller   "I need you to transfer $4,200 to a secure holding."
+14:02:24  veris    `}<span className="sig">HRV ↓ 38ms · EDA ↑ 2.7µS · urgency markers detected</span>{`
+14:02:25  veris    `}<span className="alert">RISK 0.91 — coercion pattern</span>{`
+14:02:26  veris    `}<span className="alert">→ haptic pulse · trusted contact notified</span>{`
+14:02:31  user     "Wait. I'm going to call my daughter first."`}
+            </pre>
+          </div>
+          <div className="flex flex-col justify-center">
+            <p className="body-lg">
+              Veris doesn't block your call. It doesn't read transcripts to a server. It interrupts the autonomic loop the attacker is exploiting — long enough for the rational mind to come back.
+            </p>
+            <div className="mt-8 hairline" />
+            <p className="eyebrow mt-6">Median intervention latency</p>
+            <p className="mt-2 text-3xl font-semibold tracking-tight">
+              <span className="text-[color:var(--signal)]">0.84s</span>
+              <span className="ml-2 text-muted-foreground text-base font-normal">from detection to pulse</span>
             </p>
           </div>
         </div>
@@ -414,105 +306,28 @@ function Device() {
   );
 }
 
-/* ---------- STATEMENT — ring reassembles ---------- */
-function Statement() {
-  const ref = useReveal<HTMLDivElement>();
-  return (
-    <section className="relative overflow-hidden vignette">
-      <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
-      <Constellation />
-      {/* Reassembled ring as backdrop */}
-      <img
-        src={ringHero}
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 w-[120vmin] -translate-x-1/2 -translate-y-1/2 opacity-25"
-        style={{ filter: "blur(1px) drop-shadow(0 0 80px oklch(0.78 0.10 80 / 0.4))" }}
-      />
-      <div className="relative mx-auto max-w-[1440px] px-4 py-32 md:px-10 md:py-56">
-        <div ref={ref} className="reveal-scale mx-auto max-w-4xl text-center">
-          <p className="label-italic text-gold">§ 04 — Thesis</p>
-          <h2 className="mt-10 font-display text-5xl font-extralight leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[6.5rem]">
-            The future of security<br />
-            <span className="italic font-light text-gold">is human-aware.</span>
-          </h2>
-          <p className="mx-auto mt-12 max-w-2xl font-display text-lg font-light italic leading-relaxed text-muted-foreground md:text-xl">
-            Defending infrastructure is no longer enough. Veris is building the
-            layer that understands human vulnerability in real time.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Constellation() {
-  const nodes: [number, number][] = [
-    [10, 20], [30, 8], [55, 15], [78, 6], [92, 24],
-    [85, 50], [70, 70], [50, 80], [30, 72], [12, 60],
-    [45, 45], [60, 35], [38, 30],
-  ];
-  const edges: [number, number][] = [
-    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7],
-    [7, 8], [8, 9], [9, 0], [10, 1], [10, 5], [10, 7],
-    [11, 2], [11, 6], [12, 0], [12, 4], [12, 8],
-  ];
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      className="absolute inset-0 h-full w-full opacity-40 spin-slow"
-      preserveAspectRatio="none"
-      aria-hidden
-    >
-      {edges.map(([a, b], i) => (
-        <line
-          key={i}
-          x1={nodes[a][0]} y1={nodes[a][1]}
-          x2={nodes[b][0]} y2={nodes[b][1]}
-          stroke="var(--gold)" strokeWidth="0.08" opacity="0.5"
-        />
-      ))}
-      {nodes.map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r="0.4" fill="var(--gold)" />
-      ))}
-    </svg>
-  );
-}
-
-/* ---------- METRICS ---------- */
-function Metrics() {
-  const stats: Array<{ value: string; label: string; numeric?: { to: number; prefix?: string; suffix?: string; decimals?: number } }> = [
-    { value: "$3.4B", label: "Lost annually by Americans 60+ to scams", numeric: { to: 3.4, prefix: "$", suffix: "B", decimals: 1 } },
-    { value: "76%", label: "Increase in AI-enabled fraud attempts", numeric: { to: 76, suffix: "%" } },
-    { value: "0", label: "Existing systems for real-time cognitive fraud detection" },
-    { value: "1st", label: "Wearable built for manipulation awareness" },
+/* ---------- NUMBERS ---------- */
+function Numbers() {
+  const stats = [
+    { to: 3.4, prefix: "$", suffix: "B", decimals: 1, label: "Lost annually by Americans 60+ to scams" },
+    { to: 76, suffix: "%", decimals: 0, label: "Increase in AI-enabled fraud, year over year" },
+    { to: 0, suffix: "", decimals: 0, label: "Real-time cognitive fraud defenses in market" },
+    { to: 1, suffix: "st", decimals: 0, label: "Wearable built for manipulation awareness" },
   ];
   const [ref, seen] = useInView<HTMLDivElement>();
   return (
-    <section className="relative">
-      <div ref={ref} className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-32">
-        <p className="label-italic text-gold">§ 05 — Field Data</p>
-        <div className="mt-16 grid gap-px bg-border md:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s, i) => (
-            <div key={s.label} className="bg-background p-8 md:p-12">
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                Fig. {String(i + 1).padStart(2, "0")}
+    <section ref={ref} className="section border-t border-border">
+      <div className="container-x">
+        <p className="eyebrow">Field data</p>
+        <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+          {stats.map((s) => (
+            <div key={s.label}>
+              <div className="display-md font-semibold tracking-tight">
+                {seen ? <CountUp {...s} /> : `${s.prefix ?? ""}0${s.suffix ?? ""}`}
               </div>
-              <div className="mt-8 font-display text-6xl font-extralight italic text-gold md:text-7xl">
-                {s.numeric && seen ? (
-                  <CountUp
-                    to={s.numeric.to}
-                    prefix={s.numeric.prefix}
-                    suffix={s.numeric.suffix}
-                    decimals={s.numeric.decimals ?? 0}
-                  />
-                ) : (
-                  s.value
-                )}
-              </div>
-              <div className="mt-6 font-display text-base font-light leading-relaxed text-muted-foreground">
+              <p className="mt-4 max-w-[18ch] text-[14px] leading-snug text-muted-foreground">
                 {s.label}
-              </div>
+              </p>
             </div>
           ))}
         </div>
@@ -522,7 +337,7 @@ function Metrics() {
 }
 
 function CountUp({
-  to, prefix = "", suffix = "", decimals = 0, duration = 1600,
+  to, prefix = "", suffix = "", decimals = 0, duration = 1400,
 }: {
   to: number; prefix?: string; suffix?: string; decimals?: number; duration?: number;
 }) {
@@ -539,9 +354,7 @@ function CountUp({
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, [to, duration]);
-  return (
-    <span>{prefix}{v.toFixed(decimals)}{suffix}</span>
-  );
+  return <span>{prefix}{v.toFixed(decimals)}{suffix}</span>;
 }
 
 /* ---------- EARLY ACCESS ---------- */
@@ -571,16 +384,16 @@ function EarlyAccess() {
   }
 
   return (
-    <section id="access" className="relative">
-      <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-10 md:py-40">
-        <div className="mx-auto max-w-3xl">
-          <p className="label-italic text-gold">§ 06 — Access</p>
-          <h2 className="mt-6 font-display text-4xl font-extralight leading-tight tracking-tight text-ink md:text-7xl">
-            Give them independence.<br />
-            <span className="italic font-light text-gold">Not vulnerability.</span>
-          </h2>
-          <form onSubmit={onSubmit} className="mt-16 grid gap-8">
-            <div className="grid gap-8 md:grid-cols-2">
+    <section id="access" className="section border-t border-border">
+      <div className="container-x">
+        <div className="mx-auto max-w-2xl">
+          <p className="eyebrow">Access</p>
+          <h2 className="display-lg mt-6">Give them independence. Not vulnerability.</h2>
+          <p className="mt-6 body-lg">
+            Veris is in private beta with families, clinicians, and security researchers. Request an invitation.
+          </p>
+          <form onSubmit={onSubmit} className="mt-12 grid gap-6">
+            <div className="grid gap-6 md:grid-cols-2">
               <Field label="Name" required>
                 <LabInput
                   required maxLength={100}
@@ -596,27 +409,24 @@ function EarlyAccess() {
                 />
               </Field>
             </div>
-            <Field label="Team or organization (optional)">
+            <Field label="Organization (optional)">
               <LabInput
                 maxLength={150}
                 value={form.team}
                 onChange={(e) => setForm({ ...form, team: e.target.value })}
               />
             </Field>
-            <div className="mt-6 flex flex-wrap items-center gap-6">
+            <div className="mt-4 flex flex-wrap items-center gap-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="group inline-flex h-12 items-center bg-gold px-8 font-display italic text-base text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+                className="btn-primary disabled:opacity-60"
               >
-                {loading ? "Securing…" : "Join early access"}
-                <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
+                {loading ? "Sending…" : "Request access"}
+                <span aria-hidden>→</span>
               </button>
-              <a
-                href="mailto:research@veris.systems"
-                className="font-display italic text-base text-ink transition-colors hover:text-gold"
-              >
-                Request research access →
+              <a href="mailto:research@veris.systems" className="text-[14px] text-muted-foreground hover:text-foreground">
+                Research inquiries →
               </a>
             </div>
           </form>
@@ -628,14 +438,11 @@ function EarlyAccess() {
 
 function Field({
   label, required, children,
-}: {
-  label: string; required?: boolean; children: ReactNode;
-}) {
+}: { label: string; required?: boolean; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="block label-italic text-muted-foreground">
-        {label}
-        {required && <span className="text-gold"> *</span>}
+      <span className="eyebrow block">
+        {label}{required && <span className="text-foreground"> *</span>}
       </span>
       <div className="mt-3">{children}</div>
     </label>
@@ -646,54 +453,49 @@ function LabInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className="h-11 w-full border-b border-border bg-transparent px-0 font-display text-xl font-light text-ink placeholder:text-muted-foreground/50 outline-none transition-colors focus:border-gold"
+      className="h-11 w-full border-b border-border bg-transparent px-0 text-base font-medium tracking-tight text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:border-foreground"
     />
   );
 }
 
 /* ---------- FOOTER ---------- */
 function Footer() {
-  const cols: Array<{ title: string; links: Array<{ label: string; href: string }> }> = [
+  const cols = [
     { title: "Product", links: [
       { label: "Device", href: "#device" },
-      { label: "Science", href: "#science" },
-      { label: "Early Access", href: "#access" },
+      { label: "How it works", href: "#how" },
+      { label: "Access", href: "#access" },
     ]},
     { title: "Company", links: [
       { label: "Mission", href: "#mission" },
       { label: "Press", href: "mailto:press@veris.systems" },
       { label: "Research", href: "mailto:research@veris.systems" },
-      { label: "Contact", href: "mailto:hello@veris.systems" },
     ]},
     { title: "Legal", links: [
       { label: "Privacy", href: "#" },
       { label: "Terms", href: "#" },
-      { label: "Responsible Disclosure", href: "mailto:security@veris.systems" },
+      { label: "Disclosure", href: "mailto:security@veris.systems" },
     ]},
   ];
   return (
-    <footer className="relative border-t border-border">
-      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 py-20 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-10 md:py-24">
+    <footer className="border-t border-border">
+      <div className="container-x grid gap-10 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:py-20">
         <div>
-          <div className="flex items-center gap-3">
-            <span className="grid h-8 w-8 place-items-center border border-gold text-gold font-display italic text-base">V</span>
-            <span className="font-display text-2xl text-ink">Veris</span>
+          <div className="flex items-center gap-2">
+            <span className="grid h-7 w-7 place-items-center rounded-full border border-foreground/40 text-[13px] font-semibold">V</span>
+            <span className="text-[15px] font-semibold tracking-tight">Veris</span>
           </div>
-          <p className="mt-6 max-w-xs font-display text-base font-light italic leading-relaxed text-muted-foreground">
-            Cognitive defense infrastructure for the AI era. A whisper-thin
-            titanium ring, built for the moment manipulation begins.
-          </p>
-          <p className="mt-8 label-italic text-muted-foreground">
-            Veris Labs — San Francisco
+          <p className="mt-5 max-w-xs text-[14px] leading-relaxed text-muted-foreground">
+            Cognitive defense infrastructure for the AI era.
           </p>
         </div>
         {cols.map((c) => (
           <div key={c.title}>
-            <p className="label-italic text-gold">{c.title}</p>
-            <ul className="mt-6 space-y-3">
+            <p className="eyebrow">{c.title}</p>
+            <ul className="mt-5 space-y-3">
               {c.links.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} className="font-display italic text-base text-ink/80 transition-colors hover:text-gold">
+                  <a href={l.href} className="text-[14px] text-foreground/80 transition-colors hover:text-foreground">
                     {l.label}
                   </a>
                 </li>
@@ -703,9 +505,9 @@ function Footer() {
         ))}
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-3 px-4 py-6 label-italic text-muted-foreground md:flex-row md:items-center md:px-10">
-          <span>© 2026 Veris Labs · All rights reserved</span>
-          <span className="text-gold">Moonshot 03 — Cognitive Defense</span>
+        <div className="container-x flex flex-col items-start justify-between gap-2 py-5 text-[12px] text-muted-foreground md:flex-row md:items-center">
+          <span>© 2026 Veris Labs · San Francisco</span>
+          <span>Cognitive defense — built for the AI era.</span>
         </div>
       </div>
     </footer>
