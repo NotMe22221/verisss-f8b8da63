@@ -93,7 +93,7 @@ function HeroSection() {
           <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-6">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-[6.5rem] font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-5xl mb-6 lg:mb-8" style={{ letterSpacing: "-0.04em" }}>
+          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-6 lg:mb-8" style={{ letterSpacing: "-0.04em" }}>
             Every fraud tool reacts.
             <br />
             Veris intervenes.
