@@ -86,17 +86,17 @@ function HeroSection() {
         </video>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
-        <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-24 md:p-12 md:pt-36">
+        <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-20 md:p-12 md:pt-36">
           <p className="text-[#1B3A4B]/70 text-xs font-medium tracking-[0.18em] uppercase mb-6">
-            Private Beta · Cognitive Defense
+            Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-tight max-w-xl mb-4" style={{ letterSpacing: "-0.04em" }}>
-            Protection before
+          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-[1.02] max-w-xl mb-5" style={{ letterSpacing: "-0.04em" }}>
+            Every fraud tool reacts.
             <br />
-            the damage.
+            Veris intervenes.
           </h1>
-          <p className="text-[#1B3A4B] text-base md:text-lg max-w-md mb-8 leading-relaxed font-medium">
-            Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time — before financial loss occurs.
+          <p className="text-[#1B3A4B] text-base md:text-lg max-w-lg mb-8 leading-relaxed font-medium">
+            Biosignals, voice, and on-device AI — fused in a ring — to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
           <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
             Join the beta
