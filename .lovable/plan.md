@@ -1,50 +1,43 @@
 ## Goal
 
-Keep the new Halo-style fintech layout (navbar, hero with video, info cards, backers marquee, use cases, etc.) but swap all the placeholder Halo copy back to the original **Veris** wearable / Moonshot Cognitive Defense content, and re-add the Early Access form that writes to the existing `early_access_signups` table.
+Recolor the landing page so the palette is built from two brand colors:
 
-## Sections (in order)
+- **#F4EFE6** (warm cream) — page surface, light text on dark
+- **#1B3A4B** (deep teal) — primary brand color: dark cards, primary buttons, dark text on light
 
-1. **Navbar** — `Veris` wordmark + LogoIcon. Links: Mission · The Device · Science · Press · Manifesto. Right CTA pill: "Secure Your Spot" → `#early-access`.
+This is a pure recolor of `src/routes/index.tsx`. No layout, copy, or component changes.
 
-2. **Hero** (full-screen video card, kept as-is structurally)
-   - Eyebrow: `MOONSHOT IDEA 03 · PRIVATE BETA · COGNITIVE DEFENSE`
-   - Headline: `Protection before the damage.`
-   - Subheadline: `Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time — before financial loss occurs.`
-   - CTA: `Join the beta` (pill + arrow circle)
-   - Marquee brands swapped to credibility logos: MIT Media Lab, DARPA, Stanford HAI, FINCEN, AARP Labs, Apple Health, Verily.
+## Color mapping
 
-3. **Info / Problem section** ("Meet Veris.")
-   - Left: eyebrow `The Problem`, h2 `Meet Veris.`, CTA `See the device`.
-   - Right paragraph: `$3.4B is lost annually to elder fraud, romance scams, and coercive financial pressure. Veris stops the damage before it happens.`
-   - 3 dark cards (drop the image card to stay on-brand): "Detects coercion in real time", "Private by design", "Built for the moment" — copy aligned with Veris.
+Today the page uses `#F5F5F5` as background, `#2B2644` (dark slate) as card color, and pure `black` / `white` for type and buttons. New mapping:
 
-4. **The Device** (new, replaces generic Halo info)
-   - Eyebrow + h2 `The Device`.
-   - Left: existing `ring-device-studio.jpg` in a rounded dark card.
-   - Right grid: 4 feature tiles (Titanium Shell, On-device AI, Haptic Engine, Skin Contact Sensors) + 3 stat tiles (7-DAY Battery, 4g Weight, 100m Water resistance).
+| Current | New | Where it's used |
+|---|---|---|
+| `bg-[#F5F5F5]` | `bg-[#F4EFE6]` | page + every section background |
+| `bg-[#2B2644]` | `bg-[#1B3A4B]` | dark info cards, device card, feature/stat tiles |
+| `bg-black` | `bg-[#1B3A4B]` | primary pill CTAs ("Join the beta", "See the device") |
+| `hover:bg-gray-800` | `hover:bg-[#14303f]` | hover state for primary pills (slightly darker teal) |
+| `text-black` | `text-[#1B3A4B]` | all dark headings/body on cream |
+| `text-black/70`, `text-black/60`, `text-black/50` | `text-[#1B3A4B]/70`, `/60`, `/50` | muted body / eyebrows / marquee logos |
+| `hover:text-black` (nav links) | `hover:text-[#1B3A4B]` | navbar link hover |
+| `text-gray-700` (nav links) | `text-[#1B3A4B]/70` | navbar links default |
+| `text-white`, `text-white/60`, `/70`, `/40` | `text-[#F4EFE6]`, `/70`, `/60`, `/40` | type inside dark teal cards |
+| `bg-white` (icon circle inside black pill) | `bg-[#F4EFE6]` | arrow circle inside primary pill |
+| `text-black` (arrow inside white circle) | `text-[#1B3A4B]` | arrow glyph color |
+| `bg-white/80 backdrop-blur` (Use Cases arrow circle on video) | keep `bg-[#F4EFE6]/80 backdrop-blur` | small arrow circle over video card |
 
-5. **Backed By** marquee — relabel to "Funded by premier partners and forward-thinking leaders." with VC logos: Founders Fund, Andreessen, USV, Khosla, Lux Capital, DCVC, 8VC, Founders Forum.
+The `<HeroSection>` keeps the background video; only the eyebrow / headline / sub / CTA colors change to the cream-on-video + teal pill scheme above. The hero brand marquee text (`text-black/60`) becomes `text-[#1B3A4B]/60`.
 
-6. **Who it protects** (replaces Halo "Use modes")
-   - Left: eyebrow `Veris in the Field`, h2 `Who it protects`, supporting copy on aging parents / isolated adults / high-risk individuals.
-   - Right: video card with overlay h3 `Families`, copy about the 127 families / 9 states pilot, "Join the pilot" link.
+The `BackedBySection` marquee logos go from `text-black/50` to `text-[#1B3A4B]/50`.
 
-7. **Early Access** (new dark rounded panel, `#early-access`)
-   - Eyebrow `Private Beta`, h2 `Secure your spot.`
-   - Form fields: Name, Email, Team / Family.
-   - Submit pill `Secure spot` → calls existing `submitEarlyAccess` server fn; toast on success / duplicate / error.
-   - Footer line: `Cohort 03 · 127 families · 9 states · on-device AI · private by design`.
-
-## Technical
-
-- Single file edit: `src/routes/index.tsx` — replace Halo copy with Veris copy, add `DeviceSection` and `EarlyAccessSection`, keep all layout/animation/marquee CSS unchanged.
-- Reuse existing `submitEarlyAccess` from `src/lib/early-access.functions.ts` and `Toaster` from `@/components/ui/sonner`.
-- Reuse existing asset `src/assets/ring-device-studio.jpg` for the device shot.
-- Keep `bg-[#F5F5F5]`, dark cards `#2B2644`, TT Norms Pro font setup, and both marquee keyframes from the current build.
-- No DB migration needed (table already exists).
+The page wrapper `bg-[#F5F5F5]` becomes `bg-[#F4EFE6]`.
 
 ## Out of scope
 
-- No new images generated.
-- No design-token / `styles.css` changes.
-- No new routes.
+- No changes to `src/styles.css` (the CSS variables there already use these two colors and are not consumed by this page's hard-coded classes).
+- No copy, structure, font, animation, or asset changes.
+- No new components.
+
+## Files
+
+- `src/routes/index.tsx` — single-file find-and-replace of the color tokens listed above.
