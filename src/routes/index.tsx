@@ -306,10 +306,10 @@ function ScienceSection() {
 /* ---------- MANIFESTO BAND ---------- */
 function ManifestoBand() {
   return (
-    <section className="bg-[#1B3A4B] px-6 py-28 md:py-36">
-      <div className="max-w-5xl mx-auto">
+    <section className="bg-[#1B3A4B] px-6 lg:px-12 py-28 md:py-36 lg:py-48">
+      <div className="max-w-5xl lg:max-w-7xl mx-auto">
         <p className="text-[#F4EFE6]/40 text-xs font-medium tracking-[0.18em] uppercase mb-6">Manifesto</p>
-        <p className="text-[#F4EFE6] text-3xl md:text-5xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.03em" }}>
+        <p className="text-[#F4EFE6] text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.03em" }}>
           Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision — because that's the only second that matters.
         </p>
       </div>
