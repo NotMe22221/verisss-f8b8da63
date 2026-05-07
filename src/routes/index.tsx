@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import ringDevice from "@/assets/ring-device-studio.jpg";
+import ringDevice from "@/assets/ring-device-studio.png";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
