@@ -1,21 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Shield, Heart, Lock } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import ringDevice from "@/assets/ring-device-studio.png";
-import heroGrandmother from "@/assets/hero-grandmother.jpg";
-import scenePhone from "@/assets/scene-phone.jpg";
-import sceneDoor from "@/assets/scene-door.jpg";
-import sceneFamily from "@/assets/scene-family.jpg";
-import sceneReassurance from "@/assets/scene-reassurance.jpg";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
   head: () => ({
     meta: [
-      { title: "Veris — Quiet protection for the people who matter most." },
+      { title: "Veris — Protection before the damage." },
       {
         name: "description",
         content:
-          "Veris is a calm, wearable layer of intelligence designed to protect older adults from manipulation and coercion — gently, privately, before any damage is done.",
+          "Veris is the first wearable intelligence system designed to detect coercion, manipulation, and scam pressure in real time before financial loss occurs.",
       },
     ],
   }),
@@ -32,374 +27,215 @@ function LogoIcon({ className = "w-7 h-7" }: { className?: string }) {
 
 /* ---------- NAVBAR ---------- */
 function Navbar() {
-  const links = ["Mission", "The Ring", "Science", "Families", "Press"];
+  const links = ["Mission", "The Device", "Science", "Press", "Manifesto"];
   return (
-    <nav className="absolute top-0 left-0 right-0 z-30 px-6 py-5">
+    <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-5">
       <div className="max-w-[88rem] mx-auto flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 text-foreground">
+        <a href="#" className="flex items-center gap-2 text-[#1B3A4B]">
           <LogoIcon className="w-7 h-7" />
           <span className="text-2xl font-medium tracking-tight">Veris</span>
         </a>
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
-            <a key={l} href="#" className="text-sm text-foreground/65 hover:text-foreground font-medium transition-colors duration-200">
+            <a key={l} href="#" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
               {l}
             </a>
           ))}
         </div>
-        <a href="#early-access" className="hidden md:inline-flex items-center gap-2 bg-foreground text-background text-sm font-medium pl-5 pr-2 py-1.5 rounded-full hover:bg-foreground/90 transition-colors">
-          Join Early Access
-          <span className="bg-background rounded-full p-1.5">
-            <ArrowRight className="w-3.5 h-3.5 text-foreground" />
-          </span>
-        </a>
       </div>
     </nav>
+  );
+}
+
+/* ---------- BRAND MARQUEE ---------- */
+const heroBrands: Array<{ name: string; style: React.CSSProperties }> = [
+  { name: "MIT Media Lab", style: { fontFamily: "Georgia, serif", fontWeight: 700, letterSpacing: "-0.02em", fontSize: 15 } },
+  { name: "DARPA", style: { fontFamily: "Arial, sans-serif", fontWeight: 900, letterSpacing: "0.08em", fontSize: 13, textTransform: "uppercase" } },
+  { name: "Stanford HAI", style: { fontFamily: "'Trebuchet MS', sans-serif", fontWeight: 600, letterSpacing: "0.01em", fontSize: 15, fontStyle: "italic" } },
+  { name: "FINCEN", style: { fontFamily: "'Courier New', monospace", fontWeight: 700, letterSpacing: "0.12em", fontSize: 13, textTransform: "uppercase" } },
+  { name: "AARP Labs", style: { fontFamily: "Palatino, serif", fontWeight: 400, letterSpacing: "-0.01em", fontSize: 16 } },
+  { name: "Apple Health", style: { fontFamily: "Impact, sans-serif", fontWeight: 400, letterSpacing: "0.04em", fontSize: 14 } },
+  { name: "Verily", style: { fontFamily: "Verdana, sans-serif", fontWeight: 700, letterSpacing: "-0.03em", fontSize: 13 } },
+];
+
+function HeroMarquee() {
+  return (
+    <div className="mt-24 w-full max-w-md overflow-hidden">
+      <style>{`
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-track { display: flex; width: max-content; animation: marquee 22s linear infinite; }
+      `}</style>
+      <div className="marquee-track">
+        {[...heroBrands, ...heroBrands].map((b, i) => (
+          <span key={i} className="mx-7 shrink-0 text-[#1B3A4B]/60 whitespace-nowrap" style={b.style}>
+            {b.name}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 
 /* ---------- HERO ---------- */
 function HeroSection() {
   return (
-    <section className="relative w-full px-4 md:px-6 pt-4 pb-6">
-      <div className="relative w-full rounded-[28px] overflow-hidden max-w-[88rem] mx-auto" style={{ minHeight: "min(92vh, 880px)" }}>
-        <img
-          src={heroGrandmother}
-          alt="Older woman in warm morning light wearing the Veris ring"
-          className="absolute inset-0 w-full h-full object-cover"
-          width={1600}
-          height={1200}
-        />
-        {/* warm cream wash for legibility, no dark overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(251,248,242,0.85) 0%, rgba(251,248,242,0.55) 28%, rgba(251,248,242,0.18) 55%, rgba(251,248,242,0.05) 100%)",
-          }}
-        />
-        {/* soft sun glow bottom-right */}
-        <div
-          className="absolute -bottom-24 -right-24 w-[420px] h-[420px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(closest-side, rgba(249,233,201,0.55), transparent 70%)" }}
-        />
-
-        <div className="relative z-10 flex flex-col items-start justify-start h-full px-6 pt-28 pb-16 md:px-14 md:pt-36 md:pb-20" style={{ minHeight: "inherit" }}>
-          <p className="text-foreground/65 text-[11px] md:text-xs font-medium tracking-[0.22em] uppercase mb-6 flex items-center gap-2">
-            <span className="inline-block w-6 h-px bg-accent" />
-            Quiet protection, worn naturally
+    <section className="flex-1 px-4 md:px-6 pt-20 pb-6 flex items-end">
+      <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] md:min-h-0" style={{ height: "calc(100vh - 96px)" }}>
+        <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full" style={{ filter: "grayscale(1) contrast(1.05) brightness(1.02)" }}>
+          <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
+        <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-20 md:p-12 md:pt-36">
+          <p className="text-[#1B3A4B]/70 text-xs font-medium tracking-[0.18em] uppercase mb-6">
+            Private Beta · The Cognitive Defense Layer
           </p>
-          <h1
-            className="text-foreground text-[44px] sm:text-6xl md:text-7xl font-medium leading-[1.02] max-w-2xl mb-6"
-            style={{ letterSpacing: "-0.04em" }}
-          >
-            Protection before<br />the damage.
+          <h1 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-[1.02] max-w-xl mb-5" style={{ letterSpacing: "-0.04em" }}>
+            Every fraud tool reacts.
+            <br />
+            Veris intervenes.
           </h1>
-          <p className="text-foreground/75 text-base md:text-xl max-w-xl mb-10 leading-relaxed">
-            A calm, wearable layer of intelligence for the people who matter most — designed to protect independence, not replace it.
+          <p className="text-[#1B3A4B] text-base md:text-lg max-w-lg mb-8 leading-relaxed font-medium">
+            Biosignals, voice, and on-device AI — fused in a ring — to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <a
-              href="#early-access"
-              className="inline-flex items-center justify-center gap-3 bg-foreground text-background text-base font-medium pl-7 pr-2 py-2 rounded-full hover:bg-foreground/90 transition-colors duration-200"
-            >
-              Join Early Access
-              <span className="bg-background rounded-full p-2">
-                <ArrowRight className="w-4 h-4 text-foreground" />
-              </span>
-            </a>
-            <a
-              href="#how"
-              className="inline-flex items-center justify-center gap-2 border border-foreground/25 text-foreground text-base font-medium px-6 py-3 rounded-full hover:border-foreground/60 transition-colors duration-200"
-            >
-              See how it works
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- WORN NATURALLY ---------- */
-const moments = [
-  {
-    img: scenePhone,
-    title: "On the phone",
-    quote: "The body reacts before the mind understands.",
-  },
-  {
-    img: sceneDoor,
-    title: "At the front door",
-    quote: "A gentle pause when something feels off.",
-  },
-  {
-    img: sceneFamily,
-    title: "With family",
-    quote: "Family stays close, without watching.",
-  },
-];
-
-function MomentsSection() {
-  return (
-    <section id="how" className="px-6 py-24 md:py-32">
-      <div className="max-w-[88rem] mx-auto">
-        <div className="max-w-2xl mb-14 md:mb-20">
-          <p className="text-foreground/55 text-xs font-medium tracking-[0.22em] uppercase mb-4 flex items-center gap-2">
-            <span className="inline-block w-6 h-px bg-accent" />
-            Worn naturally
-          </p>
-          <h2 className="text-foreground text-4xl md:text-5xl font-medium leading-[1.05]" style={{ letterSpacing: "-0.035em" }}>
-            A quiet presence in the everyday moments that matter.
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-          {moments.map((m) => (
-            <figure key={m.title} className="flex flex-col gap-5">
-              <div className="rounded-[22px] overflow-hidden bg-muted aspect-[4/5]">
-                <img
-                  src={m.img}
-                  alt={m.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <figcaption>
-                <p className="text-foreground/55 text-xs font-medium tracking-[0.18em] uppercase mb-2">{m.title}</p>
-                <p className="text-foreground text-lg md:text-xl leading-snug" style={{ letterSpacing: "-0.015em" }}>
-                  {m.quote}
-                </p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- WHY VERIS ---------- */
-const pillars = [
-  { icon: Heart, title: "Calm", body: "A soft haptic, never an alarm. A pause, never panic." },
-  { icon: Lock, title: "Private", body: "Nothing leaves the ring. No cloud, no recording, no surveillance." },
-  { icon: Shield, title: "Human", body: "Built with families, for families — protecting dignity, not replacing it." },
-];
-
-function WhySection() {
-  return (
-    <section className="px-6 py-24 md:py-32" style={{ background: "linear-gradient(180deg, var(--surface-warm) 0%, var(--background) 100%)" }}>
-      <div className="max-w-[88rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-        <div className="lg:col-span-5">
-          <p className="text-foreground/55 text-xs font-medium tracking-[0.22em] uppercase mb-4 flex items-center gap-2">
-            <span className="inline-block w-6 h-px bg-accent" />
-            Why Veris
-          </p>
-          <h2 className="text-foreground text-4xl md:text-5xl font-medium leading-[1.05] mb-6" style={{ letterSpacing: "-0.035em" }}>
-            Designed to protect independence, not replace it.
-          </h2>
-          <p className="text-foreground/70 text-lg leading-relaxed max-w-md">
-            Most safeguards arrive too late — after the call, after the transfer, after the regret. Veris notices the quiet signs of pressure as they happen, and offers a gentle moment to pause.
-          </p>
-        </div>
-
-        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {pillars.map(({ icon: Icon, title, body }) => (
-            <div key={title} className="rounded-[22px] bg-card border border-border p-7 flex flex-col gap-5 min-h-[240px]">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "var(--surface-sun)" }}>
-                <Icon className="w-5 h-5" style={{ color: "var(--accent)" }} strokeWidth={1.6} />
-              </div>
-              <div>
-                <h3 className="text-foreground text-xl font-medium mb-2" style={{ letterSpacing: "-0.02em" }}>{title}</h3>
-                <p className="text-foreground/65 text-sm leading-relaxed">{body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- THE RING ---------- */
-const ringFeatures = [
-  { label: "Material", value: "Aerospace-grade titanium · 4g" },
-  { label: "Intelligence", value: "On-device AI · zero cloud" },
-  { label: "Signal", value: "Silent haptic, only the wearer feels" },
-  { label: "Battery", value: "7-day continuous wear" },
-];
-
-function RingSection() {
-  return (
-    <section id="ring" className="px-6 py-24 md:py-32">
-      <div className="max-w-[88rem] mx-auto">
-        <div className="max-w-2xl mb-14 md:mb-20">
-          <p className="text-foreground/55 text-xs font-medium tracking-[0.22em] uppercase mb-4 flex items-center gap-2">
-            <span className="inline-block w-6 h-px bg-accent" />
-            The Ring
-          </p>
-          <h2 className="text-foreground text-4xl md:text-5xl font-medium leading-[1.05]" style={{ letterSpacing: "-0.035em" }}>
-            Lightweight. Non-medical.<br />Quietly present.
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-          <div
-            className="rounded-[28px] overflow-hidden relative min-h-[480px] lg:min-h-[600px] flex items-center justify-center"
-            style={{
-              background:
-                "radial-gradient(circle at 50% 40%, rgba(249,233,201,0.9) 0%, var(--surface-warm) 55%, var(--background) 100%)",
-            }}
-          >
-            <img
-              src={ringDevice}
-              alt="The Veris ring"
-              loading="lazy"
-              className="relative z-10 max-w-[80%] max-h-[80%] object-contain drop-shadow-[0_30px_60px_rgba(31,42,58,0.18)]"
-            />
-          </div>
-
-          <div className="rounded-[28px] bg-card border border-border p-8 md:p-12 flex flex-col justify-center">
-            <p className="text-foreground/70 text-lg leading-relaxed mb-10">
-              A piece you forget you're wearing — until the moment it matters. No screens. No notifications. Just a calm presence on your finger.
-            </p>
-            <ul className="divide-y divide-border">
-              {ringFeatures.map((f) => (
-                <li key={f.label} className="py-5 flex items-baseline justify-between gap-6">
-                  <span className="text-foreground/55 text-xs font-medium tracking-[0.18em] uppercase shrink-0">{f.label}</span>
-                  <span className="text-foreground text-base md:text-lg text-right font-medium" style={{ letterSpacing: "-0.015em" }}>{f.value}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- FAMILY REASSURANCE ---------- */
-function ReassuranceSection() {
-  return (
-    <section className="px-6 py-24 md:py-32" style={{ background: "var(--surface-warm)" }}>
-      <div className="max-w-[88rem] mx-auto">
-        <div className="rounded-[28px] overflow-hidden bg-card border border-border grid grid-cols-1 lg:grid-cols-5">
-          <div className="lg:col-span-3 relative min-h-[360px] lg:min-h-[560px]">
-            <img
-              src={sceneReassurance}
-              alt="Mother and adult daughter sitting together in warm light"
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          </div>
-          <div className="lg:col-span-2 p-8 md:p-14 flex flex-col justify-center">
-            <p className="text-foreground/55 text-xs font-medium tracking-[0.22em] uppercase mb-5 flex items-center gap-2">
-              <span className="inline-block w-6 h-px bg-accent" />
-              For families
-            </p>
-            <p className="text-foreground text-3xl md:text-4xl font-medium leading-[1.1] mb-8" style={{ letterSpacing: "-0.03em" }}>
-              "Quiet protection for the people who matter most."
-            </p>
-            <p className="text-foreground/65 text-base leading-relaxed mb-10 max-w-md">
-              Veris keeps families close without watching over their shoulder. A gentle reassurance, nothing more.
-            </p>
-            <a
-              href="#early-access"
-              className="self-start inline-flex items-center gap-3 bg-foreground text-background text-base font-medium pl-7 pr-2 py-2 rounded-full hover:bg-foreground/90 transition-colors duration-200"
-            >
-              Join Early Access
-              <span className="bg-background rounded-full p-2">
-                <ArrowRight className="w-4 h-4 text-foreground" />
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- TRUST STRIP ---------- */
-const trustBrands = [
-  "MIT Media Lab",
-  "Stanford HAI",
-  "AARP Labs",
-  "Apple Health",
-  "Verily",
-  "DARPA",
-];
-
-function TrustSection() {
-  return (
-    <section className="px-6 py-20">
-      <div className="max-w-[88rem] mx-auto">
-        <p className="text-center text-foreground/45 text-xs font-medium tracking-[0.24em] uppercase mb-8">
-          In conversation with
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
-          {trustBrands.map((b) => (
-            <span key={b} className="text-foreground/55 text-sm md:text-base font-medium tracking-tight">
-              {b}
+          <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
+            Join the beta
+            <span className="bg-[#F4EFE6] rounded-full p-2">
+              <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
             </span>
-          ))}
+          </a>
+          <HeroMarquee />
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------- FOOTER ---------- */
-function Footer() {
+/* ---------- INFO / PROBLEM ---------- */
+function InfoSection() {
   return (
-    <footer id="early-access" className="px-6 pt-20 pb-10" style={{ background: "var(--surface-warm)" }}>
+    <section className="bg-[#F4EFE6] px-6 py-24">
       <div className="max-w-[88rem] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 mb-16">
-          <div className="md:col-span-2 max-w-xl">
-            <a href="#" className="flex items-center gap-2 text-foreground mb-6">
-              <LogoIcon className="w-7 h-7" />
-              <span className="text-2xl font-medium tracking-tight">Veris</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-start">
+          <div>
+            <p className="text-[#1B3A4B]/60 text-sm mb-3">The Problem</p>
+            <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-tight mb-8" style={{ letterSpacing: "-0.03em" }}>
+              Meet Veris.
+            </h2>
+            <a href="#device" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base font-medium pl-8 pr-2 py-2 rounded-full hover:bg-[#14303f] transition-colors duration-200">
+              See the device
+              <span className="bg-[#F4EFE6] rounded-full p-2">
+                <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
+              </span>
             </a>
-            <p className="text-foreground text-2xl md:text-3xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.025em" }}>
-              Human-aware technology, designed with care.
+          </div>
+          <p className="text-[#1B3A4B]/70 text-2xl md:text-3xl leading-relaxed">
+            $3.4B is lost annually to elder fraud, romance scams, and coercive
+            financial pressure. Veris stops the damage before it happens.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-2 rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
+            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
+              Detects coercion in real time
+            </h3>
+            <p className="text-[#F4EFE6]/60 text-base max-w-xs">
+              On-device AI listens for stress signatures, scripted pressure, and
+              the physiological fingerprint of duress.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-8 text-sm">
-            <div className="flex flex-col gap-3">
-              <p className="text-foreground/45 text-xs font-medium tracking-[0.2em] uppercase mb-1">Veris</p>
-              {["Mission", "The Ring", "Science", "Press"].map((l) => (
-                <a key={l} href="#" className="text-foreground/70 hover:text-foreground transition-colors">{l}</a>
-              ))}
-            </div>
-            <div className="flex flex-col gap-3">
-              <p className="text-foreground/45 text-xs font-medium tracking-[0.2em] uppercase mb-1">Care</p>
-              {["For Families", "Privacy", "Contact"].map((l) => (
-                <a key={l} href="#" className="text-foreground/70 hover:text-foreground transition-colors">{l}</a>
-              ))}
-            </div>
+          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
+            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
+              Private
+              <br />
+              by design
+            </h3>
+            <p className="text-[#F4EFE6]/60 text-base">
+              Nothing leaves the ring. No cloud, no recording, no surveillance —
+              just a quiet haptic when something is wrong.
+            </p>
+          </div>
+          <div className="rounded-2xl p-7 min-h-80 flex flex-col justify-between bg-[#1B3A4B]">
+            <h3 className="text-[#F4EFE6] text-2xl font-medium leading-snug" style={{ letterSpacing: "-0.02em" }}>
+              Built for
+              <br />
+              the moment
+            </h3>
+            <p className="text-[#F4EFE6]/60 text-base">
+              127 families across 9 states. A 7-day battery. A defense system
+              that lives on your finger.
+            </p>
           </div>
         </div>
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <p className="text-foreground/50 text-sm">© {new Date().getFullYear()} Veris. Designed to protect independence.</p>
-          <p className="text-foreground/50 text-sm">Private Beta · By invitation</p>
-        </div>
       </div>
-    </footer>
+    </section>
   );
 }
+
+/* ---------- THE DEVICE ---------- */
+const deviceFeatures = [
+  { title: "Titanium Shell", body: "Aerospace-grade, hypoallergenic, 4g." },
+  { title: "On-device AI", body: "Edge inference. Zero cloud dependency." },
+  { title: "Haptic Engine", body: "Silent alerts only the wearer feels." },
+  { title: "Skin Contact Sensors", body: "Continuous physiological readout." },
+];
+const deviceStats = [
+  { value: "7", unit: "DAY", label: "Battery" },
+  { value: "4", unit: "g", label: "Weight" },
+  { value: "100", unit: "m", label: "Water resistance" },
+];
+
+function DeviceSection() {
+  return (
+    <section id="device" className="bg-[#F4EFE6] px-6 py-24">
+      <div className="max-w-[88rem] mx-auto">
+        <p className="text-[#1B3A4B]/60 text-sm mb-3">The Device</p>
+        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl font-medium leading-none mb-12" style={{ letterSpacing: "-0.04em" }}>
+          The Device
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] relative">
+            <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {deviceFeatures.map((f) => (
+              <div key={f.title} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
+                <h3 className="text-[#F4EFE6] text-lg font-medium" style={{ letterSpacing: "-0.02em" }}>{f.title}</h3>
+                <p className="text-[#F4EFE6]/60 text-sm">{f.body}</p>
+              </div>
+            ))}
+            {deviceStats.map((s) => (
+              <div key={s.label} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
+                <p className="text-[#F4EFE6] text-4xl font-medium" style={{ letterSpacing: "-0.03em" }}>
+                  {s.value}<span className="text-[#F4EFE6]/70 text-xl ml-1">{s.unit}</span>
+                </p>
+                <p className="text-[#F4EFE6]/60 text-sm uppercase tracking-wider">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+
 
 /* ---------- PAGE ---------- */
 function VerisLanding() {
   return (
-    <div className="flex flex-col bg-background text-foreground">
-      <div className="relative">
+    <div className="flex flex-col bg-[#F4EFE6]">
+      <div className="h-screen flex flex-col overflow-hidden relative">
         <Navbar />
         <HeroSection />
       </div>
-      <MomentsSection />
-      <WhySection />
-      <RingSection />
-      <ReassuranceSection />
-      <TrustSection />
-      <Footer />
+      <InfoSection />
+      <DeviceSection />
+      
+      
+      
     </div>
   );
 }

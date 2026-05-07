@@ -1,104 +1,34 @@
-# Veris — Warm Redesign Plan
+## Goal
+Rebuild the hero around the chosen positioning: **manifesto headline + human subhead.** No layout overhaul — just copy, eyebrow, and a small contrast/hierarchy fix so the new line lands.
 
-Shift the landing from "dark/mysterious cybersecurity" to "calm, premium, human protection." Same single page (`src/routes/index.tsx`), same stack — restructured sections, new palette, new imagery, softened copy.
+## Copy changes (`src/routes/index.tsx`, hero block ~lines 90–100)
 
-## 1. Palette & global tokens (`src/styles.css`)
+**Eyebrow**
+- From: `Private Beta · Cognitive Defense`
+- To: `Private Beta · The Cognitive Defense Layer`
 
-Move from dark slate base to warm, airy base. New tokens:
+**Headline (H1)**
+- From: `Protection before / the damage.`
+- To: `Every fraud tool reacts. / Veris intervenes.`
+- Keep current size and tracking. Add a subtle weight contrast: "Veris intervenes." rendered in the same teal but with `font-medium` continuing — no color swap (keeps it premium, not loud).
 
-- `--background: #FBF8F2` (warm cream)
-- `--foreground: #1F2A3A` (soft navy ink, not black)
-- `--card: #FFFFFF` with `--card-foreground: #1F2A3A`
-- `--muted: #EFE7D8` / `--muted-foreground: #6A6A66` (warm gray)
-- `--accent: #C8A26A` (champagne gold) → for hairlines/icons only, never floods
-- `--secondary: #2C4A63` (muted navy) — used sparingly for one accent block
-- New: `--surface-warm: #F4EBDA`, `--surface-sun: #F9E9C9` (sunlight wash)
+**Subhead**
+- From the current single sentence.
+- To a two-beat line that carries the warmth Direction 2 had:
+  > Biosignals, voice, and on-device AI — fused in a ring — to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
+- Keep at `text-base md:text-lg`, full teal, `font-medium`. Cap width at `max-w-lg` so the rhythm of the triplet doesn't break awkwardly on desktop.
 
-Body bg becomes cream. Remove the dark-slate default. Keep `paper` token but invert: now the rare *darker* panel is the inversion.
+**CTA**
+- Keep "Join the beta" — it fits the manifesto register. No change.
 
-## 2. Hero (rebuild)
+## Small supporting tweaks
+- Tighten the H1 line-height very slightly (`leading-[1.02]`) so the two lines feel like one statement, not two sentences.
+- Reduce mb between H1 and subhead from `mb-4` to `mb-5` to give the longer subhead breathing room.
+- Mobile (384px): the longer subhead will push the CTA down. Reduce the hero's mobile top padding from `pt-24` to `pt-20` so nothing clips. No change to desktop.
 
-Replace the grayscale dark-tinted video with a **bright, warm, human hero**:
-
-- Full-bleed image of an older woman at home in soft window light, wearing the ring naturally (hand resting on a coffee mug). Generated via Lovable AI image gen (Nano Banana Pro), saved to `src/assets/hero-grandmother.jpg`.
-- Layered soft gradient: warm cream → translucent at the bottom for legibility. No dark mix-blend overlay.
-- Eyebrow: `Quiet protection, worn naturally`
-- H1 (large, navy ink, generous leading): **"Protection before the damage."**
-- Subhead: "A calm, wearable layer of intelligence for the people who matter most — designed to protect independence, not replace it."
-- Primary CTA: **Join Early Access** (filled navy pill)
-- Secondary CTA: **See How It Works** (ghost, navy outline)
-- Remove the brand marquee from the hero — moved lower as a quiet trust strip.
-
-## 3. New section: "Worn naturally" (human moments)
-
-Editorial 3-up image grid with short captions, no dark cards:
-
-1. Grandmother answering a phone call at home — *"The body reacts before the mind understands."*
-2. Older man at the front door speaking to a stranger — *"A gentle pause when something feels off."*
-3. Daughter glancing at a reassuring notification — *"Family stays close, without watching."*
-
-Soft rounded corners, generous whitespace, captions in warm gray. Images generated to `src/assets/scene-{1,2,3}.jpg`.
-
-## 4. Rework "The Problem" → "Why Veris"
-
-Drop the $3.4B fear stat as the lead. Replace with an emotional, calm two-column:
-
-- Left: small eyebrow "Why Veris", H2 *"Designed to protect independence, not replace it."*, short paragraph about quiet intervention.
-- Right: three stacked light cards (white on cream, hairline border, gold dot accent):
-  - **Calm** — "A soft haptic, never an alarm."
-  - **Private** — "Nothing leaves the ring. No cloud, no recording."
-  - **Human** — "Built with families, for families."
-
-No more dark navy card grid.
-
-## 5. "The Ring" product section
-
-Bright, editorial product moment:
-
-- Large soft cream panel with the existing `ring-device-studio.png` floated on a champagne-gold gradient wash (light, sunlit feel, not dark).
-- Right column: 4 minimal feature rows separated by hairlines (titanium, on-device AI, haptic, 7-day battery). Numbers live as small ticks, not bold dark cards.
-- Tagline above: *"Lightweight. Non-medical. Quietly present."*
-
-## 6. Family reassurance band
-
-Single full-width warm panel (cream + soft sun gradient): an editorial photo of a multi-generational moment (daughter + mother) on the left, on the right one quote-style line: *"Quiet protection for the people who matter most."* Below: small CTA "Join Early Access".
-
-## 7. Trust strip + footer
-
-- Quiet brand row (the existing `heroBrands` list) rendered as a single static, low-contrast row — not a marquee in the hero. Label: "In conversation with".
-- Minimal footer: logo, short manifesto line ("Human-aware technology."), nav links, copyright. All in warm gray on cream.
-
-## 8. Navbar
-
-Keep current structure but:
-- Transparent over the bright hero (navy ink already works on cream).
-- Update links to: Mission · The Ring · Science · Families · Press
-- Add a small navy-pill "Join Early Access" CTA on the right (desktop).
-
-## 9. Imagery generation
-
-Generate four warm, editorial, photo-real images via Lovable AI (`google/gemini-3-pro-image-preview`) into `src/assets/`:
-- `hero-grandmother.jpg` — older woman, warm window light, ring on finger, mug.
-- `scene-phone.jpg` — older woman calmly on a landline, kitchen, warm light.
-- `scene-door.jpg` — older man at front door, daylight, ring visible.
-- `scene-family.jpg` — adult daughter glancing at phone with calm expression, mother in soft focus behind.
-
-Style prompt baseline: "editorial photography, natural warm window light, shallow depth of field, soft skin tones, cream and champagne palette, dignified, calm, no tech UI overlays."
-
-## 10. Copy direction (locked)
-
-- Avoid: "fraud," "scam," "attack," "intervene" as a verb pattern.
-- Lean on: independence, calm, protection, family, dignity, quiet, trust.
-- Headlines stay short (≤7 words). Body lines stay ≤2 sentences.
-
-## Out of scope
-- Animations beyond existing `reveal` / soft fades.
-- New routes or backend changes.
-- Auth / early-access form rework (existing CTA anchor stays).
+## Out of scope (deliberately)
+- Video treatment, contrast token system, and proof block — those were the other items in my earlier critique. You picked headlines-only first; I'll propose those next once this lands.
+- No new components, no new files, no dependency changes.
 
 ## Files touched
-- `src/styles.css` — palette + a couple of warm utility classes.
-- `src/routes/index.tsx` — full section rewrite (single file, same exports).
-- `src/assets/` — 4 new generated images.
-
-After implementation: visual QA at mobile (384px) and desktop widths; verify cream bg, navy ink contrast (WCAG AA on body copy), and that no dark slate panels remain except possibly one tasteful accent.
+- `src/routes/index.tsx` (hero section only, ~10 lines)
