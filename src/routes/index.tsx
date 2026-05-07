@@ -185,13 +185,13 @@ function HowItWorksSection() {
 /* ---------- AUDIENCE ---------- */
 function AudienceSection() {
   return (
-    <section className="bg-[#F4EFE6] px-6 py-24">
+    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">Who It's For</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl font-medium leading-[1.05] max-w-3xl mb-12" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-12 lg:mb-20" style={{ letterSpacing: "-0.04em" }}>
           Built for the people doing the worrying — and the people they worry about.
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6]">
             <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For families</p>
             <div>
