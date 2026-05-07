@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -34,16 +34,19 @@ function Navbar() {
   return (
     <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-5">
       <div className="max-w-[88rem] mx-auto flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 text-[#1B3A4B]">
+        <Link to="/" className="flex items-center gap-2 text-[#1B3A4B]">
           <LogoIcon className="w-7 h-7" />
           <span className="text-2xl font-medium tracking-tight">Veris</span>
-        </a>
+        </Link>
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <a key={l} href="#" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
               {l}
             </a>
           ))}
+          <Link to="/about" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
+            About
+          </Link>
         </div>
       </div>
     </nav>
@@ -396,43 +399,7 @@ function CTASection() {
   );
 }
 
-/* ---------- ABOUT US ---------- */
-function AboutSection() {
-  const team = [
-    { name: "Aria Chen", role: "CEO & Co-founder", bio: "Former neuroscience researcher at Stanford HAI. Watched her grandmother lose $42,000 to a scam call. Started Veris six months later." },
-    { name: "Marcus Okafor", role: "CTO & Co-founder", bio: "Built on-device ML systems at Apple Health. Believes the most powerful AI is the kind that runs entirely on your finger." },
-    { name: "Dr. Helena Reyes", role: "Chief Science Officer", bio: "Geriatric neurologist, 15 years at MIT Media Lab. Co-authored the leading research on stress biomarkers in elder cognition." },
-  ];
-  return (
-    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
-      <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3">About Us</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-12 lg:mb-16" style={{ letterSpacing: "-0.04em" }}>
-          We started Veris because we had to.
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start mb-20 lg:mb-28">
-          <p className="text-[#1B3A4B]/80 text-xl md:text-2xl leading-relaxed font-medium">
-            Veris began at a kitchen table, after a phone call that cost a family $42,000 and a grandmother her trust in her own judgment. We are neuroscientists, engineers, and clinicians building the protection we wished our own families had.
-          </p>
-          <p className="text-[#1B3A4B]/70 text-base md:text-lg lg:text-xl leading-relaxed">
-            Backed by AARP Labs, MIT Media Lab affiliates, and a clinical advisory board of geriatricians and behavioral economists. Headquartered in Cambridge, MA. Building quietly, on purpose.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {team.map((m) => (
-            <div key={m.name} className="rounded-2xl border border-[#1B3A4B]/15 p-7 lg:p-9 bg-[#F4EFE6]">
-              <p className="text-[#1B3A4B] text-2xl lg:text-3xl font-medium mb-1" style={{ letterSpacing: "-0.02em" }}>{m.name}</p>
-              <p className="text-[#1B3A4B]/50 text-sm uppercase tracking-wider mb-5">{m.role}</p>
-              <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed">{m.bio}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- FOOTER ---------- */
+/* About moved to /about */
 function Footer() {
   const links = ["Mission", "Manifesto", "Privacy", "Contact"];
   return (
@@ -468,7 +435,7 @@ function VerisLanding() {
       <DeviceSection />
       <ScienceSection />
       <ManifestoBand />
-      <AboutSection />
+      
       
       <Footer />
     </div>
