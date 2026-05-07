@@ -122,10 +122,10 @@ function ProblemSection() {
     { value: "$35,000", label: "average loss per incident" },
   ];
   return (
-    <section className="bg-[#F4EFE6] px-6 py-24 border-t border-[#1B3A4B]/10">
+    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
         <p className="text-[#1B3A4B]/60 text-sm mb-3">The Problem</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl font-medium leading-[1.05] max-w-4xl mb-16" style={{ letterSpacing: "-0.04em" }}>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
           Every fraud system in the world reacts after the money is gone.
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
