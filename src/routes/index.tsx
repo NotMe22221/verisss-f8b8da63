@@ -83,7 +83,7 @@ function HeroMarquee() {
 function HeroSection() {
   return (
     <section className="flex-1 px-4 md:px-6 pt-20 pb-6 flex items-end">
-      <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] md:min-h-0" style={{ height: "calc(100vh - 96px)" }}>
+      <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[760px] lg:min-h-[820px]" style={{ minHeight: "calc(100vh - 96px)" }}>
         <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full" style={{ filter: "grayscale(1) contrast(1.05) brightness(1.02)" }}>
           <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
         </video>
