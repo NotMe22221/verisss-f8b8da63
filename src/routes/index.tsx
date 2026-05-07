@@ -34,16 +34,19 @@ function Navbar() {
   return (
     <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-5">
       <div className="max-w-[88rem] mx-auto flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 text-[#1B3A4B]">
+        <Link to="/" className="flex items-center gap-2 text-[#1B3A4B]">
           <LogoIcon className="w-7 h-7" />
           <span className="text-2xl font-medium tracking-tight">Veris</span>
-        </a>
+        </Link>
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <a key={l} href="#" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
               {l}
             </a>
           ))}
+          <Link to="/about" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
+            About
+          </Link>
         </div>
       </div>
     </nav>
