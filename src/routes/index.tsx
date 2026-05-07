@@ -47,9 +47,6 @@ function Navbar() {
             </a>
           ))}
         </div>
-        <a href="#early-access" className="bg-black text-white text-base font-medium px-7 py-2.5 rounded-full hover:bg-gray-800 transition-colors duration-200">
-          Secure Your Spot
-        </a>
       </div>
     </nav>
   );
