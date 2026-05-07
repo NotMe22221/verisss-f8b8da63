@@ -125,33 +125,33 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 /* ---------- HERO ---------- */
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-hidden bg-[#0d1f2a] text-[#F4EFE6]">
       <div className="relative h-[88vh] min-h-[640px] w-full">
         <img
           src={ringHero}
           alt="Veris titanium ring"
           width={1920}
           height={1088}
-          className="hero-img absolute inset-0 h-full w-full object-cover"
+          className="hero-img absolute inset-0 h-full w-full object-cover opacity-95"
         />
         {/* gradient legibility wash */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0d1f2a] via-[#0d1f2a]/40 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0d1f2a]/80 via-transparent to-transparent" />
 
         <div className="container-x relative z-10 flex h-full flex-col justify-end pb-16 md:pb-24">
-          <p className="eyebrow mb-5 text-foreground/70">Veris · Cognitive Defense</p>
+          <p className="eyebrow mb-5 !text-[#C9A46A]">Veris · Cognitive Defense</p>
           <h1 className="display-xl max-w-[14ch]">
             Protection before<br />the damage.
           </h1>
-          <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-[#F4EFE6]/70 md:text-lg">
             A titanium ring with on-device AI that reads coercion as it happens — and intervenes before money moves.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a href="#access" className="btn-primary">
+            <a href="#access" className="inline-flex h-11 items-center gap-2 rounded-full bg-[#C9A46A] px-5 text-[14px] font-medium text-[#1B3A4B] transition-colors hover:bg-[#d4b27a]">
               Request access
               <span aria-hidden>→</span>
             </a>
-            <a href="#how" className="btn-ghost">
+            <a href="#how" className="inline-flex h-11 items-center gap-2 rounded-full border border-[#F4EFE6]/30 px-5 text-[14px] font-medium text-[#F4EFE6] transition-colors hover:border-[#F4EFE6]">
               See how it works
             </a>
           </div>
