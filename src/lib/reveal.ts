@@ -19,27 +19,29 @@ export function revealAll(scope: HTMLElement) {
   const staggers = scope.querySelectorAll<HTMLElement>(".reveal-stagger");
 
   if (reduced) {
-    // Make sure everything is visible if motion is reduced.
-    gsap.set([eyebrows, ups, staggers], { clearProps: "all", opacity: 1, x: 0, y: 0 });
+    if (eyebrows.length) gsap.set(eyebrows, { clearProps: "all", opacity: 1, x: 0 });
+    if (ups.length) gsap.set(ups, { clearProps: "all", opacity: 1, y: 0 });
     heads.forEach((h) => {
-      gsap.set(h.querySelectorAll(".anim-word, .anim-char"), {
-        clearProps: "all",
-        yPercent: 0,
-        opacity: 1,
-      });
+      const w = h.querySelectorAll(".anim-word, .anim-char");
+      if (w.length) gsap.set(w, { clearProps: "all", yPercent: 0, opacity: 1 });
+    });
+    staggers.forEach((s) => {
+      const kids = Array.from(s.children);
+      if (kids.length) gsap.set(kids, { clearProps: "all", opacity: 1, y: 0 });
     });
     return;
   }
 
   // Hide everything immediately.
-  gsap.set(eyebrows, { opacity: 0, x: -16 });
-  gsap.set(ups, { opacity: 0, y: 56 });
+  if (eyebrows.length) gsap.set(eyebrows, { opacity: 0, x: -16 });
+  if (ups.length) gsap.set(ups, { opacity: 0, y: 56 });
   heads.forEach((h) => {
     const words = h.querySelectorAll(".anim-word, .anim-char");
-    gsap.set(words, { yPercent: 115, opacity: 0 });
+    if (words.length) gsap.set(words, { yPercent: 115, opacity: 0 });
   });
   staggers.forEach((s) => {
-    gsap.set(Array.from(s.children), { opacity: 0, y: 48 });
+    const kids = Array.from(s.children);
+    if (kids.length) gsap.set(kids, { opacity: 0, y: 48 });
   });
 
   // Animate in on scroll.
