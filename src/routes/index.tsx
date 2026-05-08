@@ -457,80 +457,80 @@ function VerisLanding() {
 
   useGSAP(
     () => {
+      const root = rootRef.current!;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // 1. Apply the shared reveal system across the whole page first.
+      revealAll(root);
+
       if (reduced) return;
 
-      // Pre-hide above-the-fold targets immediately so the intro reads as motion.
-      gsap.set(".hero-eyebrow", { opacity: 0, y: 14 });
-      gsap.set(".hero-head .anim-word", { yPercent: 130, opacity: 0 });
-      gsap.set(".hero-copy", { opacity: 0, y: 24 });
-      gsap.set(".hero-cta", { opacity: 0, y: 20, scale: 0.96 });
-      gsap.set(".marquee-track", { opacity: 0 });
+      // 2. Hero intro — overrides the scroll reveal for above-the-fold so it
+      // plays on mount instead of needing a scroll trigger.
+      const heroEyebrow = root.querySelector(".hero-eyebrow");
+      const heroHeadWords = root.querySelectorAll(".hero-head .anim-word");
+      const heroCopy = root.querySelector(".hero-copy");
+      const heroCta = root.querySelector(".hero-cta");
+      const heroCounter = root.querySelector(".hero-counter");
+      const marquee = root.querySelector(".marquee-track");
 
-      // Hero intro timeline — runs on mount, no scroll required.
-      const intro = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
+      gsap.set(heroEyebrow, { opacity: 0, x: -16 });
+      gsap.set(heroHeadWords, { yPercent: 115, opacity: 0 });
+      gsap.set(heroCopy, { opacity: 0, y: 28 });
+      gsap.set(heroCta, { opacity: 0, y: 24, scale: 0.95 });
+      gsap.set(heroCounter, { opacity: 0, y: 16 });
+      gsap.set(marquee, { opacity: 0 });
+
+      const intro = gsap.timeline({ defaults: { ease: "expo.out" }, delay: 0.95 });
       intro
-        .to(".hero-eyebrow", { opacity: 1, y: 0, duration: 0.7 })
+        .to(heroEyebrow, { opacity: 1, x: 0, duration: 0.9 })
         .to(
-          ".hero-head .anim-word",
-          { yPercent: 0, opacity: 1, duration: 0.95, stagger: 0.06, ease: "power4.out" },
-          "-=0.45",
+          heroHeadWords,
+          { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 },
+          "-=0.55",
         )
-        .to(".hero-copy", { opacity: 1, y: 0, duration: 0.8 }, "-=0.55")
-        .to(".hero-cta", { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, "-=0.45")
-        .to(".marquee-track", { opacity: 1, duration: 0.8 }, "-=0.4");
+        .to(heroCopy, { opacity: 1, y: 0, duration: 0.9 }, "-=0.7")
+        .to(heroCta, { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: "back.out(1.6)" }, "-=0.55")
+        .to(heroCounter, { opacity: 1, y: 0, duration: 0.7 }, "-=0.45")
+        .to(marquee, { opacity: 1, duration: 0.8 }, "-=0.5");
 
-      // Subtle continuous float on the CTA so the page never sits still.
-      gsap.to(".hero-cta", {
-        y: -4,
+      // 3. CTA continuous float so the page never sits still.
+      gsap.to(heroCta, {
+        y: -5,
         duration: 2.6,
         ease: "sine.inOut",
         yoyo: true,
         repeat: -1,
-        delay: 1.6,
+        delay: 2.4,
       });
 
-      // Scroll-triggered reveals for everything below the fold.
-      gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 16,
-          duration: 0.7,
-          ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-        });
-      });
+      // 4. Hero parallax on cursor move.
+      const heroSection = root.querySelector<HTMLElement>("section");
+      const parallaxEls = root.querySelectorAll<HTMLElement>("[data-parallax]");
+      if (heroSection && parallaxEls.length) {
+        const setters = Array.from(parallaxEls).map((el) => ({
+          el,
+          depth: parseFloat(el.dataset.parallax || "0.5"),
+          x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3.out" }),
+          y: gsap.quickTo(el, "y", { duration: 0.9, ease: "power3.out" }),
+        }));
+        const onMove = (e: PointerEvent) => {
+          const r = heroSection.getBoundingClientRect();
+          const cx = (e.clientX - r.left) / r.width - 0.5;
+          const cy = (e.clientY - r.top) / r.height - 0.5;
+          setters.forEach(({ depth, x, y }) => {
+            x(cx * depth * -28);
+            y(cy * depth * -22);
+          });
+        };
+        heroSection.addEventListener("pointermove", onMove);
+      }
 
-      gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
-        const words = head.querySelectorAll(".anim-word");
-        if (!words.length) return;
-        gsap.set(words, { yPercent: 130, opacity: 0 });
-        gsap.to(words, {
-          yPercent: 0,
-          opacity: 1,
-          duration: 0.95,
-          ease: "power4.out",
-          stagger: 0.055,
-          scrollTrigger: { trigger: head, start: "top 88%", once: true },
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el, i) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 48,
-          duration: 0.95,
-          ease: "power3.out",
-          delay: (i % 4) * 0.05,
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-        });
-      });
-
-      // Marquee speed reacts to scroll velocity.
-      const track = rootRef.current!.querySelector<HTMLElement>(".marquee-track");
+      // 5. Marquee speed reacts to scroll velocity.
+      const track = root.querySelector<HTMLElement>(".marquee-track");
       if (track) {
         ScrollTrigger.create({
-          trigger: rootRef.current!,
+          trigger: root,
           start: "top top",
           end: "bottom bottom",
           onUpdate: (self) => {
@@ -540,8 +540,8 @@ function VerisLanding() {
         });
       }
 
-      // Device image: continuous gentle float + scroll-driven rotate/scale.
-      const deviceImg = rootRef.current!.querySelector<HTMLElement>(".device-image");
+      // 6. Device image: continuous float + scroll-driven rotate/scale.
+      const deviceImg = root.querySelector<HTMLElement>(".device-image");
       if (deviceImg) {
         gsap.to(deviceImg, {
           y: -14,
@@ -563,34 +563,44 @@ function VerisLanding() {
         });
       }
 
-      // Step cards: tilt-in with stagger.
+      // 7. Step cards: 3D tilt-in on scroll.
       const stepCards = gsap.utils.toArray<HTMLElement>(".step-card");
       if (stepCards.length) {
-        gsap.from(stepCards, {
-          opacity: 0,
-          y: 60,
-          rotateX: -12,
-          transformPerspective: 800,
-          duration: 1,
-          ease: "power3.out",
-          stagger: 0.12,
+        gsap.set(stepCards, { opacity: 0, y: 80, rotateX: -18, transformPerspective: 900 });
+        gsap.to(stepCards, {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 1.1,
+          ease: "expo.out",
+          stagger: 0.14,
           scrollTrigger: { trigger: stepCards[0], start: "top 85%", once: true },
         });
       }
 
-      // CTA card subtle scale-in.
-      gsap.from(".cta-card", {
-        opacity: 0,
-        y: 60,
-        scale: 0.97,
-        duration: 1.1,
-        ease: "power3.out",
+      // 8. CTA card scale-in.
+      gsap.set(".cta-card", { opacity: 0, y: 80, scale: 0.96 });
+      gsap.to(".cta-card", {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: "expo.out",
         scrollTrigger: { trigger: ".cta-card", start: "top 85%", once: true },
       });
 
-      if (typeof document !== "undefined" && (document as any).fonts?.ready) {
-        (document as any).fonts.ready.then(() => ScrollTrigger.refresh());
-      }
+      // 9. Section hairlines: draw across as you scroll past.
+      gsap.utils.toArray<HTMLElement>(".section-rule").forEach((el) => {
+        gsap.fromTo(
+          el,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: { trigger: el, start: "top 95%", end: "top 60%", scrub: true },
+          },
+        );
+      });
     },
     { scope: rootRef },
   );
