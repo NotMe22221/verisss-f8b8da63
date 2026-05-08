@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { animate, rafThrottle, reducedMotion } from "@/lib/anime";
 
 /**
- * A custom cursor: small dot + lagging ring. Hidden on touch devices and
- * when prefers-reduced-motion is set. Grows over interactive elements.
+ * Custom cursor: small ink dot + lagging ring. Only mounts on devices with a
+ * fine pointer and respects reduced motion.
  */
 export function CursorFollower() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -11,25 +11,29 @@ export function CursorFollower() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (window.matchMedia("(hover: none)").matches) return;
+    if (reducedMotion()) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
 
     const dot = dotRef.current!;
     const ring = ringRef.current!;
+    document.body.classList.add("has-custom-cursor");
+
+    // Park them off-screen until first move so they don't flash at 0,0.
+    dot.style.transform = "translate3d(-100px,-100px,0)";
+    ring.style.transform = "translate3d(-100px,-100px,0)";
     dot.style.opacity = "1";
     ring.style.opacity = "1";
 
-    const dotX = gsap.quickTo(dot, "x", { duration: 0.12, ease: "power3.out" });
-    const dotY = gsap.quickTo(dot, "y", { duration: 0.12, ease: "power3.out" });
-    const ringX = gsap.quickTo(ring, "x", { duration: 0.45, ease: "power3.out" });
-    const ringY = gsap.quickTo(ring, "y", { duration: 0.45, ease: "power3.out" });
-
+    let dx = -100, dy = -100, rx = -100, ry = -100;
     let scale = 1;
-    const onMove = (e: PointerEvent) => {
-      dotX(e.clientX);
-      dotY(e.clientY);
-      ringX(e.clientX);
-      ringY(e.clientY);
+
+    const onMove = rafThrottle((e: PointerEvent) => {
+      dx = e.clientX;
+      dy = e.clientY;
+      rx = e.clientX;
+      ry = e.clientY;
+      animate(dot, { x: dx, y: dy, duration: 140, ease: "outQuad" });
+      animate(ring, { x: rx, y: ry, duration: 480, ease: "outExpo" });
 
       const t = e.target as HTMLElement | null;
       const interactive = !!t?.closest(
@@ -38,54 +42,55 @@ export function CursorFollower() {
       const wantScale = interactive ? 2.4 : 1;
       if (wantScale !== scale) {
         scale = wantScale;
-        gsap.to(ring, { scale, duration: 0.4, ease: "power3.out" });
+        animate(ring, { scale, duration: 380, ease: "outExpo" });
       }
-    };
+    });
 
     window.addEventListener("pointermove", onMove);
-    return () => window.removeEventListener("pointermove", onMove);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      document.body.classList.remove("has-custom-cursor");
+    };
   }, []);
+
+  const baseStyle: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    pointerEvents: "none",
+    zIndex: 2147483647,
+    opacity: 0,
+    willChange: "transform",
+  };
 
   return (
     <>
       <div
         ref={ringRef}
         aria-hidden
-        className="cursor-ring"
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: 36,
-          height: 36,
-          marginLeft: -18,
-          marginTop: -18,
+          ...baseStyle,
+          width: 38,
+          height: 38,
+          marginLeft: -19,
+          marginTop: -19,
           borderRadius: 999,
-          border: "1px solid rgba(27,58,75,0.55)",
-          pointerEvents: "none",
-          zIndex: 9999,
-          opacity: 0,
-          mixBlendMode: "difference",
+          border: "1.5px solid #1B3A4B",
+          boxShadow: "0 0 0 1px rgba(244,239,230,0.6)",
         }}
       />
       <div
         ref={dotRef}
         aria-hidden
-        className="cursor-dot"
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: 6,
-          height: 6,
-          marginLeft: -3,
-          marginTop: -3,
+          ...baseStyle,
+          width: 8,
+          height: 8,
+          marginLeft: -4,
+          marginTop: -4,
           borderRadius: 999,
           background: "#1B3A4B",
-          pointerEvents: "none",
-          zIndex: 9999,
-          opacity: 0,
-          mixBlendMode: "difference",
+          boxShadow: "0 0 0 2px rgba(244,239,230,0.8), 0 6px 18px rgba(27,58,75,0.35)",
         }}
       />
     </>

@@ -1,11 +1,6 @@
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { animate, rafThrottle, reducedMotion } from "@/lib/anime";
 
-/**
- * Ambient layers for the hero: an animated gradient mesh, a cursor-following
- * spotlight, and a subtle grain. Sits absolutely behind the foreground text.
- * Pass a ref to the hero container to limit pointer tracking to that area.
- */
 export function HeroAmbient({ containerRef }: { containerRef: React.RefObject<HTMLElement | null> }) {
   const spotRef = useRef<HTMLDivElement>(null);
 
@@ -13,29 +8,29 @@ export function HeroAmbient({ containerRef }: { containerRef: React.RefObject<HT
     const container = containerRef.current;
     const spot = spotRef.current;
     if (!container || !spot) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reducedMotion()) return;
 
-    const setX = gsap.quickTo(spot, "x", { duration: 0.6, ease: "power3.out" });
-    const setY = gsap.quickTo(spot, "y", { duration: 0.6, ease: "power3.out" });
-
-    const onMove = (e: PointerEvent) => {
+    const center = () => {
       const rect = container.getBoundingClientRect();
-      setX(e.clientX - rect.left);
-      setY(e.clientY - rect.top);
+      animate(spot, { x: rect.width / 2, y: rect.height / 2, duration: 0 });
     };
+    center();
+
+    const onMove = rafThrottle((e: PointerEvent) => {
+      const rect = container.getBoundingClientRect();
+      animate(spot, {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        duration: 600,
+        ease: "outExpo",
+      });
+    });
     container.addEventListener("pointermove", onMove);
-
-    // Center it initially.
-    const rect = container.getBoundingClientRect();
-    setX(rect.width / 2);
-    setY(rect.height / 2);
-
     return () => container.removeEventListener("pointermove", onMove);
   }, [containerRef]);
 
   return (
     <>
-      {/* Animated gradient mesh */}
       <div
         aria-hidden
         className="hero-mesh"
@@ -47,7 +42,6 @@ export function HeroAmbient({ containerRef }: { containerRef: React.RefObject<HT
           pointerEvents: "none",
         }}
       />
-      {/* Cursor spotlight */}
       <div
         ref={spotRef}
         aria-hidden
@@ -65,9 +59,9 @@ export function HeroAmbient({ containerRef }: { containerRef: React.RefObject<HT
           pointerEvents: "none",
           mixBlendMode: "soft-light",
           filter: "blur(10px)",
+          willChange: "transform",
         }}
       />
-      {/* Grain */}
       <div aria-hidden className="hero-grain" />
     </>
   );

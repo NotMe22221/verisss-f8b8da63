@@ -1,40 +1,35 @@
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { animate, reducedMotion } from "@/lib/anime";
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   strength?: number;
   children: React.ReactNode;
-  as?: "div" | "span";
 };
 
-/**
- * Wraps any element to add a subtle cursor-magnetic hover effect.
- * Disabled on touch devices and when reduced motion is preferred.
- */
 export function Magnetic({ children, strength = 0.35, className, ...rest }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (window.matchMedia("(hover: none)").matches) return;
+    if (reducedMotion()) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    const inner = el.firstElementChild as HTMLElement | null;
-    const target = inner ?? el;
-    const xTo = gsap.quickTo(target, "x", { duration: 0.45, ease: "power3.out" });
-    const yTo = gsap.quickTo(target, "y", { duration: 0.45, ease: "power3.out" });
+    const inner = (el.firstElementChild as HTMLElement | null) ?? el;
 
     const onMove = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
-      xTo((e.clientX - cx) * strength);
-      yTo((e.clientY - cy) * strength);
+      animate(inner, {
+        x: (e.clientX - cx) * strength,
+        y: (e.clientY - cy) * strength,
+        duration: 450,
+        ease: "outExpo",
+      });
     };
     const onLeave = () => {
-      xTo(0);
-      yTo(0);
+      animate(inner, { x: 0, y: 0, duration: 600, ease: "outElastic(1, .6)" });
     };
 
     el.addEventListener("mousemove", onMove);
