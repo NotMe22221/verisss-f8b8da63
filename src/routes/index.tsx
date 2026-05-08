@@ -467,42 +467,41 @@ function VerisLanding() {
 
       // 2. Hero intro — overrides the scroll reveal for above-the-fold so it
       // plays on mount instead of needing a scroll trigger.
-      const heroEyebrow = root.querySelector(".hero-eyebrow");
-      const heroHeadWords = root.querySelectorAll(".hero-head .anim-word");
-      const heroCopy = root.querySelector(".hero-copy");
-      const heroCta = root.querySelector(".hero-cta");
-      const heroCounter = root.querySelector(".hero-counter");
-      const marquee = root.querySelector(".marquee-track");
+      const heroEyebrow = root.querySelector<HTMLElement>(".hero-eyebrow");
+      const heroHeadWords = root.querySelectorAll<HTMLElement>(".hero-head .anim-word");
+      const heroCopy = root.querySelector<HTMLElement>(".hero-copy");
+      const heroCta = root.querySelector<HTMLElement>(".hero-cta");
+      const heroCounter = root.querySelector<HTMLElement>(".hero-counter");
+      const marquee = root.querySelector<HTMLElement>(".marquee-track");
 
-      gsap.set(heroEyebrow, { opacity: 0, x: -16 });
-      gsap.set(heroHeadWords, { yPercent: 115, opacity: 0 });
-      gsap.set(heroCopy, { opacity: 0, y: 28 });
-      gsap.set(heroCta, { opacity: 0, y: 24, scale: 0.95 });
-      gsap.set(heroCounter, { opacity: 0, y: 16 });
-      gsap.set(marquee, { opacity: 0 });
+      if (heroEyebrow) gsap.set(heroEyebrow, { opacity: 0, x: -16 });
+      if (heroHeadWords.length) gsap.set(heroHeadWords, { yPercent: 115, opacity: 0 });
+      if (heroCopy) gsap.set(heroCopy, { opacity: 0, y: 28 });
+      if (heroCta) gsap.set(heroCta, { opacity: 0, y: 24, scale: 0.95 });
+      if (heroCounter) gsap.set(heroCounter, { opacity: 0, y: 16 });
+      if (marquee) gsap.set(marquee, { opacity: 0 });
 
       const intro = gsap.timeline({ defaults: { ease: "expo.out" }, delay: 0.95 });
-      intro
-        .to(heroEyebrow, { opacity: 1, x: 0, duration: 0.9 })
-        .to(
-          heroHeadWords,
-          { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 },
-          "-=0.55",
-        )
-        .to(heroCopy, { opacity: 1, y: 0, duration: 0.9 }, "-=0.7")
-        .to(heroCta, { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: "back.out(1.6)" }, "-=0.55")
-        .to(heroCounter, { opacity: 1, y: 0, duration: 0.7 }, "-=0.45")
-        .to(marquee, { opacity: 1, duration: 0.8 }, "-=0.5");
+      if (heroEyebrow) intro.to(heroEyebrow, { opacity: 1, x: 0, duration: 0.9 });
+      if (heroHeadWords.length)
+        intro.to(heroHeadWords, { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 }, "-=0.55");
+      if (heroCopy) intro.to(heroCopy, { opacity: 1, y: 0, duration: 0.9 }, "-=0.7");
+      if (heroCta)
+        intro.to(heroCta, { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: "back.out(1.6)" }, "-=0.55");
+      if (heroCounter) intro.to(heroCounter, { opacity: 1, y: 0, duration: 0.7 }, "-=0.45");
+      if (marquee) intro.to(marquee, { opacity: 1, duration: 0.8 }, "-=0.5");
 
       // 3. CTA continuous float so the page never sits still.
-      gsap.to(heroCta, {
-        y: -5,
-        duration: 2.6,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-        delay: 2.4,
-      });
+      if (heroCta) {
+        gsap.to(heroCta, {
+          y: -5,
+          duration: 2.6,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: 2.4,
+        });
+      }
 
       // 4. Hero parallax on cursor move.
       const heroSection = root.querySelector<HTMLElement>("section");
@@ -581,15 +580,18 @@ function VerisLanding() {
       }
 
       // 8. CTA card scale-in.
-      gsap.set(".cta-card", { opacity: 0, y: 80, scale: 0.96 });
-      gsap.to(".cta-card", {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1.2,
-        ease: "expo.out",
-        scrollTrigger: { trigger: ".cta-card", start: "top 85%", once: true },
-      });
+      const ctaCard = root.querySelector<HTMLElement>(".cta-card");
+      if (ctaCard) {
+        gsap.set(ctaCard, { opacity: 0, y: 80, scale: 0.96 });
+        gsap.to(ctaCard, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.2,
+          ease: "expo.out",
+          scrollTrigger: { trigger: ctaCard, start: "top 85%", once: true },
+        });
+      }
 
       // 9. Section hairlines: draw across as you scroll past.
       gsap.utils.toArray<HTMLElement>(".section-rule").forEach((el) => {

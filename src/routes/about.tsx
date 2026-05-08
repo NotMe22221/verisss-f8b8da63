@@ -94,15 +94,15 @@ function AboutPage() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
       // About hero intro on mount.
-      const eyebrow = root.querySelector(".about-hero-eyebrow");
-      const headWords = root.querySelectorAll(".about-hero-head .anim-word");
-      gsap.set(eyebrow, { opacity: 0, x: -16 });
-      gsap.set(headWords, { yPercent: 115, opacity: 0 });
+      const eyebrow = root.querySelector<HTMLElement>(".about-hero-eyebrow");
+      const headWords = root.querySelectorAll<HTMLElement>(".about-hero-head .anim-word");
+      if (eyebrow) gsap.set(eyebrow, { opacity: 0, x: -16 });
+      if (headWords.length) gsap.set(headWords, { yPercent: 115, opacity: 0 });
 
       const intro = gsap.timeline({ defaults: { ease: "expo.out" }, delay: 0.95 });
-      intro
-        .to(eyebrow, { opacity: 1, x: 0, duration: 0.9 })
-        .to(headWords, { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 }, "-=0.55");
+      if (eyebrow) intro.to(eyebrow, { opacity: 1, x: 0, duration: 0.9 });
+      if (headWords.length)
+        intro.to(headWords, { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 }, "-=0.55");
     },
     { scope: rootRef },
   );
