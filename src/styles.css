@@ -218,7 +218,6 @@ img { max-width: 100%; display: block; }
 .anim-mask { overflow: hidden; display: inline-block; vertical-align: bottom; }
 /* Reveal classes are markers only — initial hidden state is set by GSAP in JS,
    so if JS fails or is slow, content stays visible (no blank page). */
-.reveal-head { display: inline-block; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal-up, .reveal-fade, .reveal-eyebrow, .reveal-line { opacity: 1; transform: none; }
