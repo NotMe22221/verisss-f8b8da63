@@ -6,9 +6,12 @@ import { toast } from "sonner";
 import ringDevice from "@/assets/ring-device-studio.png";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { revealAll } from "@/lib/reveal";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
 import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
+import { HeroAmbient } from "@/components/landing/HeroAmbient";
+import { CountUp } from "@/components/landing/CountUp";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
