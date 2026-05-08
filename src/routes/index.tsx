@@ -507,6 +507,7 @@ function VerisLanding() {
       // 4. Hero parallax on cursor move.
       const heroSection = root.querySelector<HTMLElement>("section");
       const parallaxEls = root.querySelectorAll<HTMLElement>("[data-parallax]");
+      let parallaxCleanup: (() => void) | null = null;
       if (heroSection && parallaxEls.length) {
         const setters = Array.from(parallaxEls).map((el) => ({
           el,
@@ -524,6 +525,7 @@ function VerisLanding() {
           });
         };
         heroSection.addEventListener("pointermove", onMove);
+        parallaxCleanup = () => heroSection.removeEventListener("pointermove", onMove);
       }
 
       // 5. Marquee speed reacts to scroll velocity.
