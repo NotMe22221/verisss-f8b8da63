@@ -145,8 +145,8 @@ function AboutPage() {
         <Navbar />
         <section className="px-6 lg:px-12 pt-32 lg:pt-40 pb-16 lg:pb-24">
           <div className="max-w-[88rem] mx-auto">
-            <p className="text-[#1B3A4B]/60 text-sm mb-4 uppercase tracking-[0.18em] reveal-eyebrow">About Veris</p>
-            <h1 className="text-[#1B3A4B] text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] max-w-5xl reveal-head" style={{ letterSpacing: "-0.04em" }}>
+            <p className="text-[#1B3A4B]/60 text-sm mb-4 uppercase tracking-[0.18em] about-hero-eyebrow">About Veris</p>
+            <h1 className="text-[#1B3A4B] text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] max-w-5xl about-hero-head" style={{ letterSpacing: "-0.04em" }}>
               <SplitText by="word">We started Veris because we had to.</SplitText>
             </h1>
           </div>
