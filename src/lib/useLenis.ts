@@ -1,16 +1,13 @@
 import { useEffect } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 /**
- * Mount once at the root. Drives smooth scrolling globally and keeps
- * ScrollTrigger in sync with Lenis's virtual scroll position.
+ * Mount once at the root. Drives smooth scrolling globally with Lenis.
  * Dynamic-imports lenis so SSR doesn't touch window.
  */
 export function useLenis() {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let cleanup: (() => void) | null = null;
     let cancelled = false;
@@ -24,13 +21,15 @@ export function useLenis() {
         touchMultiplier: 1.4,
       });
 
-      lenis.on("scroll", ScrollTrigger.update);
-      const tick = (time: number) => lenis.raf(time * 1000);
-      gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
+      let rafId = 0;
+      const tick = (time: number) => {
+        lenis.raf(time);
+        rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
 
       cleanup = () => {
-        gsap.ticker.remove(tick);
+        cancelAnimationFrame(rafId);
         lenis.destroy();
       };
     });

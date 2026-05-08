@@ -1,56 +1,49 @@
-## Goal
-Make the homepage feel animated again by fixing the runtime error that is aborting the motion setup, then restoring visible load/scroll reveals across the home and About pages.
+# Switch motion engine to anime.js + bring the cursor back
 
-## What I’ll change
+## Why
+The current GSAP setup keeps crashing on missing targets, which silently kills every animation on the page. You also can't see the custom cursor anymore — it's mounted but the native cursor is hidden globally, so when the follower fails to render you're left with nothing. Moving to **anime.js v4** (smaller, simpler API, no plugin/license friction) plus a hardened cursor layer will get the Awwwards-style motion back and keep it stable.
 
-### 1. Stop the animation system from crashing
-Harden the page-specific GSAP setup so it only animates real elements:
-- Guard every `gsap.set`, `gsap.to`, timeline target, and `quickTo` target in `src/routes/index.tsx`.
-- Guard the About page intro targets in `src/routes/about.tsx` the same way.
-- Make sure selector-based animations like the CTA card and any optional decorative hooks can’t throw if the element is missing.
+## What I'll do
 
-This is the core fix, because the current `Cannot read properties of undefined (reading 'opacity')` error is likely killing the entire motion initialization before the reveals can run.
+### 1. Install anime.js, retire GSAP usage
+- `bun add animejs` and remove the `gsap` / `@gsap/react` runtime dependency.
+- Delete `src/lib/gsap.ts`, replace with `src/lib/anime.ts` exporting a configured `animate`, `stagger`, `createScope`, plus a tiny IntersectionObserver-based `onInView` helper (anime.js has no built-in ScrollTrigger).
 
-### 2. Restore visible hero motion on first paint
-Retune the homepage hero so the animation is obvious at the current viewport height:
-- Keep the mount intro for eyebrow, headline, copy, CTA, counter, and marquee.
-- Ensure those hero elements are hidden and revealed only when they actually exist.
-- Keep the cursor parallax and marquee velocity behavior, but only attach them when their targets are present.
+### 2. Rewrite the reveal system
+- Rewrite `src/lib/reveal.ts` using anime.js + IntersectionObserver:
+  - `.reveal-eyebrow` → fade + slide from left
+  - `.reveal-head` (with `<SplitText>` words) → words rise from a mask with stagger
+  - `.reveal-up` → fade-rise
+  - `.reveal-stagger` → children stagger in
+- Pre-hide every target with inline styles before observing so there's no flash of unstyled content.
+- Respect `prefers-reduced-motion` (snap to final state, skip observers).
 
-### 3. Make scroll reveals actually read as motion
-Adjust the shared reveal system in `src/lib/reveal.ts` so text/cards don’t feel static:
-- Keep `gsap.set`-first behavior for reveal markers.
-- Retune trigger starts/durations if needed so sections entering the 881×525 viewport don’t all complete too early.
-- Preserve reduced-motion behavior.
+### 3. Port the homepage and about page
+- `src/routes/index.tsx`: rebuild the hero intro timeline (eyebrow → headline words → copy → CTA → counter → marquee) using anime.js timelines. Replace the `pointermove` quickTo parallax with an anime.js `animate(..., { x, y, ease: 'outExpo', duration: 600 })` driven by a throttled pointer handler. Keep the same DOM structure and class hooks.
+- `src/routes/about.tsx`: same treatment for the hero intro.
+- `src/components/landing/CountUp.tsx`: rewrite with anime.js animating a number proxy on `inView`.
+- `src/components/landing/HeroAmbient.tsx`: rewrite the spotlight follower with anime.js `animate` + pointer handler.
+- `src/components/landing/PageCurtain.tsx` and `MagneticButton.tsx`: port to anime.js.
 
-### 4. Verify the animated surfaces still mount cleanly
-Check the supporting motion components for safe initialization:
-- `HeroAmbient.tsx`
-- `CursorFollower.tsx`
-- `PageCurtain.tsx`
-- `CountUp.tsx`
+### 4. Fix the cursor
+Root cause: `src/styles.css` sets `cursor: none` globally, and `CursorFollower` uses `mix-blend-mode: difference` against a light background, which on cream/white sections renders the dot nearly invisible. Also the early-return `if (matchMedia('(hover: none)'))` can wrongly hide it on some laptops with touchscreens.
+- Only hide the native cursor on devices that actually get the custom cursor (use a `body.has-custom-cursor` class toggled by the component, scoped via CSS).
+- Replace `mix-blend-mode: difference` with a high-contrast solid fill (deep ink dot + ink ring) plus a soft drop-shadow so it reads on every section.
+- Bump z-index to `2147483647`, remove `mixBlendMode`, ensure `pointer-events: none`, and set initial position off-screen so it doesn't flash at 0,0.
+- Detect "real" pointer with `matchMedia('(pointer: fine)')` instead of `(hover: none)`.
+- Drive position with anime.js (`animate(el, { x, y, duration: 120, ease: 'outExpo' })`) keyed off pointermove; ring uses a longer duration for the lag.
+- Add a hover-grow on `a, button, [data-cursor='hover']` via class toggle.
 
-If any of them are contributing to the early abort, I’ll make their setup defensive without changing the intended design.
+### 5. Cleanup
+- Remove `useLenis` usage if it depended on GSAP (Lenis itself is fine; just unwire ScrollTrigger sync).
+- Delete `.lovable/plan.md` cruft from prior attempts is not needed.
+- Quick visual QA in the preview after the swap.
 
-## Files involved
-- `src/routes/index.tsx`
-- `src/routes/about.tsx`
-- `src/lib/reveal.ts`
-- Possibly one or more of:
-  - `src/components/landing/HeroAmbient.tsx`
-  - `src/components/landing/CursorFollower.tsx`
-  - `src/components/landing/PageCurtain.tsx`
-  - `src/components/landing/CountUp.tsx`
+## Files touched
+- add: `src/lib/anime.ts`
+- rewrite: `src/lib/reveal.ts`, `src/components/landing/CountUp.tsx`, `src/components/landing/CursorFollower.tsx`, `src/components/landing/HeroAmbient.tsx`, `src/components/landing/PageCurtain.tsx`, `src/components/landing/MagneticButton.tsx`, `src/routes/index.tsx`, `src/routes/about.tsx`, `src/styles.css` (cursor rules)
+- delete: `src/lib/gsap.ts`
+- package.json: add `animejs`, remove `gsap` + `@gsap/react`
 
-## Technical details
-- Root error found: `Uncaught TypeError: Cannot read properties of undefined (reading 'opacity')`
-- Shared reveal utility already has some empty-target guards.
-- The homepage and About page still contain several unguarded `gsap.set(...)` and intro timeline targets outside that shared utility.
-- If GSAP hits an undefined target during init, the rest of the animation setup for the page won’t run, which matches the “there is no animations” symptom.
-
-## Result
-After this pass, the page should:
-- load without the GSAP runtime error
-- show visible hero entrance motion
-- reveal headlines/text/cards while scrolling instead of reading as static
-- keep the dense motion layer without breaking the site
+## Out of scope
+- No content/copy changes, no layout changes, no new sections — only the motion engine swap and cursor fix.

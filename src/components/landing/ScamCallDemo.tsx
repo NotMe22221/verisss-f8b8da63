@@ -1,28 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import { Phone, PhoneOff, ShieldAlert, RotateCcw, Bell } from "lucide-react";
-import { gsap } from "@/lib/gsap";
+import { animate, createTimeline } from "@/lib/anime";
 
 type Line = { who: "scammer" | "parent"; text: string; delay: number };
 
 const SCRIPT: Line[] = [
   { who: "scammer", text: "Grandma, it's me. I'm in trouble — please don't tell mom.", delay: 0 },
-  { who: "parent", text: "Oh no, sweetheart, what happened?", delay: 1.6 },
-  { who: "scammer", text: "I was in an accident. I need $4,800 for bail. Right now.", delay: 3.0 },
-  { who: "scammer", text: "Don't hang up. Stay on the line. Get gift cards from CVS.", delay: 4.6 },
-  { who: "scammer", text: "Hurry — they'll move me in 20 minutes if you don't.", delay: 6.0 },
+  { who: "parent", text: "Oh no, sweetheart, what happened?", delay: 1600 },
+  { who: "scammer", text: "I was in an accident. I need $4,800 for bail. Right now.", delay: 3000 },
+  { who: "scammer", text: "Don't hang up. Stay on the line. Get gift cards from CVS.", delay: 4600 },
+  { who: "scammer", text: "Hurry — they'll move me in 20 minutes if you don't.", delay: 6000 },
 ];
 
 export function ScamCallDemo() {
   const [playing, setPlaying] = useState(false);
   const [visible, setVisible] = useState<number>(0);
-  const [stress, setStress] = useState(0); // 0..100
+  const [stress, setStress] = useState(0);
   const [intervened, setIntervened] = useState(false);
   const [alerted, setAlerted] = useState(false);
   const ringRef = useRef<HTMLDivElement>(null);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const tlRef = useRef<ReturnType<typeof createTimeline> | null>(null);
 
   function reset() {
-    tlRef.current?.kill();
+    tlRef.current?.pause();
     tlRef.current = null;
     setPlaying(false);
     setVisible(0);
@@ -34,34 +34,34 @@ export function ScamCallDemo() {
   function play() {
     reset();
     setPlaying(true);
-    const tl = gsap.timeline({ onComplete: () => setPlaying(false) });
+    const tl = createTimeline({ defaults: { duration: 1 } });
     tlRef.current = tl;
 
     SCRIPT.forEach((line, i) => {
-      tl.call(() => setVisible(i + 1), [], line.delay);
-      tl.to({ v: stress }, {
+      const obj = { v: i === 0 ? 0 : Math.min(100, 18 + (i - 1) * 22) };
+      tl.call(() => setVisible(i + 1), line.delay);
+      tl.add(obj, {
         v: Math.min(100, 18 + i * 22),
-        duration: 0.8,
-        onUpdate: function () {
-          setStress(Math.round(this.targets()[0].v));
-        },
+        duration: 800,
+        onUpdate: () => setStress(Math.round(obj.v)),
       }, line.delay);
     });
 
     tl.call(() => {
       setIntervened(true);
       if (ringRef.current) {
-        gsap.fromTo(
-          ringRef.current,
-          { scale: 1 },
-          { scale: 1.08, duration: 0.18, yoyo: true, repeat: 5, ease: "power2.inOut" },
-        );
+        animate(ringRef.current, {
+          scale: [1, 1.08, 1, 1.08, 1, 1.08, 1],
+          duration: 1080,
+          ease: "inOutQuad",
+        });
       }
-    }, [], 4.4);
-    tl.call(() => setAlerted(true), [], 6.4);
+    }, 4400);
+    tl.call(() => setAlerted(true), 6400);
+    tl.call(() => setPlaying(false), 6800);
   }
 
-  useEffect(() => () => { tlRef.current?.kill(); }, []);
+  useEffect(() => () => { tlRef.current?.pause(); }, []);
 
   return (
     <section id="see-it-work" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
@@ -72,7 +72,6 @@ export function ScamCallDemo() {
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4 lg:gap-6 items-stretch">
-          {/* Phone / call panel */}
           <div className="rounded-2xl bg-[#1B3A4B] p-6 md:p-8 lg:p-10 min-h-[520px] flex flex-col">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
@@ -122,7 +121,6 @@ export function ScamCallDemo() {
             </div>
           </div>
 
-          {/* Ring + signals panel */}
           <div className="rounded-2xl border border-[#1B3A4B]/15 p-6 md:p-8 lg:p-10 min-h-[520px] flex flex-col bg-[#F4EFE6] relative overflow-hidden">
             <p className="text-[#1B3A4B]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6">Veris ring · live</p>
 
@@ -138,7 +136,6 @@ export function ScamCallDemo() {
               </div>
             </div>
 
-            {/* Stress meter */}
             <div className="mt-6">
               <div className="flex items-center justify-between text-xs text-[#1B3A4B]/60 mb-2">
                 <span>Cognitive stress index</span>
@@ -152,7 +149,6 @@ export function ScamCallDemo() {
               </div>
             </div>
 
-            {/* Intervention badge */}
             {intervened && (
               <div className="mt-4 rounded-xl bg-[#1B3A4B] text-[#F4EFE6] px-4 py-3 flex items-center gap-3 animate-[fade-in_0.4s_ease-out]">
                 <ShieldAlert className="w-4 h-4 text-[#C9A46A] shrink-0" />
@@ -160,7 +156,6 @@ export function ScamCallDemo() {
               </div>
             )}
 
-            {/* Family alert toast */}
             {alerted && (
               <div className="absolute right-4 bottom-4 max-w-[280px] rounded-xl bg-[#F4EFE6] border border-[#1B3A4B]/20 shadow-[0_20px_60px_-20px_rgba(27,58,75,0.3)] p-4 animate-[slide-in-right_0.45s_ease-out]">
                 <div className="flex items-start gap-3">

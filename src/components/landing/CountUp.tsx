@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { animate, onInView, reducedMotion } from "@/lib/anime";
 
 type Props = {
   to: number;
@@ -10,44 +10,40 @@ type Props = {
   duration?: number;
 };
 
-/** Counts up from 0 to `to` when scrolled into view. */
 export function CountUp({
   to,
   prefix = "",
   suffix = "",
   decimals = 0,
   className,
-  duration = 2,
+  duration = 2000,
 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const format = (v: number) => {
       const n = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString();
       return `${prefix}${n}${suffix}`;
     };
-    if (reduced) {
+    if (reducedMotion()) {
       el.textContent = format(to);
       return;
     }
     el.textContent = format(0);
     const obj = { v: 0 };
-    const tween = gsap.to(obj, {
-      v: to,
-      duration,
-      ease: "expo.out",
-      onUpdate: () => {
-        el.textContent = format(obj.v);
-      },
-      scrollTrigger: { trigger: el, start: "top 90%", once: true },
+    const disconnect = onInView(el, () => {
+      animate(obj, {
+        v: to,
+        duration,
+        ease: "outExpo",
+        onUpdate: () => {
+          el.textContent = format(obj.v);
+        },
+      });
     });
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
+    return disconnect;
   }, [to, prefix, suffix, decimals, duration]);
 
   return <span ref={ref} className={className}>{prefix}0{suffix}</span>;
