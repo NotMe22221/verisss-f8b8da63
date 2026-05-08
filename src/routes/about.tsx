@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
@@ -84,35 +85,59 @@ function AboutPage() {
     { title: "Quiet by default", body: "We build calm technology. A pulse, not an alarm. Intervention that interrupts manipulation, not life." },
   ];
 
-  useLayoutEffect(() => {
-    if (!rootRef.current) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useGSAP(
+    () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const ctx = gsap.context(() => {
+      // Hero intro for the About headline.
+      gsap.set(".about-hero-eyebrow", { opacity: 0, y: 14 });
+      gsap.set(".about-hero-head .anim-word", { yPercent: 130, opacity: 0 });
+      const intro = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
+      intro
+        .to(".about-hero-eyebrow", { opacity: 1, y: 0, duration: 0.7 })
+        .to(
+          ".about-hero-head .anim-word",
+          { yPercent: 0, opacity: 1, duration: 1, stagger: 0.06, ease: "power4.out" },
+          "-=0.45",
+        );
+
       gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
         gsap.from(el, {
-          opacity: 0, y: 8, duration: 0.6, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 95%", once: true },
+          opacity: 0,
+          y: 16,
+          duration: 0.7,
+          ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
         });
       });
+
       gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
         const words = head.querySelectorAll(".anim-word");
         if (!words.length) return;
-        gsap.from(words, {
-          yPercent: 110, opacity: 0, duration: 0.85, ease: "power3.out", stagger: 0.04,
-          scrollTrigger: { trigger: head, start: "top 95%", once: true },
+        gsap.set(words, { yPercent: 130, opacity: 0 });
+        gsap.to(words, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.95,
+          ease: "power4.out",
+          stagger: 0.055,
+          scrollTrigger: { trigger: head, start: "top 88%", once: true },
         });
       });
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
-        gsap.from(el, {
-          opacity: 0, y: 28, duration: 0.8, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 95%", once: true },
-        });
-      });
-    }, rootRef);
 
-    return () => ctx.revert();
-  }, []);
+      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el, i) => {
+        gsap.from(el, {
+          opacity: 0,
+          y: 48,
+          duration: 0.95,
+          ease: "power3.out",
+          delay: (i % 4) * 0.05,
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+    },
+    { scope: rootRef },
+  );
 
   return (
     <div ref={rootRef} className="flex flex-col bg-[#F4EFE6] min-h-screen">
@@ -120,8 +145,8 @@ function AboutPage() {
         <Navbar />
         <section className="px-6 lg:px-12 pt-32 lg:pt-40 pb-16 lg:pb-24">
           <div className="max-w-[88rem] mx-auto">
-            <p className="text-[#1B3A4B]/60 text-sm mb-4 uppercase tracking-[0.18em] reveal-eyebrow">About Veris</p>
-            <h1 className="text-[#1B3A4B] text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] max-w-5xl reveal-head" style={{ letterSpacing: "-0.04em" }}>
+            <p className="text-[#1B3A4B]/60 text-sm mb-4 uppercase tracking-[0.18em] about-hero-eyebrow">About Veris</p>
+            <h1 className="text-[#1B3A4B] text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] max-w-5xl about-hero-head" style={{ letterSpacing: "-0.04em" }}>
               <SplitText by="word">We started Veris because we had to.</SplitText>
             </h1>
           </div>
