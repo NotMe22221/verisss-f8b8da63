@@ -441,21 +441,17 @@ function Footer() {
 function VerisLanding() {
   const rootRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rootRef.current) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      gsap.utils.toArray<HTMLElement>(".reveal-up,.reveal-eyebrow,.reveal-head .anim-word")
-        .forEach((el) => gsap.set(el, { clearProps: "all", opacity: 1, y: 0 }));
-      return;
-    }
+    if (reduced) return;
 
     const ctx = gsap.context(() => {
       // Eyebrows
       gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
-        gsap.to(el, {
-          opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        gsap.from(el, {
+          opacity: 0, y: 8, duration: 0.6, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 95%", once: true },
         });
       });
 
@@ -463,17 +459,17 @@ function VerisLanding() {
       gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
         const words = head.querySelectorAll(".anim-word");
         if (!words.length) return;
-        gsap.to(words, {
-          y: 0, opacity: 1, duration: 0.85, ease: "power3.out", stagger: 0.045,
-          scrollTrigger: { trigger: head, start: "top 85%", once: true },
+        gsap.from(words, {
+          yPercent: 110, opacity: 0, duration: 0.85, ease: "power3.out", stagger: 0.045,
+          scrollTrigger: { trigger: head, start: "top 95%", once: true },
         });
       });
 
       // Generic reveal-up
       gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
-        gsap.to(el, {
-          opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        gsap.from(el, {
+          opacity: 0, y: 28, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 95%", once: true },
         });
       });
 
@@ -506,18 +502,13 @@ function VerisLanding() {
           },
         });
       }
-
-      // Subtle parallax on each section
-      gsap.utils.toArray<HTMLElement>("section").forEach((sec) => {
-        const inner = sec.querySelector<HTMLElement>("h2.reveal-head");
-        if (!inner) return;
-        gsap.to(inner, {
-          y: -20,
-          ease: "none",
-          scrollTrigger: { trigger: sec, start: "top bottom", end: "bottom top", scrub: 1 },
-        });
-      });
     }, rootRef);
+
+    // Recompute trigger positions once fonts have loaded (prevents off-by-one
+    // misses for elements whose layout shifts after font swap).
+    if (typeof document !== "undefined" && (document as any).fonts?.ready) {
+      (document as any).fonts.ready.then(() => ScrollTrigger.refresh());
+    }
 
     return () => ctx.revert();
   }, []);
