@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
 import { toast } from "sonner";
 import ringDevice from "@/assets/ring-device-studio.png";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
