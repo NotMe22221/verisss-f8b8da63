@@ -1,75 +1,42 @@
-## Goal
+## What's actually wrong
 
-Transform the homepage and About page from a static layout into a motion-led, cinematic experience — without losing the cream / deep-teal craft language. Every section should reward scrolling.
+Looked at the live preview: the navbar and hero video render, but everything with a `.reveal-up`, `.reveal-eyebrow`, or `.reveal-head` class is invisible (opacity 0). No JS errors in the console. That means the GSAP "reveal" animations aren't firing on the client even though the CSS that hides those elements *is* applied.
 
-## Tech
-
-- Add `gsap` + its `ScrollTrigger` plugin (single dependency, registered once in a small `src/lib/gsap.ts` helper).
-- Keep `framer-motion` only if needed for small UI hover states; otherwise GSAP handles everything.
-- Respect `prefers-reduced-motion` — degrade gracefully to static layout.
-- All animation registered inside `useGSAP` / `useEffect` per route, cleanly disposed on unmount.
-
-## Homepage motion pass
+The current setup is fragile:
 
 ```text
-HERO         scroll-driven type reveal, ring orbits in, marquee speeds with scroll velocity
-PROBLEM      stat counters tick up on enter, copy fades line-by-line
-HOW IT WORKS pinned section, 4 steps advance as you scroll (cinematic chapter)
-WHO IT'S FOR cards lift + cross-fade on view
-DEVICE       ring rotates 360° as you scroll past it, spec callouts draw lines in
-SCIENCE      3 columns stagger in, subtle parallax on labels
-MANIFESTO    full-bleed teal band, single sentence types in word-by-word, pinned briefly
-CTA          form scales in, button has magnetic hover, success state morphs
+src/styles.css        →  .reveal-up { opacity: 0 }   (hides content by default)
+src/routes/index.tsx  →  useEffect → gsap.to(...)     (supposed to reveal it)
 ```
 
-Micro-interactions everywhere:
-- Magnetic primary buttons (cursor-follow within ~40px).
-- Nav links: animated underline + active dot that slides between sections via ScrollTrigger.
-- Section eyebrows fade + slide in on enter.
-- Smooth scroll behavior tuned (no heavy library — native `scroll-behavior: smooth` + ScrollTrigger is enough).
+If anything delays or breaks that effect — slow hydration, ScrollTrigger initializing before layout settles, a reduced-motion edge case, an SSR/CSR mismatch — the page is left blank. That's exactly what's happening now.
 
-## Interactive product demo (the centerpiece)
+## Fix
 
-A new **"See it work"** module between How It Works and Device:
-- A fake inbound scam call UI on the left (avatar, "Unknown caller", live transcript typing out a classic impersonation script).
-- The ring on the right with a soft pulse.
-- As the scripted call escalates, the ring's haptic indicator pulses, a "manipulation detected" badge appears, and a family-alert toast slides in.
-- User can replay the scenario with a button. Pure front-end timeline (GSAP), no backend.
+Flip the model: **content is visible by default; JS opts it into being hidden, then animates it in.** If JS ever fails or is slow, the user still sees the page.
 
-## About page motion pass
+1. **`src/styles.css`** — remove the rules that hide content:
+   - delete `.reveal-up { opacity: 0; transform: translateY(28px) }`
+   - delete `.reveal-eyebrow { opacity: 0; … }`
+   - delete `.reveal-head .anim-word { transform: translateY(110%); opacity: 0 }`
+   - keep the `prefers-reduced-motion` block (now a no-op, harmless).
 
-- Hero headline: split-text reveal, word-by-word.
-- Founder story: long-form copy fades in paragraph-by-paragraph with subtle y-offset.
-- Values (3 principles): horizontal pinned scroll on desktop, stacked fade on mobile.
-- Team: cards tilt slightly toward cursor, photos grayscale → color on hover.
-- CTA band mirrors homepage CTA animation for consistency.
+2. **`src/routes/index.tsx` and `src/routes/about.tsx`** — replace `useEffect` with `useLayoutEffect` (or `useGSAP` from `@gsap/react`, already installed) so we paint the hidden state *before* the browser shows the page:
+   - inside the effect, **first** call `gsap.set(targets, { opacity: 0, y: 28 })` for `.reveal-up`/`.reveal-eyebrow` and `gsap.set(words, { yPercent: 110, opacity: 0 })` for headline words — this is the new "hide before reveal" step that used to live in CSS.
+   - **then** create the ScrollTrigger `gsap.to(...)` tweens (existing logic).
+   - call `ScrollTrigger.refresh()` after `document.fonts.ready` so triggers measure correctly once the custom font finishes loading (the missing `tt-norms-pro-regular.woff2` 404 is shifting layout).
+   - keep the `prefers-reduced-motion` early-return (no `gsap.set`, content just shows).
 
-## Mobile (current 384px viewport)
+3. **Hero/above-the-fold reveals** — change those specific tweens from ScrollTrigger to a plain `gsap.from`/timeline that runs on mount. ScrollTriggers with `start: "top 85%"` on elements already in the viewport on first load are the most likely thing that's silently failing; a plain timeline removes that whole class of bug for the hero.
 
-- All pinned/horizontal scroll sections collapse to vertical stacked reveals on `<md`.
-- Reduce parallax magnitude, drop magnetic cursor effects (touch).
-- Keep counters, fades, and the interactive demo — they work fine on mobile.
+4. **Sanity checks while in there**:
+   - confirm `ScamCallDemo` and `Magnetic` don't throw during hydration (quick read, no expected changes).
+   - keep `ctx.revert()` cleanup so HMR doesn't stack triggers.
 
-## Files touched
-
-- `package.json` — add `gsap`.
-- `src/lib/gsap.ts` (new) — register ScrollTrigger once, export configured `gsap`.
-- `src/lib/useReducedMotion.ts` (new) — small hook.
-- `src/components/landing/ScamCallDemo.tsx` (new) — the interactive demo.
-- `src/components/landing/MagneticButton.tsx` (new) — reusable.
-- `src/components/landing/SplitText.tsx` (new) — small word/char splitter.
-- `src/routes/index.tsx` — wire animations per section, add demo, refactor sections into local components if the file gets long.
-- `src/routes/about.tsx` — wire animations.
-- `src/styles.css` — add a few motion utility classes + `prefers-reduced-motion` overrides.
+5. **Verify in the browser** — after the change, screenshot the homepage and About page, scroll, and confirm the hero headline, eyebrow, paragraph, CTA, and each section's reveal actually animate. If they still don't, add a one-line `console.log` inside the effect and re-check logs — but with step 1 in place, the page is at minimum readable.
 
 ## Out of scope
 
-- No new copy or new sections beyond the scam-call demo.
-- No backend changes — early-access form keeps its existing server function.
-- No new imagery — motion does the heavy lifting.
-- No heavy smooth-scroll library (Lenis) unless needed after first pass.
-
-## Risk / cost
-
-- Adds ~70KB gzip (`gsap` + ScrollTrigger). Acceptable for a marketing site.
-- Pinned sections need careful testing on the 384px viewport; mobile fallbacks handled above.
+- No new sections, copy, or imagery.
+- No dependency changes (`gsap` + `@gsap/react` already installed).
+- The 404 on `tt-norms-pro-regular.woff2` is unrelated to motion and stays for a separate pass.

@@ -216,11 +216,8 @@ img { max-width: 100%; display: block; }
 /* ---------- MOTION PRIMITIVES ---------- */
 .anim-word, .anim-char { display: inline-block; }
 .anim-mask { overflow: hidden; display: inline-block; vertical-align: bottom; }
-.reveal-up { opacity: 0; transform: translateY(28px); }
-.reveal-fade { opacity: 0; }
-.reveal-eyebrow { opacity: 0; transform: translateY(8px); }
-.reveal-head .anim-word { transform: translateY(110%); opacity: 0; }
-.reveal-line { opacity: 0; transform: translateY(18px); }
+/* Reveal classes are markers only — initial hidden state is set by GSAP in JS,
+   so if JS fails or is slow, content stays visible (no blank page). */
 
 @media (prefers-reduced-motion: reduce) {
   .reveal-up, .reveal-fade, .reveal-eyebrow, .reveal-line { opacity: 1; transform: none; }

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
@@ -84,29 +84,29 @@ function AboutPage() {
     { title: "Quiet by default", body: "We build calm technology. A pulse, not an alarm. Intervention that interrupts manipulation, not life." },
   ];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rootRef.current) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
-        gsap.to(el, {
-          opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        gsap.from(el, {
+          opacity: 0, y: 8, duration: 0.6, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 95%", once: true },
         });
       });
       gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
         const words = head.querySelectorAll(".anim-word");
         if (!words.length) return;
-        gsap.to(words, {
-          y: 0, opacity: 1, duration: 0.85, ease: "power3.out", stagger: 0.04,
-          scrollTrigger: { trigger: head, start: "top 85%", once: true },
+        gsap.from(words, {
+          yPercent: 110, opacity: 0, duration: 0.85, ease: "power3.out", stagger: 0.04,
+          scrollTrigger: { trigger: head, start: "top 95%", once: true },
         });
       });
       gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
-        gsap.to(el, {
-          opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        gsap.from(el, {
+          opacity: 0, y: 28, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 95%", once: true },
         });
       });
     }, rootRef);
