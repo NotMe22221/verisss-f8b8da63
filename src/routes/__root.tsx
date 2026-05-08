@@ -9,6 +9,9 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { useLenis } from "@/lib/useLenis";
+import { CursorFollower } from "@/components/landing/CursorFollower";
+import { PageCurtain } from "@/components/landing/PageCurtain";
 
 function NotFoundComponent() {
   return (
@@ -118,9 +121,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useLenis();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <PageCurtain />
+      <CursorFollower />
       <Outlet />
     </QueryClientProvider>
   );

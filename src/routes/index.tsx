@@ -6,9 +6,12 @@ import { toast } from "sonner";
 import ringDevice from "@/assets/ring-device-studio.png";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { revealAll } from "@/lib/reveal";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
 import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
+import { HeroAmbient } from "@/components/landing/HeroAmbient";
+import { CountUp } from "@/components/landing/CountUp";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
@@ -97,34 +100,44 @@ function HeroMarquee() {
 
 /* ---------- HERO ---------- */
 function HeroSection() {
+  const heroRef = useRef<HTMLDivElement>(null);
   return (
     <section className="flex-1 px-4 md:px-6 pt-20 pb-6 flex items-end">
-      <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] lg:min-h-[720px]">
+      <div
+        ref={heroRef}
+        className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] lg:min-h-[720px]"
+      >
         <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full" style={{ filter: "grayscale(1) contrast(1.05) brightness(1.02)" }}>
           <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
+        <HeroAmbient containerRef={heroRef} />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
-          <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
+          <p data-parallax="0.3" className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 hero-head overflow-hidden" style={{ letterSpacing: "-0.04em" }}>
+          <h1 data-parallax="0.5" className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 hero-head" style={{ letterSpacing: "-0.04em" }}>
             <SplitText by="word">Every fraud tool reacts.</SplitText>
             <br />
             <SplitText by="word">Veris intervenes.</SplitText>
           </h1>
-          <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium hero-copy">
+          <p data-parallax="0.7" className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium hero-copy">
             Biosignals, voice, and on-device AI, fused in a ring, to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
-          <Magnetic className="hero-cta">
-            <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
-              Join the beta
-              <span className="bg-[#F4EFE6] rounded-full p-2">
-                <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
-              </span>
-            </a>
-          </Magnetic>
+          <div data-parallax="0.9" className="hero-cta">
+            <Magnetic>
+              <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
+                Join the beta
+                <span className="bg-[#F4EFE6] rounded-full p-2">
+                  <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
+                </span>
+              </a>
+            </Magnetic>
+          </div>
+          <p className="mt-5 text-[#1B3A4B]/60 text-sm font-medium hero-counter">
+            <CountUp to={12847} className="text-[#1B3A4B] font-semibold tabular-nums" /> calls intercepted in pilot
+          </p>
           <HeroMarquee />
         </div>
       </div>
@@ -444,80 +457,80 @@ function VerisLanding() {
 
   useGSAP(
     () => {
+      const root = rootRef.current!;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // 1. Apply the shared reveal system across the whole page first.
+      revealAll(root);
+
       if (reduced) return;
 
-      // Pre-hide above-the-fold targets immediately so the intro reads as motion.
-      gsap.set(".hero-eyebrow", { opacity: 0, y: 14 });
-      gsap.set(".hero-head .anim-word", { yPercent: 130, opacity: 0 });
-      gsap.set(".hero-copy", { opacity: 0, y: 24 });
-      gsap.set(".hero-cta", { opacity: 0, y: 20, scale: 0.96 });
-      gsap.set(".marquee-track", { opacity: 0 });
+      // 2. Hero intro — overrides the scroll reveal for above-the-fold so it
+      // plays on mount instead of needing a scroll trigger.
+      const heroEyebrow = root.querySelector(".hero-eyebrow");
+      const heroHeadWords = root.querySelectorAll(".hero-head .anim-word");
+      const heroCopy = root.querySelector(".hero-copy");
+      const heroCta = root.querySelector(".hero-cta");
+      const heroCounter = root.querySelector(".hero-counter");
+      const marquee = root.querySelector(".marquee-track");
 
-      // Hero intro timeline — runs on mount, no scroll required.
-      const intro = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
+      gsap.set(heroEyebrow, { opacity: 0, x: -16 });
+      gsap.set(heroHeadWords, { yPercent: 115, opacity: 0 });
+      gsap.set(heroCopy, { opacity: 0, y: 28 });
+      gsap.set(heroCta, { opacity: 0, y: 24, scale: 0.95 });
+      gsap.set(heroCounter, { opacity: 0, y: 16 });
+      gsap.set(marquee, { opacity: 0 });
+
+      const intro = gsap.timeline({ defaults: { ease: "expo.out" }, delay: 0.95 });
       intro
-        .to(".hero-eyebrow", { opacity: 1, y: 0, duration: 0.7 })
+        .to(heroEyebrow, { opacity: 1, x: 0, duration: 0.9 })
         .to(
-          ".hero-head .anim-word",
-          { yPercent: 0, opacity: 1, duration: 0.95, stagger: 0.06, ease: "power4.out" },
-          "-=0.45",
+          heroHeadWords,
+          { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 },
+          "-=0.55",
         )
-        .to(".hero-copy", { opacity: 1, y: 0, duration: 0.8 }, "-=0.55")
-        .to(".hero-cta", { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, "-=0.45")
-        .to(".marquee-track", { opacity: 1, duration: 0.8 }, "-=0.4");
+        .to(heroCopy, { opacity: 1, y: 0, duration: 0.9 }, "-=0.7")
+        .to(heroCta, { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: "back.out(1.6)" }, "-=0.55")
+        .to(heroCounter, { opacity: 1, y: 0, duration: 0.7 }, "-=0.45")
+        .to(marquee, { opacity: 1, duration: 0.8 }, "-=0.5");
 
-      // Subtle continuous float on the CTA so the page never sits still.
-      gsap.to(".hero-cta", {
-        y: -4,
+      // 3. CTA continuous float so the page never sits still.
+      gsap.to(heroCta, {
+        y: -5,
         duration: 2.6,
         ease: "sine.inOut",
         yoyo: true,
         repeat: -1,
-        delay: 1.6,
+        delay: 2.4,
       });
 
-      // Scroll-triggered reveals for everything below the fold.
-      gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 16,
-          duration: 0.7,
-          ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-        });
-      });
+      // 4. Hero parallax on cursor move.
+      const heroSection = root.querySelector<HTMLElement>("section");
+      const parallaxEls = root.querySelectorAll<HTMLElement>("[data-parallax]");
+      if (heroSection && parallaxEls.length) {
+        const setters = Array.from(parallaxEls).map((el) => ({
+          el,
+          depth: parseFloat(el.dataset.parallax || "0.5"),
+          x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3.out" }),
+          y: gsap.quickTo(el, "y", { duration: 0.9, ease: "power3.out" }),
+        }));
+        const onMove = (e: PointerEvent) => {
+          const r = heroSection.getBoundingClientRect();
+          const cx = (e.clientX - r.left) / r.width - 0.5;
+          const cy = (e.clientY - r.top) / r.height - 0.5;
+          setters.forEach(({ depth, x, y }) => {
+            x(cx * depth * -28);
+            y(cy * depth * -22);
+          });
+        };
+        heroSection.addEventListener("pointermove", onMove);
+      }
 
-      gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
-        const words = head.querySelectorAll(".anim-word");
-        if (!words.length) return;
-        gsap.set(words, { yPercent: 130, opacity: 0 });
-        gsap.to(words, {
-          yPercent: 0,
-          opacity: 1,
-          duration: 0.95,
-          ease: "power4.out",
-          stagger: 0.055,
-          scrollTrigger: { trigger: head, start: "top 88%", once: true },
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el, i) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 48,
-          duration: 0.95,
-          ease: "power3.out",
-          delay: (i % 4) * 0.05,
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-        });
-      });
-
-      // Marquee speed reacts to scroll velocity.
-      const track = rootRef.current!.querySelector<HTMLElement>(".marquee-track");
+      // 5. Marquee speed reacts to scroll velocity.
+      const track = root.querySelector<HTMLElement>(".marquee-track");
       if (track) {
         ScrollTrigger.create({
-          trigger: rootRef.current!,
+          trigger: root,
           start: "top top",
           end: "bottom bottom",
           onUpdate: (self) => {
@@ -527,8 +540,8 @@ function VerisLanding() {
         });
       }
 
-      // Device image: continuous gentle float + scroll-driven rotate/scale.
-      const deviceImg = rootRef.current!.querySelector<HTMLElement>(".device-image");
+      // 6. Device image: continuous float + scroll-driven rotate/scale.
+      const deviceImg = root.querySelector<HTMLElement>(".device-image");
       if (deviceImg) {
         gsap.to(deviceImg, {
           y: -14,
@@ -550,34 +563,44 @@ function VerisLanding() {
         });
       }
 
-      // Step cards: tilt-in with stagger.
+      // 7. Step cards: 3D tilt-in on scroll.
       const stepCards = gsap.utils.toArray<HTMLElement>(".step-card");
       if (stepCards.length) {
-        gsap.from(stepCards, {
-          opacity: 0,
-          y: 60,
-          rotateX: -12,
-          transformPerspective: 800,
-          duration: 1,
-          ease: "power3.out",
-          stagger: 0.12,
+        gsap.set(stepCards, { opacity: 0, y: 80, rotateX: -18, transformPerspective: 900 });
+        gsap.to(stepCards, {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 1.1,
+          ease: "expo.out",
+          stagger: 0.14,
           scrollTrigger: { trigger: stepCards[0], start: "top 85%", once: true },
         });
       }
 
-      // CTA card subtle scale-in.
-      gsap.from(".cta-card", {
-        opacity: 0,
-        y: 60,
-        scale: 0.97,
-        duration: 1.1,
-        ease: "power3.out",
+      // 8. CTA card scale-in.
+      gsap.set(".cta-card", { opacity: 0, y: 80, scale: 0.96 });
+      gsap.to(".cta-card", {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: "expo.out",
         scrollTrigger: { trigger: ".cta-card", start: "top 85%", once: true },
       });
 
-      if (typeof document !== "undefined" && (document as any).fonts?.ready) {
-        (document as any).fonts.ready.then(() => ScrollTrigger.refresh());
-      }
+      // 9. Section hairlines: draw across as you scroll past.
+      gsap.utils.toArray<HTMLElement>(".section-rule").forEach((el) => {
+        gsap.fromTo(
+          el,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: { trigger: el, start: "top 95%", end: "top 60%", scrub: true },
+          },
+        );
+      });
     },
     { scope: rootRef },
   );

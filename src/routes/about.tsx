@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import { revealAll } from "@/lib/reveal";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
 
@@ -87,54 +88,21 @@ function AboutPage() {
 
   useGSAP(
     () => {
+      const root = rootRef.current!;
+      revealAll(root);
+
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Hero intro for the About headline.
-      gsap.set(".about-hero-eyebrow", { opacity: 0, y: 14 });
-      gsap.set(".about-hero-head .anim-word", { yPercent: 130, opacity: 0 });
-      const intro = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
+      // About hero intro on mount.
+      const eyebrow = root.querySelector(".about-hero-eyebrow");
+      const headWords = root.querySelectorAll(".about-hero-head .anim-word");
+      gsap.set(eyebrow, { opacity: 0, x: -16 });
+      gsap.set(headWords, { yPercent: 115, opacity: 0 });
+
+      const intro = gsap.timeline({ defaults: { ease: "expo.out" }, delay: 0.95 });
       intro
-        .to(".about-hero-eyebrow", { opacity: 1, y: 0, duration: 0.7 })
-        .to(
-          ".about-hero-head .anim-word",
-          { yPercent: 0, opacity: 1, duration: 1, stagger: 0.06, ease: "power4.out" },
-          "-=0.45",
-        );
-
-      gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 16,
-          duration: 0.7,
-          ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
-        const words = head.querySelectorAll(".anim-word");
-        if (!words.length) return;
-        gsap.set(words, { yPercent: 130, opacity: 0 });
-        gsap.to(words, {
-          yPercent: 0,
-          opacity: 1,
-          duration: 0.95,
-          ease: "power4.out",
-          stagger: 0.055,
-          scrollTrigger: { trigger: head, start: "top 88%", once: true },
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el, i) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 48,
-          duration: 0.95,
-          ease: "power3.out",
-          delay: (i % 4) * 0.05,
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-        });
-      });
+        .to(eyebrow, { opacity: 1, x: 0, duration: 0.9 })
+        .to(headWords, { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 }, "-=0.55");
     },
     { scope: rootRef },
   );
