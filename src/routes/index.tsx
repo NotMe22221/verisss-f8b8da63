@@ -9,6 +9,7 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
 import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
+import { HeroScene } from "@/components/landing/HeroScene";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
@@ -100,11 +101,9 @@ function HeroSection() {
   return (
     <section className="flex-1 px-4 md:px-6 pt-20 pb-6 flex items-end">
       <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] lg:min-h-[720px]">
-        <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full" style={{ filter: "grayscale(1) contrast(1.05) brightness(1.02)" }}>
-          <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(120% 90% at 80% 50%, rgba(201,164,106,0.18) 0%, rgba(244,239,230,0) 55%), linear-gradient(180deg, #F4EFE6 0%, #EDE6D6 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.07]" style={{ backgroundImage: "repeating-linear-gradient(0deg, #1B3A4B 0 1px, transparent 1px 36px), repeating-linear-gradient(90deg, #1B3A4B 0 1px, transparent 1px 36px)" }} />
+        <HeroScene />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
           <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
             Private Beta · The Cognitive Defense Layer
