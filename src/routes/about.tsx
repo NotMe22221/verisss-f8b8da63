@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
