@@ -214,14 +214,67 @@ html, body { font-family: "TT Norms Pro", "Inter", ui-sans-serif, system-ui, -ap
 img { max-width: 100%; display: block; }
 
 /* ---------- MOTION PRIMITIVES ---------- */
-.anim-word, .anim-char { display: inline-block; }
-.anim-mask { overflow: hidden; display: inline-block; vertical-align: bottom; }
+.anim-word, .anim-char { display: inline-block; will-change: transform, opacity; }
+.mask-word, .mask-char {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: inherit;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
 /* Reveal classes are markers only — initial hidden state is set by GSAP in JS,
    so if JS fails or is slow, content stays visible (no blank page). */
 
+/* ---------- HERO AMBIENT ---------- */
+@keyframes mesh-shift {
+  0%   { background-position: 0% 0%, 100% 100%, 50% 50%; }
+  50%  { background-position: 100% 50%, 0% 50%, 80% 20%; }
+  100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+}
+.hero-mesh {
+  background:
+    radial-gradient(60% 60% at 20% 30%, rgba(201,164,106,0.55) 0%, transparent 60%),
+    radial-gradient(60% 60% at 80% 70%, rgba(27,58,75,0.55) 0%, transparent 60%),
+    radial-gradient(50% 50% at 50% 50%, rgba(244,239,230,0.4) 0%, transparent 60%);
+  background-size: 200% 200%, 200% 200%, 200% 200%;
+  animation: mesh-shift 18s ease-in-out infinite;
+}
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain-shift 1.6s steps(4) infinite;
+}
+@keyframes grain-shift {
+  0%   { transform: translate(0,0); }
+  25%  { transform: translate(-3%, 2%); }
+  50%  { transform: translate(2%, -3%); }
+  75%  { transform: translate(-2%, -2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ---------- CUSTOM CURSOR ---------- */
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button { cursor: none; }
+}
+
+/* ---------- SECTION HAIRLINE DRAW ---------- */
+.section-rule {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: rgba(27,58,75,0.18);
+  transform-origin: left center;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal-up, .reveal-fade, .reveal-eyebrow, .reveal-line { opacity: 1; transform: none; }
-  .reveal-head .anim-word { transform: none; opacity: 1; }
+  .reveal-up, .reveal-fade, .reveal-eyebrow, .reveal-line, .reveal-stagger > * { opacity: 1; transform: none; }
+  .reveal-head .anim-word, .reveal-head .anim-char { transform: none; opacity: 1; }
+  .hero-mesh, .hero-grain { animation: none; }
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
 
