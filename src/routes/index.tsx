@@ -1,11 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import ringDevice from "@/assets/ring-device-studio.png";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { animate, createTimeline, stagger, onInView, rafThrottle, reducedMotion } from "@/lib/anime";
 import { revealAll } from "@/lib/reveal";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
@@ -455,163 +454,147 @@ function Footer() {
 function VerisLanding() {
   const rootRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const root = rootRef.current!;
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const cleanupReveal = revealAll(root);
+    const cleanups: Array<() => void> = [cleanupReveal];
 
-      // 1. Apply the shared reveal system across the whole page first.
-      revealAll(root);
+    if (reducedMotion()) return () => cleanups.forEach((c) => c());
 
-      if (reduced) return;
+    // 1. Hero intro on mount.
+    const heroEyebrow = root.querySelector<HTMLElement>(".hero-eyebrow");
+    const heroHeadWords = root.querySelectorAll<HTMLElement>(".hero-head .anim-word");
+    const heroCopy = root.querySelector<HTMLElement>(".hero-copy");
+    const heroCta = root.querySelector<HTMLElement>(".hero-cta");
+    const heroCounter = root.querySelector<HTMLElement>(".hero-counter");
+    const marquee = root.querySelector<HTMLElement>(".marquee-track");
 
-      // 2. Hero intro — overrides the scroll reveal for above-the-fold so it
-      // plays on mount instead of needing a scroll trigger.
-      const heroEyebrow = root.querySelector<HTMLElement>(".hero-eyebrow");
-      const heroHeadWords = root.querySelectorAll<HTMLElement>(".hero-head .anim-word");
-      const heroCopy = root.querySelector<HTMLElement>(".hero-copy");
-      const heroCta = root.querySelector<HTMLElement>(".hero-cta");
-      const heroCounter = root.querySelector<HTMLElement>(".hero-counter");
-      const marquee = root.querySelector<HTMLElement>(".marquee-track");
+    const hide = (el: HTMLElement | null, transform: string) => {
+      if (!el) return;
+      el.style.opacity = "0";
+      el.style.transform = transform;
+    };
+    hide(heroEyebrow, "translateX(-16px)");
+    heroHeadWords.forEach((w) => hide(w, "translateY(115%)"));
+    hide(heroCopy, "translateY(28px)");
+    hide(heroCta, "translateY(24px) scale(0.95)");
+    hide(heroCounter, "translateY(16px)");
+    if (marquee) marquee.style.opacity = "0";
 
-      if (heroEyebrow) gsap.set(heroEyebrow, { opacity: 0, x: -16 });
-      if (heroHeadWords.length) gsap.set(heroHeadWords, { yPercent: 115, opacity: 0 });
-      if (heroCopy) gsap.set(heroCopy, { opacity: 0, y: 28 });
-      if (heroCta) gsap.set(heroCta, { opacity: 0, y: 24, scale: 0.95 });
-      if (heroCounter) gsap.set(heroCounter, { opacity: 0, y: 16 });
-      if (marquee) gsap.set(marquee, { opacity: 0 });
+    const intro = createTimeline({ defaults: { ease: "outExpo" } });
+    if (heroEyebrow)
+      intro.add(heroEyebrow, { opacity: [0, 1], translateX: [-16, 0], duration: 900 }, 950);
+    if (heroHeadWords.length)
+      intro.add(
+        heroHeadWords,
+        { opacity: [0, 1], translateY: ["115%", "0%"], duration: 1200, delay: stagger(70) },
+        1300,
+      );
+    if (heroCopy)
+      intro.add(heroCopy, { opacity: [0, 1], translateY: [28, 0], duration: 900 }, 1700);
+    if (heroCta)
+      intro.add(
+        heroCta,
+        { opacity: [0, 1], translateY: [24, 0], scale: [0.95, 1], duration: 850, ease: "outBack(1.6)" },
+        2050,
+      );
+    if (heroCounter)
+      intro.add(heroCounter, { opacity: [0, 1], translateY: [16, 0], duration: 700 }, 2300);
+    if (marquee) intro.add(marquee, { opacity: [0, 1], duration: 800 }, 2500);
 
-      const intro = gsap.timeline({ defaults: { ease: "expo.out" }, delay: 0.95 });
-      if (heroEyebrow) intro.to(heroEyebrow, { opacity: 1, x: 0, duration: 0.9 });
-      if (heroHeadWords.length)
-        intro.to(heroHeadWords, { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 }, "-=0.55");
-      if (heroCopy) intro.to(heroCopy, { opacity: 1, y: 0, duration: 0.9 }, "-=0.7");
-      if (heroCta)
-        intro.to(heroCta, { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: "back.out(1.6)" }, "-=0.55");
-      if (heroCounter) intro.to(heroCounter, { opacity: 1, y: 0, duration: 0.7 }, "-=0.45");
-      if (marquee) intro.to(marquee, { opacity: 1, duration: 0.8 }, "-=0.5");
-
-      // 3. CTA continuous float so the page never sits still.
-      if (heroCta) {
-        gsap.to(heroCta, {
-          y: -5,
-          duration: 2.6,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          delay: 2.4,
-        });
-      }
-
-      // 4. Hero parallax on cursor move.
-      const heroSection = root.querySelector<HTMLElement>("section");
-      const parallaxEls = root.querySelectorAll<HTMLElement>("[data-parallax]");
-      let parallaxCleanup: (() => void) | null = null;
-      if (heroSection && parallaxEls.length) {
-        const setters = Array.from(parallaxEls).map((el) => ({
-          el,
-          depth: parseFloat(el.dataset.parallax || "0.5"),
-          x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3.out" }),
-          y: gsap.quickTo(el, "y", { duration: 0.9, ease: "power3.out" }),
-        }));
-        const onMove = (e: PointerEvent) => {
-          const r = heroSection.getBoundingClientRect();
-          const cx = (e.clientX - r.left) / r.width - 0.5;
-          const cy = (e.clientY - r.top) / r.height - 0.5;
-          setters.forEach(({ depth, x, y }) => {
-            x(cx * depth * -28);
-            y(cy * depth * -22);
-          });
-        };
-        heroSection.addEventListener("pointermove", onMove);
-        parallaxCleanup = () => heroSection.removeEventListener("pointermove", onMove);
-      }
-
-      // 5. Marquee speed reacts to scroll velocity.
-      const track = root.querySelector<HTMLElement>(".marquee-track");
-      if (track) {
-        ScrollTrigger.create({
-          trigger: root,
-          start: "top top",
-          end: "bottom bottom",
-          onUpdate: (self) => {
-            const speed = 1 + Math.min(3, Math.abs(self.getVelocity()) / 600);
-            track.style.animationDuration = `${22 / speed}s`;
-          },
-        });
-      }
-
-      // 6. Device image: continuous float + scroll-driven rotate/scale.
-      const deviceImg = root.querySelector<HTMLElement>(".device-image");
-      if (deviceImg) {
-        gsap.to(deviceImg, {
-          y: -14,
-          duration: 4,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
-        gsap.to(deviceImg, {
-          rotate: 22,
-          scale: 1.08,
-          ease: "none",
-          scrollTrigger: {
-            trigger: deviceImg.closest(".device-image-wrap"),
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0.6,
-          },
-        });
-      }
-
-      // 7. Step cards: 3D tilt-in on scroll.
-      const stepCards = gsap.utils.toArray<HTMLElement>(".step-card");
-      if (stepCards.length) {
-        gsap.set(stepCards, { opacity: 0, y: 80, rotateX: -18, transformPerspective: 900 });
-        gsap.to(stepCards, {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 1.1,
-          ease: "expo.out",
-          stagger: 0.14,
-          scrollTrigger: { trigger: stepCards[0], start: "top 85%", once: true },
-        });
-      }
-
-      // 8. CTA card scale-in.
-      const ctaCard = root.querySelector<HTMLElement>(".cta-card");
-      if (ctaCard) {
-        gsap.set(ctaCard, { opacity: 0, y: 80, scale: 0.96 });
-        gsap.to(ctaCard, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.2,
-          ease: "expo.out",
-          scrollTrigger: { trigger: ctaCard, start: "top 85%", once: true },
-        });
-      }
-
-      // 9. Section hairlines: draw across as you scroll past.
-      gsap.utils.toArray<HTMLElement>(".section-rule").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            ease: "none",
-            scrollTrigger: { trigger: el, start: "top 95%", end: "top 60%", scrub: true },
-          },
-        );
+    // 2. CTA continuous float.
+    if (heroCta) {
+      const float = animate(heroCta, {
+        translateY: [0, -5],
+        duration: 2600,
+        ease: "inOutSine",
+        loop: true,
+        alternate: true,
+        delay: 3400,
       });
+      cleanups.push(() => float.pause());
+    }
 
-      return () => {
-        parallaxCleanup?.();
-      };
-    },
-    { scope: rootRef },
-  );
+    // 3. Hero parallax via cursor.
+    const heroSection = root.querySelector<HTMLElement>("section");
+    const parallaxEls = Array.from(root.querySelectorAll<HTMLElement>("[data-parallax]"));
+    if (heroSection && parallaxEls.length) {
+      const onMove = rafThrottle((e: PointerEvent) => {
+        const r = heroSection.getBoundingClientRect();
+        const cx = (e.clientX - r.left) / r.width - 0.5;
+        const cy = (e.clientY - r.top) / r.height - 0.5;
+        parallaxEls.forEach((el) => {
+          const depth = parseFloat(el.dataset.parallax || "0.5");
+          animate(el, {
+            x: cx * depth * -28,
+            y: cy * depth * -22,
+            duration: 900,
+            ease: "outExpo",
+          });
+        });
+      });
+      heroSection.addEventListener("pointermove", onMove);
+      cleanups.push(() => heroSection.removeEventListener("pointermove", onMove));
+    }
+
+    // 4. Device image float.
+    const deviceImg = root.querySelector<HTMLElement>(".device-image");
+    if (deviceImg) {
+      const a = animate(deviceImg, {
+        translateY: [0, -14],
+        duration: 4000,
+        ease: "inOutSine",
+        loop: true,
+        alternate: true,
+      });
+      cleanups.push(() => a.pause());
+    }
+
+    // 5. Step cards: 3D tilt-in on scroll.
+    const stepCards = Array.from(root.querySelectorAll<HTMLElement>(".step-card"));
+    if (stepCards.length) {
+      stepCards.forEach((c) => {
+        c.style.opacity = "0";
+        c.style.transform = "translateY(80px) perspective(900px) rotateX(-18deg)";
+      });
+      cleanups.push(
+        onInView(stepCards[0], () => {
+          animate(stepCards, {
+            opacity: [0, 1],
+            translateY: [80, 0],
+            rotateX: [-18, 0],
+            duration: 1100,
+            ease: "outExpo",
+            delay: stagger(140),
+          });
+        }),
+      );
+    }
+
+    // 6. CTA card scale-in.
+    const ctaCard = root.querySelector<HTMLElement>(".cta-card");
+    if (ctaCard) {
+      ctaCard.style.opacity = "0";
+      ctaCard.style.transform = "translateY(80px) scale(0.96)";
+      cleanups.push(
+        onInView(ctaCard, () => {
+          animate(ctaCard, {
+            opacity: [0, 1],
+            translateY: [80, 0],
+            scale: [0.96, 1],
+            duration: 1200,
+            ease: "outExpo",
+          });
+        }),
+      );
+    }
+
+    return () => {
+      intro.pause();
+      cleanups.forEach((c) => c());
+    };
+  }, []);
 
   return (
     <div ref={rootRef} className="flex flex-col bg-[#F4EFE6]">
