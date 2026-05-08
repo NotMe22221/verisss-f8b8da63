@@ -30,7 +30,12 @@ function LogoIcon({ className = "w-7 h-7" }: { className?: string }) {
 
 /* ---------- NAVBAR ---------- */
 function Navbar() {
-  const links = ["Mission", "The Device", "Science", "Press", "Manifesto"];
+  const links = [
+    { label: "Mission", href: "#problem" },
+    { label: "The Device", href: "#device" },
+    { label: "Science", href: "#science" },
+    { label: "Manifesto", href: "#manifesto" },
+  ];
   return (
     <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-5">
       <div className="max-w-[88rem] mx-auto flex items-center justify-between">
@@ -38,15 +43,18 @@ function Navbar() {
           <LogoIcon className="w-7 h-7" />
           <span className="text-2xl font-medium tracking-tight">Veris</span>
         </Link>
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-7">
           {links.map((l) => (
-            <a key={l} href="#" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
-              {l}
+            <a key={l.label} href={l.href} className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
+              {l.label}
             </a>
           ))}
-          <Link to="/about" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
+          <Link to="/about" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200" activeProps={{ className: "text-[#1B3A4B] font-medium" }}>
             About
           </Link>
+          <a href="#early-access" className="text-base bg-[#1B3A4B] text-[#F4EFE6] px-4 py-2 rounded-full hover:bg-[#1B3A4B]/90 font-medium transition-colors duration-200">
+            Early Access
+          </a>
         </div>
       </div>
     </nav>
