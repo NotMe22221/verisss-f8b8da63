@@ -100,34 +100,44 @@ function HeroMarquee() {
 
 /* ---------- HERO ---------- */
 function HeroSection() {
+  const heroRef = useRef<HTMLDivElement>(null);
   return (
     <section className="flex-1 px-4 md:px-6 pt-20 pb-6 flex items-end">
-      <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] lg:min-h-[720px]">
+      <div
+        ref={heroRef}
+        className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] lg:min-h-[720px]"
+      >
         <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full" style={{ filter: "grayscale(1) contrast(1.05) brightness(1.02)" }}>
           <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
+        <HeroAmbient containerRef={heroRef} />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
-          <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
+          <p data-parallax="0.3" className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 hero-head overflow-hidden" style={{ letterSpacing: "-0.04em" }}>
+          <h1 data-parallax="0.5" className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 hero-head" style={{ letterSpacing: "-0.04em" }}>
             <SplitText by="word">Every fraud tool reacts.</SplitText>
             <br />
             <SplitText by="word">Veris intervenes.</SplitText>
           </h1>
-          <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium hero-copy">
+          <p data-parallax="0.7" className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium hero-copy">
             Biosignals, voice, and on-device AI, fused in a ring, to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
-          <Magnetic className="hero-cta">
-            <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
-              Join the beta
-              <span className="bg-[#F4EFE6] rounded-full p-2">
-                <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
-              </span>
-            </a>
-          </Magnetic>
+          <div data-parallax="0.9" className="hero-cta">
+            <Magnetic>
+              <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
+                Join the beta
+                <span className="bg-[#F4EFE6] rounded-full p-2">
+                  <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
+                </span>
+              </a>
+            </Magnetic>
+          </div>
+          <p className="mt-5 text-[#1B3A4B]/60 text-sm font-medium hero-counter">
+            <CountUp to={12847} className="text-[#1B3A4B] font-semibold tabular-nums" /> calls intercepted in pilot
+          </p>
           <HeroMarquee />
         </div>
       </div>
