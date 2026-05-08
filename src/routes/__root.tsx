@@ -121,9 +121,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useLenis();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <PageCurtain />
+      <CursorFollower />
       <Outlet />
     </QueryClientProvider>
   );
