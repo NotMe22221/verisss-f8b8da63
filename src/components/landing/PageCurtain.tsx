@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { animate, reducedMotion } from "@/lib/anime";
 
 /** Deep-teal panel that slides off the screen on first paint. */
 export function PageCurtain() {
@@ -8,19 +7,21 @@ export function PageCurtain() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (reducedMotion()) {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
       el.style.display = "none";
       return;
     }
-    animate(el, {
-      translateY: ["0%", "-100%"],
-      duration: 1050,
-      ease: "inOutExpo",
-      delay: 50,
-      onComplete: () => {
-        el.style.display = "none";
-      },
+    // Two RAFs so the initial transform commits before transitioning.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.transform = "translateY(-100%)";
+      });
     });
+    const t = window.setTimeout(() => {
+      el.style.display = "none";
+    }, 1300);
+    return () => clearTimeout(t);
   }, []);
 
   return (
@@ -33,6 +34,9 @@ export function PageCurtain() {
         background: "#1B3A4B",
         zIndex: 9998,
         pointerEvents: "none",
+        transform: "translateY(0)",
+        transition: "transform 1050ms cubic-bezier(0.86, 0, 0.07, 1)",
+        willChange: "transform",
       }}
     />
   );
