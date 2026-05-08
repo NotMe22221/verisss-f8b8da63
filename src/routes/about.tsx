@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { useEffect, useRef } from "react";
+import { animate, createTimeline, stagger, reducedMotion } from "@/lib/anime";
 import { revealAll } from "@/lib/reveal";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
@@ -86,26 +85,39 @@ function AboutPage() {
     { title: "Quiet by default", body: "We build calm technology. A pulse, not an alarm. Intervention that interrupts manipulation, not life." },
   ];
 
-  useGSAP(
-    () => {
-      const root = rootRef.current!;
-      revealAll(root);
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const cleanupReveal = revealAll(root);
+    if (reducedMotion()) return cleanupReveal;
 
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const eyebrow = root.querySelector<HTMLElement>(".about-hero-eyebrow");
+    const headWords = root.querySelectorAll<HTMLElement>(".about-hero-head .anim-word");
 
-      // About hero intro on mount.
-      const eyebrow = root.querySelector<HTMLElement>(".about-hero-eyebrow");
-      const headWords = root.querySelectorAll<HTMLElement>(".about-hero-head .anim-word");
-      if (eyebrow) gsap.set(eyebrow, { opacity: 0, x: -16 });
-      if (headWords.length) gsap.set(headWords, { yPercent: 115, opacity: 0 });
+    if (eyebrow) {
+      eyebrow.style.opacity = "0";
+      eyebrow.style.transform = "translateX(-16px)";
+    }
+    headWords.forEach((w) => {
+      w.style.opacity = "0";
+      w.style.transform = "translateY(115%)";
+    });
 
-      const intro = gsap.timeline({ defaults: { ease: "expo.out" }, delay: 0.95 });
-      if (eyebrow) intro.to(eyebrow, { opacity: 1, x: 0, duration: 0.9 });
-      if (headWords.length)
-        intro.to(headWords, { yPercent: 0, opacity: 1, duration: 1.2, stagger: 0.07 }, "-=0.55");
-    },
-    { scope: rootRef },
-  );
+    const tl = createTimeline({ defaults: { ease: "outExpo" } });
+    if (eyebrow) tl.add(eyebrow, { opacity: [0, 1], translateX: [-16, 0], duration: 900 }, 950);
+    if (headWords.length)
+      tl.add(headWords, {
+        opacity: [0, 1],
+        translateY: ["115%", "0%"],
+        duration: 1200,
+        delay: stagger(70),
+      }, 1300);
+
+    return () => {
+      cleanupReveal();
+      tl.pause();
+    };
+  }, []);
 
   return (
     <div ref={rootRef} className="flex flex-col bg-[#F4EFE6] min-h-screen">
