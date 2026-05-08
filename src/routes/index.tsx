@@ -106,18 +106,18 @@ function HeroSection() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
-          <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 reveal-eyebrow">
+          <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+          <h1 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 hero-head overflow-hidden" style={{ letterSpacing: "-0.04em" }}>
             <SplitText by="word">Every fraud tool reacts.</SplitText>
             <br />
             <SplitText by="word">Veris intervenes.</SplitText>
           </h1>
-          <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium reveal-up">
+          <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium hero-copy">
             Biosignals, voice, and on-device AI, fused in a ring, to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
-          <Magnetic className="reveal-up">
+          <Magnetic className="hero-cta">
             <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
               Join the beta
               <span className="bg-[#F4EFE6] rounded-full p-2">
