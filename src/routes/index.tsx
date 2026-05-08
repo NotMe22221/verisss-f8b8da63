@@ -442,39 +442,78 @@ function Footer() {
 function VerisLanding() {
   const rootRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
-    if (!rootRef.current) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
+  useGSAP(
+    () => {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduced) return;
 
-    const ctx = gsap.context(() => {
-      // Eyebrows
+      // Pre-hide above-the-fold targets immediately so the intro reads as motion.
+      gsap.set(".hero-eyebrow", { opacity: 0, y: 14 });
+      gsap.set(".hero-head .anim-word", { yPercent: 130, opacity: 0 });
+      gsap.set(".hero-copy", { opacity: 0, y: 24 });
+      gsap.set(".hero-cta", { opacity: 0, y: 20, scale: 0.96 });
+      gsap.set(".marquee-track", { opacity: 0 });
+
+      // Hero intro timeline — runs on mount, no scroll required.
+      const intro = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
+      intro
+        .to(".hero-eyebrow", { opacity: 1, y: 0, duration: 0.7 })
+        .to(
+          ".hero-head .anim-word",
+          { yPercent: 0, opacity: 1, duration: 0.95, stagger: 0.06, ease: "power4.out" },
+          "-=0.45",
+        )
+        .to(".hero-copy", { opacity: 1, y: 0, duration: 0.8 }, "-=0.55")
+        .to(".hero-cta", { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, "-=0.45")
+        .to(".marquee-track", { opacity: 1, duration: 0.8 }, "-=0.4");
+
+      // Subtle continuous float on the CTA so the page never sits still.
+      gsap.to(".hero-cta", {
+        y: -4,
+        duration: 2.6,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+        delay: 1.6,
+      });
+
+      // Scroll-triggered reveals for everything below the fold.
       gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
         gsap.from(el, {
-          opacity: 0, y: 8, duration: 0.6, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 95%", once: true },
+          opacity: 0,
+          y: 16,
+          duration: 0.7,
+          ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
         });
       });
 
-      // Headlines (word-by-word)
       gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
         const words = head.querySelectorAll(".anim-word");
         if (!words.length) return;
-        gsap.from(words, {
-          yPercent: 110, opacity: 0, duration: 0.85, ease: "power3.out", stagger: 0.045,
-          scrollTrigger: { trigger: head, start: "top 95%", once: true },
+        gsap.set(words, { yPercent: 130, opacity: 0 });
+        gsap.to(words, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.95,
+          ease: "power4.out",
+          stagger: 0.055,
+          scrollTrigger: { trigger: head, start: "top 88%", once: true },
         });
       });
 
-      // Generic reveal-up
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
+      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el, i) => {
         gsap.from(el, {
-          opacity: 0, y: 28, duration: 0.8, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 95%", once: true },
+          opacity: 0,
+          y: 48,
+          duration: 0.95,
+          ease: "power3.out",
+          delay: (i % 4) * 0.05,
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
         });
       });
 
-      // Marquee speed reacts to scroll velocity
+      // Marquee speed reacts to scroll velocity.
       const track = rootRef.current!.querySelector<HTMLElement>(".marquee-track");
       if (track) {
         ScrollTrigger.create({
@@ -488,12 +527,19 @@ function VerisLanding() {
         });
       }
 
-      // Device image rotates as you scroll past
+      // Device image: continuous gentle float + scroll-driven rotate/scale.
       const deviceImg = rootRef.current!.querySelector<HTMLElement>(".device-image");
       if (deviceImg) {
         gsap.to(deviceImg, {
-          rotate: 18,
-          scale: 1.06,
+          y: -14,
+          duration: 4,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        });
+        gsap.to(deviceImg, {
+          rotate: 22,
+          scale: 1.08,
           ease: "none",
           scrollTrigger: {
             trigger: deviceImg.closest(".device-image-wrap"),
@@ -503,16 +549,38 @@ function VerisLanding() {
           },
         });
       }
-    }, rootRef);
 
-    // Recompute trigger positions once fonts have loaded (prevents off-by-one
-    // misses for elements whose layout shifts after font swap).
-    if (typeof document !== "undefined" && (document as any).fonts?.ready) {
-      (document as any).fonts.ready.then(() => ScrollTrigger.refresh());
-    }
+      // Step cards: tilt-in with stagger.
+      const stepCards = gsap.utils.toArray<HTMLElement>(".step-card");
+      if (stepCards.length) {
+        gsap.from(stepCards, {
+          opacity: 0,
+          y: 60,
+          rotateX: -12,
+          transformPerspective: 800,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.12,
+          scrollTrigger: { trigger: stepCards[0], start: "top 85%", once: true },
+        });
+      }
 
-    return () => ctx.revert();
-  }, []);
+      // CTA card subtle scale-in.
+      gsap.from(".cta-card", {
+        opacity: 0,
+        y: 60,
+        scale: 0.97,
+        duration: 1.1,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".cta-card", start: "top 85%", once: true },
+      });
+
+      if (typeof document !== "undefined" && (document as any).fonts?.ready) {
+        (document as any).fonts.ready.then(() => ScrollTrigger.refresh());
+      }
+    },
+    { scope: rootRef },
+  );
 
   return (
     <div ref={rootRef} className="flex flex-col bg-[#F4EFE6]">
