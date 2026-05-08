@@ -603,6 +603,10 @@ function VerisLanding() {
           },
         );
       });
+
+      return () => {
+        parallaxCleanup?.();
+      };
     },
     { scope: rootRef },
   );
