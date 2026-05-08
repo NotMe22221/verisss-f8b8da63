@@ -1,9 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import ringDevice from "@/assets/ring-device-studio.png";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { SplitText } from "@/components/landing/SplitText";
+import { Magnetic } from "@/components/landing/MagneticButton";
+import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
@@ -101,23 +105,25 @@ function HeroSection() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
-          <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6">
+          <p className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 reveal-eyebrow">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6" style={{ letterSpacing: "-0.04em" }}>
-            Every fraud tool reacts.
+          <h1 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+            <SplitText by="word">Every fraud tool reacts.</SplitText>
             <br />
-            Veris intervenes.
+            <SplitText by="word">Veris intervenes.</SplitText>
           </h1>
-          <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium">
+          <p className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium reveal-up">
             Biosignals, voice, and on-device AI, fused in a ring, to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
           </p>
-          <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
-            Join the beta
-            <span className="bg-[#F4EFE6] rounded-full p-2">
-              <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
-            </span>
-          </a>
+          <Magnetic className="reveal-up">
+            <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
+              Join the beta
+              <span className="bg-[#F4EFE6] rounded-full p-2">
+                <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
+              </span>
+            </a>
+          </Magnetic>
           <HeroMarquee />
         </div>
       </div>
@@ -135,17 +141,17 @@ function ProblemSection() {
   return (
     <section id="problem" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3">The Problem</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
-          Every fraud system in the world reacts after the money is gone.
+        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">The Problem</p>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+          <SplitText by="word">Every fraud system in the world reacts after the money is gone.</SplitText>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
-          <p className="text-[#1B3A4B]/80 text-xl md:text-2xl leading-relaxed font-medium">
+          <p className="text-[#1B3A4B]/80 text-xl md:text-2xl leading-relaxed font-medium reveal-up">
             Banks freeze the transfer after it clears. Apps flag the call after it ends. Family finds out after the regret. By then the damage is done, financially, and to the trust an older person has in their own judgment.
           </p>
           <div className="flex flex-col divide-y divide-[#1B3A4B]/15">
             {stats.map((s) => (
-              <div key={s.value} className="py-5 first:pt-0">
+              <div key={s.value} className="py-5 first:pt-0 reveal-up">
                 <p className="text-[#1B3A4B] text-4xl md:text-5xl font-medium" style={{ letterSpacing: "-0.04em" }}>{s.value}</p>
                 <p className="text-[#1B3A4B]/60 text-sm md:text-base mt-1">{s.label}</p>
               </div>
@@ -170,13 +176,13 @@ function HowItWorksSection() {
   return (
     <section className="bg-[#1B3A4B] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#F4EFE6]/50 text-sm mb-3">How It Works</p>
-        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
-          Four signals. One second. Before the decision.
+        <p className="text-[#F4EFE6]/50 text-sm mb-3 reveal-eyebrow">How It Works</p>
+        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+          <SplitText by="word">Four signals. One second. Before the decision.</SplitText>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#F4EFE6]/10 rounded-2xl overflow-hidden">
           {steps.map((s) => (
-            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 lg:p-10 min-h-56 lg:min-h-72 flex flex-col justify-between">
+            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 lg:p-10 min-h-56 lg:min-h-72 flex flex-col justify-between step-card reveal-up">
               <p className="text-[#F4EFE6]/40 text-sm font-medium tracking-wider">{s.n}</p>
               <div>
                 <h3 className="text-[#F4EFE6] text-2xl lg:text-3xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{s.title}</h3>
@@ -185,7 +191,7 @@ function HowItWorksSection() {
             </div>
           ))}
         </div>
-        <p className="text-[#F4EFE6]/60 italic text-base md:text-lg mt-10 max-w-2xl">
+        <p className="text-[#F4EFE6]/60 italic text-base md:text-lg mt-10 max-w-2xl reveal-up">
           Nothing leaves the ring unless it has to. No cameras. No surveillance. No loss of independence.
         </p>
       </div>
@@ -198,12 +204,12 @@ function AudienceSection() {
   return (
     <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3">Who It's For</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-12 lg:mb-20" style={{ letterSpacing: "-0.04em" }}>
-          Built for the people doing the worrying, and the people they worry about.
+        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">Who It's For</p>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-12 lg:mb-20 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+          <SplitText by="word">Built for the people doing the worrying, and the people they worry about.</SplitText>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6]">
+          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6] reveal-up">
             <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For families</p>
             <div>
               <h3 className="text-[#1B3A4B] text-3xl md:text-4xl font-medium mb-4 leading-tight" style={{ letterSpacing: "-0.03em" }}>
@@ -214,7 +220,7 @@ function AudienceSection() {
               </p>
             </div>
           </div>
-          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6]">
+          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6] reveal-up">
             <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For older adults</p>
             <div>
               <h3 className="text-[#1B3A4B] text-3xl md:text-4xl font-medium mb-4 leading-tight" style={{ letterSpacing: "-0.03em" }}>
@@ -248,23 +254,23 @@ function DeviceSection() {
   return (
     <section id="device" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3">The Device</p>
-        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-none mb-12 lg:mb-20" style={{ letterSpacing: "-0.04em" }}>
-          The Device
+        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">The Device</p>
+        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-none mb-12 lg:mb-20 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+          <SplitText by="word">The Device</SplitText>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-start">
-          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative">
-            <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative device-image-wrap">
+            <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover device-image" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
             {deviceFeatures.map((f) => (
-              <div key={f.title} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
+              <div key={f.title} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between reveal-up">
                 <h3 className="text-[#F4EFE6] text-lg font-medium" style={{ letterSpacing: "-0.02em" }}>{f.title}</h3>
                 <p className="text-[#F4EFE6]/60 text-sm">{f.body}</p>
               </div>
             ))}
             {deviceStats.map((s) => (
-              <div key={s.label} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between">
+              <div key={s.label} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between reveal-up">
                 <p className="text-[#F4EFE6] text-4xl font-medium" style={{ letterSpacing: "-0.03em" }}>
                   {s.value}<span className="text-[#F4EFE6]/70 text-xl ml-1">{s.unit}</span>
                 </p>
@@ -297,13 +303,13 @@ function ScienceSection() {
   return (
     <section id="science" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3">Science & Trust</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-16 lg:mb-24" style={{ letterSpacing: "-0.04em" }}>
-          A moonshot, built like medicine.
+        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">Science & Trust</p>
+        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-16 lg:mb-24 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+          <SplitText by="word">A moonshot, built like medicine.</SplitText>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-16">
           {cols.map((c) => (
-            <div key={c.eyebrow}>
+            <div key={c.eyebrow} className="reveal-up">
               <p className="text-[#1B3A4B] text-lg lg:text-xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{c.eyebrow}</p>
               <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed">{c.body}</p>
             </div>
@@ -319,9 +325,9 @@ function ManifestoBand() {
   return (
     <section id="manifesto" className="bg-[#1B3A4B] px-6 lg:px-12 py-28 md:py-36 lg:py-48">
       <div className="max-w-5xl lg:max-w-7xl mx-auto">
-        <p className="text-[#F4EFE6]/40 text-xs font-medium tracking-[0.18em] uppercase mb-6">Manifesto</p>
-        <p className="text-[#F4EFE6] text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.15]" style={{ letterSpacing: "-0.03em" }}>
-          Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision, because that's the only second that matters.
+        <p className="text-[#F4EFE6]/40 text-xs font-medium tracking-[0.18em] uppercase mb-6 reveal-eyebrow">Manifesto</p>
+        <p className="text-[#F4EFE6] text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.15] reveal-head" style={{ letterSpacing: "-0.03em" }}>
+          <SplitText by="word">Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision, because that's the only second that matters.</SplitText>
         </p>
       </div>
     </section>
@@ -357,17 +363,17 @@ function CTASection() {
   return (
     <section id="early-access" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
-        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 lg:px-24 py-16 md:py-24 lg:py-32">
-          <p className="text-[#F4EFE6]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6">Private Beta</p>
-          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-6 lg:mb-8" style={{ letterSpacing: "-0.04em" }}>
-            Be early. Be the reason it doesn't happen to them.
+        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 lg:px-24 py-16 md:py-24 lg:py-32 cta-card">
+          <p className="text-[#F4EFE6]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6 reveal-eyebrow">Private Beta</p>
+          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-6 lg:mb-8 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+            <SplitText by="word">Be early. Be the reason it doesn't happen to them.</SplitText>
           </h2>
-          <p className="text-[#F4EFE6]/70 text-base md:text-lg lg:text-xl max-w-xl lg:max-w-2xl mb-10 lg:mb-14 leading-relaxed">
+          <p className="text-[#F4EFE6]/70 text-base md:text-lg lg:text-xl max-w-xl lg:max-w-2xl mb-10 lg:mb-14 leading-relaxed reveal-up">
             We're shipping the first cohort of rings to 127 families across 9 states. Request access, we read every email.
           </p>
 
           {done ? (
-            <div className="rounded-xl border border-[#F4EFE6]/20 bg-[#F4EFE6]/5 p-6 max-w-xl">
+            <div className="rounded-xl border border-[#F4EFE6]/20 bg-[#F4EFE6]/5 p-6 max-w-xl animate-[fade-in_0.5s_ease-out]">
               <p className="text-[#F4EFE6] text-lg font-medium mb-1">
                 {done === "duplicate" ? "You're already on the list." : "You're in."}
               </p>
@@ -376,7 +382,7 @@ function CTASection() {
               </p>
             </div>
           ) : (
-            <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl">
+            <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl reveal-up">
               <input
                 type="text"
                 placeholder="Your name"
@@ -391,14 +397,16 @@ function CTASection() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 bg-[#F4EFE6]/10 border border-[#F4EFE6]/20 text-[#F4EFE6] placeholder:text-[#F4EFE6]/40 rounded-full px-5 py-3 outline-none focus:border-[#F4EFE6]/50 transition-colors"
               />
-              <button
-                type="submit"
-                disabled={submitting}
-                className="inline-flex items-center justify-center gap-2 bg-[#F4EFE6] text-[#1B3A4B] font-medium px-6 py-3 rounded-full hover:bg-white transition-colors disabled:opacity-60"
-              >
-                {submitting ? "Sending…" : "Request access"}
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <Magnetic>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center gap-2 bg-[#F4EFE6] text-[#1B3A4B] font-medium px-6 py-3 rounded-full hover:bg-white transition-colors disabled:opacity-60"
+                >
+                  {submitting ? "Sending…" : "Request access"}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Magnetic>
             </form>
           )}
         </div>
@@ -431,20 +439,103 @@ function Footer() {
 
 /* ---------- PAGE ---------- */
 function VerisLanding() {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      gsap.utils.toArray<HTMLElement>(".reveal-up,.reveal-eyebrow,.reveal-head .anim-word")
+        .forEach((el) => gsap.set(el, { clearProps: "all", opacity: 1, y: 0 }));
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      // Eyebrows
+      gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        });
+      });
+
+      // Headlines (word-by-word)
+      gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
+        const words = head.querySelectorAll(".anim-word");
+        if (!words.length) return;
+        gsap.to(words, {
+          y: 0, opacity: 1, duration: 0.85, ease: "power3.out", stagger: 0.045,
+          scrollTrigger: { trigger: head, start: "top 85%", once: true },
+        });
+      });
+
+      // Generic reveal-up
+      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+
+      // Marquee speed reacts to scroll velocity
+      const track = rootRef.current!.querySelector<HTMLElement>(".marquee-track");
+      if (track) {
+        ScrollTrigger.create({
+          trigger: rootRef.current!,
+          start: "top top",
+          end: "bottom bottom",
+          onUpdate: (self) => {
+            const speed = 1 + Math.min(3, Math.abs(self.getVelocity()) / 600);
+            track.style.animationDuration = `${22 / speed}s`;
+          },
+        });
+      }
+
+      // Device image rotates as you scroll past
+      const deviceImg = rootRef.current!.querySelector<HTMLElement>(".device-image");
+      if (deviceImg) {
+        gsap.to(deviceImg, {
+          rotate: 18,
+          scale: 1.06,
+          ease: "none",
+          scrollTrigger: {
+            trigger: deviceImg.closest(".device-image-wrap"),
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
+      }
+
+      // Subtle parallax on each section
+      gsap.utils.toArray<HTMLElement>("section").forEach((sec) => {
+        const inner = sec.querySelector<HTMLElement>("h2.reveal-head");
+        if (!inner) return;
+        gsap.to(inner, {
+          y: -20,
+          ease: "none",
+          scrollTrigger: { trigger: sec, start: "top bottom", end: "bottom top", scrub: 1 },
+        });
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="flex flex-col bg-[#F4EFE6]">
+    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6]">
       <div className="h-screen flex flex-col overflow-hidden relative">
         <Navbar />
         <HeroSection />
       </div>
       <ProblemSection />
       <HowItWorksSection />
+      <ScamCallDemo />
       <AudienceSection />
       <DeviceSection />
       <ScienceSection />
       <ManifestoBand />
-      
-      
+      <CTASection />
       <Footer />
     </div>
   );

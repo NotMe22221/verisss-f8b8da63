@@ -1,4 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
+import { SplitText } from "@/components/landing/SplitText";
+import { Magnetic } from "@/components/landing/MagneticButton";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -67,6 +71,8 @@ function Footer() {
 }
 
 function AboutPage() {
+  const rootRef = useRef<HTMLDivElement>(null);
+
   const team = [
     { name: "Aria Chen", role: "CEO & Co-founder", bio: "Former neuroscience researcher at Stanford HAI. Watched her grandmother lose $42,000 to a scam call. Started Veris six months later." },
     { name: "Marcus Okafor", role: "CTO & Co-founder", bio: "Built on-device ML systems at Apple Health. Believes the most powerful AI is the kind that runs entirely on your finger." },
@@ -78,15 +84,45 @@ function AboutPage() {
     { title: "Quiet by default", body: "We build calm technology. A pulse, not an alarm. Intervention that interrupts manipulation, not life." },
   ];
 
+  useEffect(() => {
+    if (!rootRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        });
+      });
+      gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
+        const words = head.querySelectorAll(".anim-word");
+        if (!words.length) return;
+        gsap.to(words, {
+          y: 0, opacity: 1, duration: 0.85, ease: "power3.out", stagger: 0.04,
+          scrollTrigger: { trigger: head, start: "top 85%", once: true },
+        });
+      });
+      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="flex flex-col bg-[#F4EFE6] min-h-screen">
+    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6] min-h-screen">
       <div className="relative bg-[#F4EFE6]">
         <Navbar />
         <section className="px-6 lg:px-12 pt-32 lg:pt-40 pb-16 lg:pb-24">
           <div className="max-w-[88rem] mx-auto">
-            <p className="text-[#1B3A4B]/60 text-sm mb-4 uppercase tracking-[0.18em]">About Veris</p>
-            <h1 className="text-[#1B3A4B] text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] max-w-5xl" style={{ letterSpacing: "-0.04em" }}>
-              We started Veris because we had to.
+            <p className="text-[#1B3A4B]/60 text-sm mb-4 uppercase tracking-[0.18em] reveal-eyebrow">About Veris</p>
+            <h1 className="text-[#1B3A4B] text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] max-w-5xl reveal-head" style={{ letterSpacing: "-0.04em" }}>
+              <SplitText by="word">We started Veris because we had to.</SplitText>
             </h1>
           </div>
         </section>
@@ -94,17 +130,17 @@ function AboutPage() {
 
       <section className="px-6 lg:px-12 py-16 lg:py-24 border-t border-[#1B3A4B]/10">
         <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
-          <p className="text-[#1B3A4B] text-2xl md:text-3xl leading-snug font-medium" style={{ letterSpacing: "-0.02em" }}>
+          <p className="text-[#1B3A4B] text-2xl md:text-3xl leading-snug font-medium reveal-up" style={{ letterSpacing: "-0.02em" }}>
             Veris began at a kitchen table, after a phone call that cost a family $42,000 and a grandmother her trust in her own judgment.
           </p>
           <div className="space-y-5 text-[#1B3A4B]/75 text-base md:text-lg lg:text-xl leading-relaxed">
-            <p>
+            <p className="reveal-up">
               We are neuroscientists, engineers, and clinicians building the protection we wished our own families had. Every fraud system in the world reacts after the money is gone. We thought that was the wrong place to stand.
             </p>
-            <p>
+            <p className="reveal-up">
               So we built Veris for the second before the decision, because that is the only second that matters. A ring that senses, listens on-device, and interrupts manipulation the moment it is happening.
             </p>
-            <p>
+            <p className="reveal-up">
               Backed by AARP Labs, MIT Media Lab affiliates, and a clinical advisory board of geriatricians and behavioral economists. Headquartered in Cambridge, MA. Building quietly, on purpose.
             </p>
           </div>
@@ -113,13 +149,13 @@ function AboutPage() {
 
       <section className="px-6 lg:px-12 py-16 lg:py-28 border-t border-[#1B3A4B]/10">
         <div className="max-w-[88rem] mx-auto">
-          <p className="text-[#1B3A4B]/60 text-sm mb-3 uppercase tracking-[0.18em]">What we believe</p>
-          <h2 className="text-[#1B3A4B] text-3xl md:text-5xl lg:text-6xl font-medium max-w-4xl mb-12 lg:mb-16" style={{ letterSpacing: "-0.03em" }}>
-            Three principles, held quietly.
+          <p className="text-[#1B3A4B]/60 text-sm mb-3 uppercase tracking-[0.18em] reveal-eyebrow">What we believe</p>
+          <h2 className="text-[#1B3A4B] text-3xl md:text-5xl lg:text-6xl font-medium max-w-4xl mb-12 lg:mb-16 reveal-head" style={{ letterSpacing: "-0.03em" }}>
+            <SplitText by="word">Three principles, held quietly.</SplitText>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {values.map((v) => (
-              <div key={v.title} className="rounded-2xl border border-[#1B3A4B]/15 p-7 lg:p-9">
+              <div key={v.title} className="rounded-2xl border border-[#1B3A4B]/15 p-7 lg:p-9 reveal-up transition-transform duration-300 hover:-translate-y-1">
                 <p className="text-[#1B3A4B] text-xl lg:text-2xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{v.title}</p>
                 <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed">{v.body}</p>
               </div>
@@ -130,13 +166,13 @@ function AboutPage() {
 
       <section className="px-6 lg:px-12 py-16 lg:py-28 border-t border-[#1B3A4B]/10">
         <div className="max-w-[88rem] mx-auto">
-          <p className="text-[#1B3A4B]/60 text-sm mb-3 uppercase tracking-[0.18em]">The team</p>
-          <h2 className="text-[#1B3A4B] text-3xl md:text-5xl lg:text-6xl font-medium max-w-4xl mb-12 lg:mb-16" style={{ letterSpacing: "-0.03em" }}>
-            The people behind the ring.
+          <p className="text-[#1B3A4B]/60 text-sm mb-3 uppercase tracking-[0.18em] reveal-eyebrow">The team</p>
+          <h2 className="text-[#1B3A4B] text-3xl md:text-5xl lg:text-6xl font-medium max-w-4xl mb-12 lg:mb-16 reveal-head" style={{ letterSpacing: "-0.03em" }}>
+            <SplitText by="word">The people behind the ring.</SplitText>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {team.map((m) => (
-              <div key={m.name} className="rounded-2xl border border-[#1B3A4B]/15 p-7 lg:p-9 bg-[#F4EFE6]">
+              <div key={m.name} className="rounded-2xl border border-[#1B3A4B]/15 p-7 lg:p-9 bg-[#F4EFE6] reveal-up transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_-30px_rgba(27,58,75,0.4)]">
                 <p className="text-[#1B3A4B] text-2xl lg:text-3xl font-medium mb-1" style={{ letterSpacing: "-0.02em" }}>{m.name}</p>
                 <p className="text-[#1B3A4B]/50 text-sm uppercase tracking-wider mb-5">{m.role}</p>
                 <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed">{m.bio}</p>
@@ -148,12 +184,14 @@ function AboutPage() {
 
       <section className="px-6 lg:px-12 py-20 lg:py-28 border-t border-[#1B3A4B]/10">
         <div className="max-w-[88rem] mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-          <h2 className="text-[#1B3A4B] text-3xl md:text-5xl lg:text-6xl font-medium max-w-3xl" style={{ letterSpacing: "-0.03em" }}>
-            See what we are building.
+          <h2 className="text-[#1B3A4B] text-3xl md:text-5xl lg:text-6xl font-medium max-w-3xl reveal-head" style={{ letterSpacing: "-0.03em" }}>
+            <SplitText by="word">See what we are building.</SplitText>
           </h2>
-          <Link to="/" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base lg:text-lg font-medium px-8 py-3 rounded-full hover:bg-[#14303f] transition-colors duration-200 self-start md:self-auto">
-            Back to Veris
-          </Link>
+          <Magnetic className="reveal-up self-start md:self-auto">
+            <Link to="/" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base lg:text-lg font-medium px-8 py-3 rounded-full hover:bg-[#14303f] transition-colors duration-200">
+              Back to Veris
+            </Link>
+          </Magnetic>
         </div>
       </section>
 
