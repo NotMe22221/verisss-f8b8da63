@@ -363,17 +363,17 @@ function CTASection() {
   return (
     <section id="early-access" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
       <div className="max-w-[88rem] mx-auto">
-        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 lg:px-24 py-16 md:py-24 lg:py-32">
-          <p className="text-[#F4EFE6]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6">Private Beta</p>
-          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-6 lg:mb-8" style={{ letterSpacing: "-0.04em" }}>
-            Be early. Be the reason it doesn't happen to them.
+        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 lg:px-24 py-16 md:py-24 lg:py-32 cta-card">
+          <p className="text-[#F4EFE6]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6 reveal-eyebrow">Private Beta</p>
+          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-6 lg:mb-8 reveal-head" style={{ letterSpacing: "-0.04em" }}>
+            <SplitText by="word">Be early. Be the reason it doesn't happen to them.</SplitText>
           </h2>
-          <p className="text-[#F4EFE6]/70 text-base md:text-lg lg:text-xl max-w-xl lg:max-w-2xl mb-10 lg:mb-14 leading-relaxed">
+          <p className="text-[#F4EFE6]/70 text-base md:text-lg lg:text-xl max-w-xl lg:max-w-2xl mb-10 lg:mb-14 leading-relaxed reveal-up">
             We're shipping the first cohort of rings to 127 families across 9 states. Request access, we read every email.
           </p>
 
           {done ? (
-            <div className="rounded-xl border border-[#F4EFE6]/20 bg-[#F4EFE6]/5 p-6 max-w-xl">
+            <div className="rounded-xl border border-[#F4EFE6]/20 bg-[#F4EFE6]/5 p-6 max-w-xl animate-[fade-in_0.5s_ease-out]">
               <p className="text-[#F4EFE6] text-lg font-medium mb-1">
                 {done === "duplicate" ? "You're already on the list." : "You're in."}
               </p>
@@ -382,7 +382,7 @@ function CTASection() {
               </p>
             </div>
           ) : (
-            <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl">
+            <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl reveal-up">
               <input
                 type="text"
                 placeholder="Your name"
@@ -397,14 +397,16 @@ function CTASection() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 bg-[#F4EFE6]/10 border border-[#F4EFE6]/20 text-[#F4EFE6] placeholder:text-[#F4EFE6]/40 rounded-full px-5 py-3 outline-none focus:border-[#F4EFE6]/50 transition-colors"
               />
-              <button
-                type="submit"
-                disabled={submitting}
-                className="inline-flex items-center justify-center gap-2 bg-[#F4EFE6] text-[#1B3A4B] font-medium px-6 py-3 rounded-full hover:bg-white transition-colors disabled:opacity-60"
-              >
-                {submitting ? "Sending…" : "Request access"}
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <Magnetic>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center gap-2 bg-[#F4EFE6] text-[#1B3A4B] font-medium px-6 py-3 rounded-full hover:bg-white transition-colors disabled:opacity-60"
+                >
+                  {submitting ? "Sending…" : "Request access"}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Magnetic>
             </form>
           )}
         </div>
@@ -437,20 +439,103 @@ function Footer() {
 
 /* ---------- PAGE ---------- */
 function VerisLanding() {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      gsap.utils.toArray<HTMLElement>(".reveal-up,.reveal-eyebrow,.reveal-head .anim-word")
+        .forEach((el) => gsap.set(el, { clearProps: "all", opacity: 1, y: 0 }));
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      // Eyebrows
+      gsap.utils.toArray<HTMLElement>(".reveal-eyebrow").forEach((el) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.6, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        });
+      });
+
+      // Headlines (word-by-word)
+      gsap.utils.toArray<HTMLElement>(".reveal-head").forEach((head) => {
+        const words = head.querySelectorAll(".anim-word");
+        if (!words.length) return;
+        gsap.to(words, {
+          y: 0, opacity: 1, duration: 0.85, ease: "power3.out", stagger: 0.045,
+          scrollTrigger: { trigger: head, start: "top 85%", once: true },
+        });
+      });
+
+      // Generic reveal-up
+      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+
+      // Marquee speed reacts to scroll velocity
+      const track = rootRef.current!.querySelector<HTMLElement>(".marquee-track");
+      if (track) {
+        ScrollTrigger.create({
+          trigger: rootRef.current!,
+          start: "top top",
+          end: "bottom bottom",
+          onUpdate: (self) => {
+            const speed = 1 + Math.min(3, Math.abs(self.getVelocity()) / 600);
+            track.style.animationDuration = `${22 / speed}s`;
+          },
+        });
+      }
+
+      // Device image rotates as you scroll past
+      const deviceImg = rootRef.current!.querySelector<HTMLElement>(".device-image");
+      if (deviceImg) {
+        gsap.to(deviceImg, {
+          rotate: 18,
+          scale: 1.06,
+          ease: "none",
+          scrollTrigger: {
+            trigger: deviceImg.closest(".device-image-wrap"),
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
+      }
+
+      // Subtle parallax on each section
+      gsap.utils.toArray<HTMLElement>("section").forEach((sec) => {
+        const inner = sec.querySelector<HTMLElement>("h2.reveal-head");
+        if (!inner) return;
+        gsap.to(inner, {
+          y: -20,
+          ease: "none",
+          scrollTrigger: { trigger: sec, start: "top bottom", end: "bottom top", scrub: 1 },
+        });
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="flex flex-col bg-[#F4EFE6]">
+    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6]">
       <div className="h-screen flex flex-col overflow-hidden relative">
         <Navbar />
         <HeroSection />
       </div>
       <ProblemSection />
       <HowItWorksSection />
+      <ScamCallDemo />
       <AudienceSection />
       <DeviceSection />
       <ScienceSection />
       <ManifestoBand />
-      
-      
+      <CTASection />
       <Footer />
     </div>
   );
