@@ -6,7 +6,7 @@ import { gsap } from "@/lib/gsap";
  * spotlight, and a subtle grain. Sits absolutely behind the foreground text.
  * Pass a ref to the hero container to limit pointer tracking to that area.
  */
-export function HeroAmbient({ containerRef }: { containerRef: React.RefObject<HTMLElement> }) {
+export function HeroAmbient({ containerRef }: { containerRef: React.RefObject<HTMLElement | null> }) {
   const spotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
