@@ -11,6 +11,11 @@ import { Magnetic } from "@/components/landing/MagneticButton";
 import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
 import { HeroAmbient } from "@/components/landing/HeroAmbient";
 import { CountUp } from "@/components/landing/CountUp";
+import { StorySection } from "@/components/landing/StorySection";
+import { UseCasesSection } from "@/components/landing/UseCasesSection";
+import { PrototypeSection } from "@/components/landing/PrototypeSection";
+import { BusinessModelSection } from "@/components/landing/BusinessModelSection";
+import { WhoItsForSection } from "@/components/landing/WhoItsForSection";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
@@ -38,9 +43,9 @@ function LogoIcon({ className = "w-7 h-7" }: { className?: string }) {
 /* ---------- NAVBAR ---------- */
 function Navbar() {
   const links = [
-    { label: "Mission", href: "#problem" },
+    { label: "Story", href: "#story" },
     { label: "The Device", href: "#device" },
-    { label: "Science", href: "#science" },
+    { label: "Pricing", href: "#pricing" },
     { label: "Manifesto", href: "#manifesto" },
   ];
   return (
@@ -603,10 +608,15 @@ function VerisLanding() {
         <HeroSection />
       </div>
       <ProblemSection />
+      <StorySection />
       <HowItWorksSection />
       <ScamCallDemo />
+      <UseCasesSection />
+      <PrototypeSection />
       <AudienceSection />
       <DeviceSection />
+      <BusinessModelSection />
+      <WhoItsForSection />
       <ScienceSection />
       <ManifestoBand />
       <CTASection />
