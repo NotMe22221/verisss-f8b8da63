@@ -3,10 +3,10 @@ import macro from "@/assets/ring-design-macro.jpg";
 import { SplitText } from "./SplitText";
 
 const milestones = [
-  { tag: "2023", title: "Sketch", body: "First napkin drawing in a Boston kitchen." },
-  { tag: "2024", title: "Prototype", body: "Eleven board revisions. Four hundred 3D-printed shells." },
-  { tag: "2025", title: "Pilot", body: "127 families across 9 states wearing the ring daily." },
-  { tag: "2026", title: "Ship", body: "First production cohort, hand-fitted." },
+  { tag: "2025", title: "Sketch", body: "First concept sketches after a family member nearly fell for a phone scam." },
+  { tag: "Q1 2026", title: "Breadboard", body: "Audio pipeline running on a desk prototype. Wires everywhere." },
+  { tag: "Q2 2026", title: "Wearable", body: "First ring-shaped enclosure. Battery life still measured in hours." },
+  { tag: "Late 2026", title: "Closed pilot", body: "A small group of testers wearing it daily. Feedback over ship date." },
 ];
 
 export function PrototypeSection() {
