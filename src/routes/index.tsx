@@ -11,6 +11,11 @@ import { Magnetic } from "@/components/landing/MagneticButton";
 import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
 import { HeroAmbient } from "@/components/landing/HeroAmbient";
 import { CountUp } from "@/components/landing/CountUp";
+import { StorySection } from "@/components/landing/StorySection";
+import { UseCasesSection } from "@/components/landing/UseCasesSection";
+import { PrototypeSection } from "@/components/landing/PrototypeSection";
+import { BusinessModelSection } from "@/components/landing/BusinessModelSection";
+import { WhoItsForSection } from "@/components/landing/WhoItsForSection";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
@@ -38,9 +43,9 @@ function LogoIcon({ className = "w-7 h-7" }: { className?: string }) {
 /* ---------- NAVBAR ---------- */
 function Navbar() {
   const links = [
-    { label: "Mission", href: "#problem" },
+    { label: "Story", href: "#story" },
     { label: "The Device", href: "#device" },
-    { label: "Science", href: "#science" },
+    { label: "Pricing", href: "#pricing" },
     { label: "Manifesto", href: "#manifesto" },
   ];
   return (
@@ -590,6 +595,56 @@ function VerisLanding() {
       );
     }
 
+    // 7. Use-case cards: pointer-tilt parallax.
+    const usecaseCards = Array.from(root.querySelectorAll<HTMLElement>(".usecase-card"));
+    usecaseCards.forEach((card) => {
+      const img = card.querySelector<HTMLElement>(".usecase-img");
+      const onMove = rafThrottle((e: PointerEvent) => {
+        const r = card.getBoundingClientRect();
+        const cx = (e.clientX - r.left) / r.width - 0.5;
+        const cy = (e.clientY - r.top) / r.height - 0.5;
+        animate(card, {
+          rotateY: cx * 6,
+          rotateX: -cy * 6,
+          duration: 600,
+          ease: "outExpo",
+        });
+        if (img) {
+          animate(img, {
+            x: cx * -14,
+            y: cy * -10,
+            duration: 700,
+            ease: "outExpo",
+          });
+        }
+      });
+      const onLeave = () => {
+        animate(card, { rotateX: 0, rotateY: 0, duration: 700, ease: "outExpo" });
+        if (img) animate(img, { x: 0, y: 0, duration: 700, ease: "outExpo" });
+      };
+      card.style.transformStyle = "preserve-3d";
+      card.style.perspective = "1000px";
+      card.addEventListener("pointermove", onMove);
+      card.addEventListener("pointerleave", onLeave);
+      cleanups.push(() => {
+        card.removeEventListener("pointermove", onMove);
+        card.removeEventListener("pointerleave", onLeave);
+      });
+    });
+
+    // 8. Pricing cards: hover lift via JS for consistency.
+    const pricingCards = Array.from(root.querySelectorAll<HTMLElement>(".pricing-card"));
+    pricingCards.forEach((card) => {
+      const onEnter = () => animate(card, { translateY: -8, duration: 500, ease: "outExpo" });
+      const onLeave = () => animate(card, { translateY: 0, duration: 500, ease: "outExpo" });
+      card.addEventListener("pointerenter", onEnter);
+      card.addEventListener("pointerleave", onLeave);
+      cleanups.push(() => {
+        card.removeEventListener("pointerenter", onEnter);
+        card.removeEventListener("pointerleave", onLeave);
+      });
+    });
+
     return () => {
       intro.pause();
       cleanups.forEach((c) => c());
@@ -603,10 +658,15 @@ function VerisLanding() {
         <HeroSection />
       </div>
       <ProblemSection />
+      <StorySection />
       <HowItWorksSection />
       <ScamCallDemo />
+      <UseCasesSection />
+      <PrototypeSection />
       <AudienceSection />
       <DeviceSection />
+      <BusinessModelSection />
+      <WhoItsForSection />
       <ScienceSection />
       <ManifestoBand />
       <CTASection />

@@ -17,9 +17,10 @@ export function revealAll(scope: HTMLElement): () => void {
   const heads = Array.from(scope.querySelectorAll<HTMLElement>(".reveal-head"));
   const ups = Array.from(scope.querySelectorAll<HTMLElement>(".reveal-up"));
   const staggers = Array.from(scope.querySelectorAll<HTMLElement>(".reveal-stagger"));
+  const images = Array.from(scope.querySelectorAll<HTMLElement>(".reveal-image"));
 
   if (reduced) {
-    [...eyebrows, ...ups].forEach((el) => {
+    [...eyebrows, ...ups, ...images].forEach((el) => {
       el.style.opacity = "1";
       el.style.transform = "none";
     });
@@ -63,6 +64,12 @@ export function revealAll(scope: HTMLElement): () => void {
       el.style.transform = "translateY(48px)";
       el.style.willChange = "transform, opacity";
     });
+  });
+  images.forEach((el) => {
+    el.style.opacity = "0";
+    el.style.clipPath = "inset(0 100% 0 0)";
+    (el.style as any).webkitClipPath = "inset(0 100% 0 0)";
+    el.style.willChange = "clip-path, opacity, transform";
   });
 
   const cleanups: Array<() => void> = [];
@@ -113,6 +120,18 @@ export function revealAll(scope: HTMLElement): () => void {
         duration: 1100,
         ease: "outExpo",
         delay: stagger(80),
+      });
+    }),
+  );
+
+  cleanups.push(
+    onInView(images, (el) => {
+      animate(el, {
+        opacity: [0, 1],
+        clipPath: ["inset(0 100% 0 0)", "inset(0 0% 0 0)"],
+        scale: [1.08, 1],
+        duration: 1500,
+        ease: "outExpo",
       });
     }),
   );
