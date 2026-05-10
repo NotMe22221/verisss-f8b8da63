@@ -1,39 +1,50 @@
-## Goal
+# Final QA Pass — Veris Landing
 
-Make the 7 homepage images feel like real documentary / editorial photography instead of obviously AI-generated stock.
+A targeted polish round to bring the site to a "Google X / factory-tour" level of finish. Focused on the things that actually break the spell on a high-end site: duplicated content, weak metadata, dead links, and inconsistent claims. No re-architecture.
 
-## What looks "AI" right now
+## 1. Cut the duplicate "Who it's for" content
+The page currently has **two** sections doing the same job:
+- `AudienceSection` (For families / For older adults) in `index.tsx`
+- `WhoItsForSection` (the new one with portrait imagery)
 
-Common tells in the current set: too-perfect skin, plastic catchlights, symmetrical faces, over-smooth hands (extra fingers risk), uniform soft golden light, shallow depth-of-field on everything, generic "stock-warm" color grade, jewelry that looks rendered (too clean, perfect bevels).
+Keep `WhoItsForSection` (richer, photographic, more recent), remove `AudienceSection`. One clear "who it's for" beat, not two.
 
-## Approach
+## 2. Fix the hero CTA over-claim
+Hero shows: `12,847 calls intercepted in pilot`, while the CTA later says we are shipping the *first* cohort of 127 rings. These contradict each other and read as fake. Replace the counter with something honest for an early-stage product, e.g. `127 families in the first cohort` (matches CTA) or remove the counter entirely and keep the marquee.
 
-Regenerate each image with prompts engineered to fight those tells:
+## 3. Page metadata + social share
+Currently the root sets `Lovable App` / `Lovable Generated Project` for og/twitter, and `index.tsx` only overrides `<title>` and `description`. On share, OG falls back to Lovable defaults.
 
-- Shoot-style language: "shot on Leica Q3, 35mm, available light, ISO 800, mild grain", "Kodak Portra 400 scan", "Fujifilm Pro 400H, slight halation", "documentary photo, unposed".
-- Real imperfection: "natural skin texture, visible pores, fine wrinkles, no retouching, asymmetric face, candid expression, eyes not looking at camera".
-- Real environments: cluttered kitchen counter (mail, mug, reading glasses), worn wood, fingerprints on the phone screen, soft window light with one direction, no rim-light halo.
-- Hands: "hands clearly five fingers, natural knuckles, age spots, veins visible, ring sits naturally with slight tilt".
-- Product shots (ring, prototype): "studio product photography, single softbox, real titanium with micro-scratches, dust specks visible, shallow but not extreme DoF, no glow".
-- Color: pull away from amber/teal duotone — "neutral white balance, slight cyan in shadows, muted not saturated".
-- Composition: "off-center, rule-of-thirds broken, foreground occlusion, slight motion blur on hand".
+In `src/routes/index.tsx` `head()`, add:
+- `og:title`, `og:description`, `og:type=website`, `og:url`
+- `twitter:card=summary_large_image`, `twitter:title`, `twitter:description`
+- `og:image` + `twitter:image` pointing to a hero asset (e.g. `/ring-device-studio.png` exported as a public URL — use the imported asset URL via Vite)
 
-Use `imagegen--edit_image` where possible to keep composition but re-render in a more photographic style; fall back to `generate_image` (premium tier) for portraits where realism matters most.
+Also strip the generic Lovable defaults from `__root.tsx` `head()` so route-level meta isn't competing with stale fallbacks (keep only charset, viewport, fonts, favicon, stylesheet).
 
-## Images to redo
+## 4. Footer dead links
+All 4 footer links (`Mission`, `Manifesto`, `Privacy`, `Contact`) point to `#`. At minimum:
+- `Manifesto` → `#manifesto` (already exists)
+- `Mission` → `/about`
+- `Privacy` → keep `#` but mark as `aria-disabled` + muted, or remove
+- `Contact` → `#early-access`
 
-```text
-story-grandparent.jpg       portrait, Portra 400 look, window light, real wrinkles
-ring-design-macro.jpg       macro product, real titanium, micro-scratches, dust
-ring-prototype-bench.jpg    messy engineer bench, solder marks, coffee ring
-usecase-kitchen-call.jpg    candid, cluttered kitchen, phone screen reflection
-usecase-family-relief.jpg   adult child on couch, phone in hand, unposed
-usecase-second-doubt.jpg    older woman mid-thought, unflattering honest light
-who-its-for-portrait.jpg    two hands, real age difference, ring slightly tilted
-```
+## 5. Small consistency fixes
+- Nav `Pricing` link works (`#pricing` exists in BusinessModelSection) — verify it scrolls correctly with Lenis (it should, no change needed unless broken).
+- Marquee includes `MIT Media Lab`, `DARPA`, `Stanford HAI`, `FINCEN`, `AARP Labs`, `Apple Health`, `Verily`. ScienceSection then claims "AARP Labs early-access cohort" and "MIT Media Lab affiliated researchers." If these are aspirational, soften the marquee label (e.g. eyebrow above it: "Inspired by research from" instead of implying partnerships) — avoids a credibility hit.
+- Footer copyright says `© 2026` — fine for the project's stated date.
 
-Quality tier: `premium` for the 4 portraits, `standard` for the 3 product/scene shots. All saved over the existing paths so no code changes are needed.
+## 6. Quick polish (low-risk)
+- Add `loading="lazy"` and `decoding="async"` to the non-hero `<img>` tags in StorySection / UseCases / WhoItsFor / Prototype / Device for faster first paint.
+- Ensure every section heading is an `<h2>` and the hero is the only `<h1>` (spot-check during edit).
 
 ## Out of scope
+- No new sections, no copy rewrites beyond the items above, no design-token changes, no animation rework (animations were already polished in prior turns).
 
-No layout, copy, or animation changes. Just swap the image files.
+## Files touched
+- `src/routes/index.tsx` — remove `AudienceSection`, fix hero counter, expand `head()` meta, fix footer links
+- `src/routes/__root.tsx` — strip generic OG/Twitter fallbacks
+- `src/components/landing/StorySection.tsx`, `UseCasesSection.tsx`, `WhoItsForSection.tsx`, `PrototypeSection.tsx` — add `loading="lazy"` / `decoding="async"` to images
+- (optional) marquee eyebrow line in `index.tsx`
+
+After edits I'll re-verify in the preview at desktop + the current 881px viewport.

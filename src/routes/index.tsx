@@ -19,16 +19,28 @@ import { WhoItsForSection } from "@/components/landing/WhoItsForSection";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
-  head: () => ({
-    meta: [
-      { title: "Veris, Every fraud tool reacts. Veris intervenes." },
-      {
-        name: "description",
-        content:
-          "Veris is a wearable cognitive defense system. Biosignals, voice, and on-device AI fused in a ring, to interrupt manipulation the second it happens, before money is ever lost.",
-      },
-    ],
-  }),
+  head: () => {
+    const title = "Veris — Every fraud tool reacts. Veris intervenes.";
+    const description =
+      "Veris is a wearable cognitive defense system. Biosignals, voice, and on-device AI fused in a ring, to interrupt manipulation the second it happens, before money is ever lost.";
+    const image = ringDevice;
+    const url = "https://verisss.lovable.app/";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { property: "og:image", content: image },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: image },
+      ],
+    };
+  },
 });
 
 /* ---------- LOGO ---------- */
@@ -140,7 +152,10 @@ function HeroSection() {
             </Magnetic>
           </div>
           <p className="mt-5 text-[#1B3A4B]/60 text-sm font-medium hero-counter">
-            <CountUp to={12847} className="text-[#1B3A4B] font-semibold tabular-nums" /> calls intercepted in pilot
+            <CountUp to={127} className="text-[#1B3A4B] font-semibold tabular-nums" /> families in the first cohort
+          </p>
+          <p className="mt-10 text-[#1B3A4B]/40 text-[11px] font-medium tracking-[0.18em] uppercase">
+            Inspired by research from
           </p>
           <HeroMarquee />
         </div>
@@ -435,7 +450,6 @@ function CTASection() {
 
 /* About moved to /about */
 function Footer() {
-  const links = ["Mission", "Manifesto", "Privacy", "Contact"];
   return (
     <footer className="bg-[#F4EFE6] px-6 py-12 border-t border-[#1B3A4B]/10">
       <div className="max-w-[88rem] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -445,9 +459,9 @@ function Footer() {
           <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta, by invitation, with care.</span>
         </div>
         <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
-          {links.map((l) => (
-            <a key={l} href="#" className="hover:text-[#1B3A4B] transition-colors">{l}</a>
-          ))}
+          <Link to="/about" className="hover:text-[#1B3A4B] transition-colors">Mission</Link>
+          <a href="#manifesto" className="hover:text-[#1B3A4B] transition-colors">Manifesto</a>
+          <a href="#early-access" className="hover:text-[#1B3A4B] transition-colors">Contact</a>
           <span className="text-[#1B3A4B]/40">© 2026</span>
         </div>
       </div>
@@ -663,7 +677,6 @@ function VerisLanding() {
       <ScamCallDemo />
       <UseCasesSection />
       <PrototypeSection />
-      <AudienceSection />
       <DeviceSection />
       <BusinessModelSection />
       <WhoItsForSection />

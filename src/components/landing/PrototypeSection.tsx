@@ -20,10 +20,10 @@ export function PrototypeSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 mb-12 lg:mb-16">
           <div className="lg:col-span-7 rounded-2xl overflow-hidden aspect-[16/10] reveal-image">
-            <img src={bench} alt="Veris prototype on workbench" loading="lazy" width={1600} height={1000} className="w-full h-full object-cover" />
+            <img src={bench} alt="Veris prototype on workbench" loading="lazy" decoding="async" width={1600} height={1000} className="w-full h-full object-cover" />
           </div>
           <div className="lg:col-span-5 rounded-2xl overflow-hidden aspect-[16/10] lg:aspect-auto reveal-image">
-            <img src={macro} alt="Macro of the Veris ring" loading="lazy" width={1600} height={1200} className="w-full h-full object-cover" />
+            <img src={macro} alt="Macro of the Veris ring" loading="lazy" decoding="async" width={1600} height={1200} className="w-full h-full object-cover" />
           </div>
         </div>
 

@@ -28,7 +28,7 @@ export function WhoItsForSection() {
           <img
             src={portrait}
             alt="An elderly hand wearing the Veris ring, held by a younger hand"
-            loading="lazy"
+            loading="lazy" decoding="async"
             width={1600}
             height={686}
             className="w-full h-full object-cover"

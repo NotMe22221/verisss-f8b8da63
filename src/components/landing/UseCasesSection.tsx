@@ -39,7 +39,7 @@ export function UseCasesSection() {
                 <img
                   src={c.img}
                   alt={c.title}
-                  loading="lazy"
+                  loading="lazy" decoding="async"
                   width={1080}
                   height={1350}
                   className="usecase-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
