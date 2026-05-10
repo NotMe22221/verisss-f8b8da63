@@ -9,7 +9,7 @@ export function StorySection() {
           <img
             src={storyImg}
             alt="An older woman on the phone, ring on her finger"
-            loading="lazy"
+            loading="lazy" decoding="async"
             width={1600}
             height={1200}
             className="w-full h-full object-cover"
