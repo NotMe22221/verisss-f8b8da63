@@ -51,15 +51,15 @@ export function ScamCallDemo() {
       setIntervened(true);
       const r = ringRef.current;
       if (r) {
-        r.classList.remove("haptic-shake", "gold-flash");
-        // Force reflow to restart animations.
+        r.classList.remove("haptic-shake");
         void r.offsetWidth;
-        r.classList.add("haptic-shake", "gold-flash");
-        animate(r, {
-          scale: [1, 1.06, 1, 1.06, 1],
-          duration: 900,
-          ease: "inOutQuad",
-        });
+        r.classList.add("haptic-shake");
+        const inner = r.firstElementChild as HTMLElement | null;
+        if (inner) {
+          inner.classList.remove("gold-flash");
+          void inner.offsetWidth;
+          inner.classList.add("gold-flash");
+        }
       }
     }, 4400);
     tl.call(() => setAlerted(true), 6400);
