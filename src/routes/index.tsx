@@ -460,19 +460,25 @@ function CTASection() {
 /* About moved to /about */
 function Footer() {
   return (
-    <footer className="bg-[#F4EFE6] px-6 py-12 border-t border-[#1B3A4B]/10">
-      <div className="max-w-[88rem] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div className="flex items-center gap-3 text-[#1B3A4B]">
-          <LogoIcon className="w-6 h-6" />
-          <span className="text-xl font-medium tracking-tight">Veris</span>
-          <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta, by invitation, with care.</span>
+    <footer className="relative bg-[#F4EFE6] px-6 pt-16 pb-6 border-t border-[#1B3A4B]/10 overflow-hidden">
+      <div className="max-w-[88rem] mx-auto">
+        <p className="text-center text-[#1B3A4B]/70 text-xl md:text-2xl lg:text-3xl font-medium italic max-w-3xl mx-auto leading-snug mb-12" style={{ letterSpacing: "-0.02em" }}>
+          One second is all it takes.
+        </p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative z-10">
+          <div className="flex items-center gap-3 text-[#1B3A4B]">
+            <LogoIcon className="w-6 h-6" />
+            <span className="text-xl font-medium tracking-tight">Veris</span>
+            <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta, by invitation, with care.</span>
+          </div>
+          <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
+            <Link to="/about" className="hover:text-[#1B3A4B] transition-colors">Mission</Link>
+            <a href="#manifesto" className="hover:text-[#1B3A4B] transition-colors">Manifesto</a>
+            <a href="#early-access" className="hover:text-[#1B3A4B] transition-colors">Contact</a>
+            <span className="text-[#1B3A4B]/40">© 2026</span>
+          </div>
         </div>
-        <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
-          <Link to="/about" className="hover:text-[#1B3A4B] transition-colors">Mission</Link>
-          <a href="#manifesto" className="hover:text-[#1B3A4B] transition-colors">Manifesto</a>
-          <a href="#early-access" className="hover:text-[#1B3A4B] transition-colors">Contact</a>
-          <span className="text-[#1B3A4B]/40">© 2026</span>
-        </div>
+        <div className="footer-wordmark mt-8 -mb-[6vw] text-center" aria-hidden>Veris</div>
       </div>
     </footer>
   );
