@@ -572,12 +572,13 @@ function VerisLanding() {
       cleanups.push(() => heroSection.removeEventListener("pointermove", onMove));
     }
 
-    // 4. Device image float.
+    // 4. Device image float + slow rotational sway (combined transform).
     const deviceImg = root.querySelector<HTMLElement>(".device-image");
     if (deviceImg) {
       const a = animate(deviceImg, {
         translateY: [0, -14],
-        duration: 4000,
+        rotate: [-0.5, 0.5],
+        duration: 5200,
         ease: "inOutSine",
         loop: true,
         alternate: true,
