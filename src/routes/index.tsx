@@ -682,6 +682,7 @@ function VerisLanding() {
 
   return (
     <div ref={rootRef} className="flex flex-col bg-[#F4EFE6]">
+      <div className="page-curtain" aria-hidden />
       <div className="h-screen flex flex-col overflow-hidden relative">
         <Navbar />
         <HeroSection />
