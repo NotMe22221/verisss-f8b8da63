@@ -11,6 +11,7 @@ import { Magnetic } from "@/components/landing/MagneticButton";
 import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
 import { HeroAmbient } from "@/components/landing/HeroAmbient";
 import { CountUp } from "@/components/landing/CountUp";
+import { LiveSignalStrip } from "@/components/landing/LiveSignalStrip";
 import { StorySection } from "@/components/landing/StorySection";
 import { UseCasesSection } from "@/components/landing/UseCasesSection";
 import { PrototypeSection } from "@/components/landing/PrototypeSection";
