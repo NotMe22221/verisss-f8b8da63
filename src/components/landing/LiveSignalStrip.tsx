@@ -48,6 +48,7 @@ export function LiveSignalStrip({ className = "" }: { className?: string }) {
     >
       <span className="relative flex items-center gap-1.5">
         <span
+          ref={dotRef}
           className="w-1.5 h-1.5 rounded-full"
           style={{
             background: "#C9A46A",
