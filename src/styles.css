@@ -238,7 +238,8 @@ img { max-width: 100%; display: block; }
     radial-gradient(60% 60% at 80% 70%, rgba(27,58,75,0.55) 0%, transparent 60%),
     radial-gradient(50% 50% at 50% 50%, rgba(244,239,230,0.4) 0%, transparent 60%);
   background-size: 200% 200%, 200% 200%, 200% 200%;
-  animation: mesh-shift 18s ease-in-out infinite;
+  animation: mesh-shift 28s ease-in-out infinite;
+  opacity: 0.4 !important;
 }
 .hero-grain {
   position: absolute;
@@ -346,17 +347,37 @@ body.has-custom-cursor textarea {
   filter: drop-shadow(0 30px 60px rgba(0,0,0,0.45));
 }
 
-/* Page curtain */
-.page-curtain {
-  position: fixed; inset: 0; background: #1B3A4B; z-index: 9999;
-  transform-origin: top center;
-  animation: curtain-up 900ms cubic-bezier(0.83, 0, 0.17, 1) 250ms both;
-  pointer-events: none;
+/* Page transition fade-in (used by route components) */
+.page-fade-in { animation: page-fade 500ms cubic-bezier(0.2,0.7,0.2,1) both; }
+@keyframes page-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes curtain-up {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-101%); }
+
+/* Footer wordmark slow horizontal drift */
+.footer-wordmark { animation: wordmark-drift 60s ease-in-out infinite alternate; }
+@keyframes wordmark-drift {
+  from { transform: translateX(-1%); }
+  to   { transform: translateX(1%); }
 }
+
+/* Gold pulse flash for live signal alert state */
+@keyframes gold-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(201,164,106,0.7); }
+  60%  { box-shadow: 0 0 0 14px rgba(201,164,106,0); }
+  100% { box-shadow: 0 0 0 0 rgba(201,164,106,0); }
+}
+.gold-flash { animation: gold-flash 700ms cubic-bezier(0.2,0.7,0.2,1); }
+
+/* Haptic shake for ScamCallDemo intervention */
+@keyframes haptic-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+  20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+.haptic-shake { animation: haptic-shake 380ms cubic-bezier(0.36,0.07,0.19,0.97); }
+
+/* Device sway is applied via JS in VerisLanding (combined with float). */
 
 /* Tabular numerals */
 .tnum { font-feature-settings: "tnum","ss01"; font-variant-numeric: tabular-nums; }

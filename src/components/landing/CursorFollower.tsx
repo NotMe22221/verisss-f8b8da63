@@ -32,17 +32,17 @@ export function CursorFollower() {
       dy = e.clientY;
       rx = e.clientX;
       ry = e.clientY;
-      animate(dot, { x: dx, y: dy, duration: 140, ease: "outQuad" });
-      animate(ring, { x: rx, y: ry, duration: 480, ease: "outExpo" });
+      animate(dot, { x: dx, y: dy, duration: 120, ease: "outQuad" });
+      animate(ring, { x: rx, y: ry, duration: 320, ease: "outExpo" });
 
       const t = e.target as HTMLElement | null;
       const interactive = !!t?.closest(
         "a, button, input, textarea, [role='button'], [data-cursor='hover']",
       );
-      const wantScale = interactive ? 2.4 : 1;
+      const wantScale = interactive ? 1.8 : 1;
       if (wantScale !== scale) {
         scale = wantScale;
-        animate(ring, { scale, duration: 380, ease: "outExpo" });
+        animate(ring, { scale, duration: 320, ease: "outExpo" });
       }
     });
 

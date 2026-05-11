@@ -49,12 +49,17 @@ export function ScamCallDemo() {
 
     tl.call(() => {
       setIntervened(true);
-      if (ringRef.current) {
-        animate(ringRef.current, {
-          scale: [1, 1.08, 1, 1.08, 1, 1.08, 1],
-          duration: 1080,
-          ease: "inOutQuad",
-        });
+      const r = ringRef.current;
+      if (r) {
+        r.classList.remove("haptic-shake");
+        void r.offsetWidth;
+        r.classList.add("haptic-shake");
+        const inner = r.firstElementChild as HTMLElement | null;
+        if (inner) {
+          inner.classList.remove("gold-flash");
+          void inner.offsetWidth;
+          inner.classList.add("gold-flash");
+        }
       }
     }, 4400);
     tl.call(() => setAlerted(true), 6400);

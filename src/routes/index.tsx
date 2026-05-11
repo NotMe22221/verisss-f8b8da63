@@ -194,8 +194,10 @@ function ProblemSection() {
           <div className="flex flex-col divide-y divide-[#1B3A4B]/15">
             {stats.map((s) => (
               <div key={s.value} className="py-5 first:pt-0 reveal-up">
-                <p className="text-[#1B3A4B] text-4xl md:text-5xl font-medium" style={{ letterSpacing: "-0.04em" }}>{s.value}</p>
-                <p className="text-[#1B3A4B]/60 text-sm md:text-base mt-1">{s.label}</p>
+                <p className="text-[#1B3A4B] text-4xl md:text-5xl font-medium relative inline-block tnum pb-1" style={{ letterSpacing: "-0.04em", borderBottom: "1px solid rgba(201,164,106,0.55)" }}>
+                  {s.value}
+                </p>
+                <p className="text-[#1B3A4B]/60 text-sm md:text-base mt-2">{s.label}</p>
               </div>
             ))}
             <p className="pt-5 text-[#1B3A4B]/40 text-[11px] tracking-wide uppercase">Sources: FTC · FBI IC3 · AARP</p>
@@ -561,9 +563,9 @@ function VerisLanding() {
         parallaxEls.forEach((el) => {
           const depth = parseFloat(el.dataset.parallax || "0.5");
           animate(el, {
-            x: cx * depth * -28,
-            y: cy * depth * -22,
-            duration: 900,
+            x: cx * depth * -18,
+            y: cy * depth * -14,
+            duration: 1000,
             ease: "outExpo",
           });
         });
@@ -572,12 +574,13 @@ function VerisLanding() {
       cleanups.push(() => heroSection.removeEventListener("pointermove", onMove));
     }
 
-    // 4. Device image float.
+    // 4. Device image float + slow rotational sway (combined transform).
     const deviceImg = root.querySelector<HTMLElement>(".device-image");
     if (deviceImg) {
       const a = animate(deviceImg, {
         translateY: [0, -14],
-        duration: 4000,
+        rotate: [-0.5, 0.5],
+        duration: 5200,
         ease: "inOutSine",
         loop: true,
         alternate: true,
@@ -624,7 +627,7 @@ function VerisLanding() {
       );
     }
 
-    // 7. Use-case cards: pointer-tilt parallax.
+    // 7. Use-case cards: pointer-tilt parallax (clamped to ±4°, slower).
     const usecaseCards = Array.from(root.querySelectorAll<HTMLElement>(".usecase-card"));
     usecaseCards.forEach((card) => {
       const img = card.querySelector<HTMLElement>(".usecase-img");
@@ -633,23 +636,23 @@ function VerisLanding() {
         const cx = (e.clientX - r.left) / r.width - 0.5;
         const cy = (e.clientY - r.top) / r.height - 0.5;
         animate(card, {
-          rotateY: cx * 6,
-          rotateX: -cy * 6,
-          duration: 600,
+          rotateY: cx * 4,
+          rotateX: -cy * 4,
+          duration: 700,
           ease: "outExpo",
         });
         if (img) {
           animate(img, {
-            x: cx * -14,
-            y: cy * -10,
-            duration: 700,
+            x: cx * -10,
+            y: cy * -7,
+            duration: 800,
             ease: "outExpo",
           });
         }
       });
       const onLeave = () => {
-        animate(card, { rotateX: 0, rotateY: 0, duration: 700, ease: "outExpo" });
-        if (img) animate(img, { x: 0, y: 0, duration: 700, ease: "outExpo" });
+        animate(card, { rotateX: 0, rotateY: 0, duration: 800, ease: "outExpo" });
+        if (img) animate(img, { x: 0, y: 0, duration: 800, ease: "outExpo" });
       };
       card.style.transformStyle = "preserve-3d";
       card.style.perspective = "1000px";
@@ -681,8 +684,7 @@ function VerisLanding() {
   }, []);
 
   return (
-    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6]">
-      <div className="page-curtain" aria-hidden />
+    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6] page-fade-in">
       <div className="h-screen flex flex-col overflow-hidden relative">
         <Navbar />
         <HeroSection />

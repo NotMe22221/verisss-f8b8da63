@@ -120,7 +120,7 @@ function AboutPage() {
   }, []);
 
   return (
-    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6] min-h-screen">
+    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6] min-h-screen page-fade-in">
       <div className="relative bg-[#F4EFE6]">
         <Navbar />
         <section className="px-6 lg:px-12 pt-32 lg:pt-40 pb-16 lg:pb-24">
