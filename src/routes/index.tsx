@@ -625,7 +625,7 @@ function VerisLanding() {
       );
     }
 
-    // 7. Use-case cards: pointer-tilt parallax.
+    // 7. Use-case cards: pointer-tilt parallax (clamped to ±4°, slower).
     const usecaseCards = Array.from(root.querySelectorAll<HTMLElement>(".usecase-card"));
     usecaseCards.forEach((card) => {
       const img = card.querySelector<HTMLElement>(".usecase-img");
@@ -634,23 +634,23 @@ function VerisLanding() {
         const cx = (e.clientX - r.left) / r.width - 0.5;
         const cy = (e.clientY - r.top) / r.height - 0.5;
         animate(card, {
-          rotateY: cx * 6,
-          rotateX: -cy * 6,
-          duration: 600,
+          rotateY: cx * 4,
+          rotateX: -cy * 4,
+          duration: 700,
           ease: "outExpo",
         });
         if (img) {
           animate(img, {
-            x: cx * -14,
-            y: cy * -10,
-            duration: 700,
+            x: cx * -10,
+            y: cy * -7,
+            duration: 800,
             ease: "outExpo",
           });
         }
       });
       const onLeave = () => {
-        animate(card, { rotateX: 0, rotateY: 0, duration: 700, ease: "outExpo" });
-        if (img) animate(img, { x: 0, y: 0, duration: 700, ease: "outExpo" });
+        animate(card, { rotateX: 0, rotateY: 0, duration: 800, ease: "outExpo" });
+        if (img) animate(img, { x: 0, y: 0, duration: 800, ease: "outExpo" });
       };
       card.style.transformStyle = "preserve-3d";
       card.style.perspective = "1000px";
