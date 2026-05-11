@@ -238,7 +238,8 @@ img { max-width: 100%; display: block; }
     radial-gradient(60% 60% at 80% 70%, rgba(27,58,75,0.55) 0%, transparent 60%),
     radial-gradient(50% 50% at 50% 50%, rgba(244,239,230,0.4) 0%, transparent 60%);
   background-size: 200% 200%, 200% 200%, 200% 200%;
-  animation: mesh-shift 18s ease-in-out infinite;
+  animation: mesh-shift 28s ease-in-out infinite;
+  opacity: 0.4 !important;
 }
 .hero-grain {
   position: absolute;
