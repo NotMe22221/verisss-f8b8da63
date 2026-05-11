@@ -193,9 +193,12 @@ function ProblemSection() {
           </p>
           <div className="flex flex-col divide-y divide-[#1B3A4B]/15">
             {stats.map((s) => (
-              <div key={s.value} className="py-5 first:pt-0 reveal-up">
-                <p className="text-[#1B3A4B] text-4xl md:text-5xl font-medium" style={{ letterSpacing: "-0.04em" }}>{s.value}</p>
-                <p className="text-[#1B3A4B]/60 text-sm md:text-base mt-1">{s.label}</p>
+              <div key={s.value} className="py-5 first:pt-0 reveal-up group">
+                <p className="text-[#1B3A4B] text-4xl md:text-5xl font-medium relative inline-block tnum" style={{ letterSpacing: "-0.04em" }}>
+                  {s.value}
+                  <span aria-hidden className="absolute left-0 -bottom-1 h-px w-full bg-[#C9A46A]/70 origin-left scale-x-0 transition-transform duration-1000 ease-[cubic-bezier(0.2,0.7,0.2,1)] delay-300 group-[.in-view]:scale-x-100" />
+                </p>
+                <p className="text-[#1B3A4B]/60 text-sm md:text-base mt-2">{s.label}</p>
               </div>
             ))}
             <p className="pt-5 text-[#1B3A4B]/40 text-[11px] tracking-wide uppercase">Sources: FTC · FBI IC3 · AARP</p>
