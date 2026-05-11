@@ -76,6 +76,7 @@ export function revealAll(scope: HTMLElement): () => void {
 
   cleanups.push(
     onInView(eyebrows, (el) => {
+      (el as HTMLElement).classList.add("in");
       animate(el, {
         opacity: [0, 1],
         translateX: [-16, 0],

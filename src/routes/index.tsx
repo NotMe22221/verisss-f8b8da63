@@ -11,6 +11,7 @@ import { Magnetic } from "@/components/landing/MagneticButton";
 import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
 import { HeroAmbient } from "@/components/landing/HeroAmbient";
 import { CountUp } from "@/components/landing/CountUp";
+import { LiveSignalStrip } from "@/components/landing/LiveSignalStrip";
 import { StorySection } from "@/components/landing/StorySection";
 import { UseCasesSection } from "@/components/landing/UseCasesSection";
 import { PrototypeSection } from "@/components/landing/PrototypeSection";
@@ -130,10 +131,14 @@ function HeroSection() {
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
         <HeroAmbient containerRef={heroRef} />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
-          <p data-parallax="0.3" className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
+          <p data-parallax="0.3" className="hero-eyebrow reveal-eyebrow in text-[#1B3A4B]/80 mb-5 lg:mb-7">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 data-parallax="0.5" className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 hero-head" style={{ letterSpacing: "-0.04em" }}>
+          <h1
+            data-parallax="0.5"
+            className="text-[#1B3A4B] font-medium max-w-xl lg:max-w-3xl xl:max-w-5xl mb-5 lg:mb-7 hero-head"
+            style={{ letterSpacing: "-0.05em", lineHeight: 0.95, fontSize: "clamp(2.75rem, 8.5vw, 8.5rem)" }}
+          >
             <SplitText by="word">Every fraud tool reacts.</SplitText>
             <br />
             <SplitText by="word">Veris intervenes.</SplitText>
@@ -151,9 +156,13 @@ function HeroSection() {
               </a>
             </Magnetic>
           </div>
-          <p className="mt-5 text-[#1B3A4B]/60 text-sm font-medium hero-counter">
-            <CountUp to={127} className="text-[#1B3A4B] font-semibold tabular-nums" /> families in the first cohort
-          </p>
+          <div className="mt-5 hero-counter flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+            <p className="text-[#1B3A4B]/60 text-sm font-medium">
+              <CountUp to={127} className="text-[#C9A46A] font-semibold tnum" /> families in the first cohort
+            </p>
+            <span className="hidden sm:inline text-[#1B3A4B]/25">·</span>
+            <LiveSignalStrip />
+          </div>
           <p className="mt-10 text-[#1B3A4B]/40 text-[11px] font-medium tracking-[0.18em] uppercase">
             Inspired by research from
           </p>
@@ -292,7 +301,7 @@ function DeviceSection() {
           <SplitText by="word">The Device</SplitText>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-start">
-          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative device-image-wrap">
+          <div className="device-stage rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative device-image-wrap">
             <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover device-image" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
@@ -451,19 +460,25 @@ function CTASection() {
 /* About moved to /about */
 function Footer() {
   return (
-    <footer className="bg-[#F4EFE6] px-6 py-12 border-t border-[#1B3A4B]/10">
-      <div className="max-w-[88rem] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div className="flex items-center gap-3 text-[#1B3A4B]">
-          <LogoIcon className="w-6 h-6" />
-          <span className="text-xl font-medium tracking-tight">Veris</span>
-          <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta, by invitation, with care.</span>
+    <footer className="relative bg-[#F4EFE6] px-6 pt-16 pb-6 border-t border-[#1B3A4B]/10 overflow-hidden">
+      <div className="max-w-[88rem] mx-auto">
+        <p className="text-center text-[#1B3A4B]/70 text-xl md:text-2xl lg:text-3xl font-medium italic max-w-3xl mx-auto leading-snug mb-12" style={{ letterSpacing: "-0.02em" }}>
+          One second is all it takes.
+        </p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative z-10">
+          <div className="flex items-center gap-3 text-[#1B3A4B]">
+            <LogoIcon className="w-6 h-6" />
+            <span className="text-xl font-medium tracking-tight">Veris</span>
+            <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta, by invitation, with care.</span>
+          </div>
+          <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
+            <Link to="/about" className="hover:text-[#1B3A4B] transition-colors">Mission</Link>
+            <a href="#manifesto" className="hover:text-[#1B3A4B] transition-colors">Manifesto</a>
+            <a href="#early-access" className="hover:text-[#1B3A4B] transition-colors">Contact</a>
+            <span className="text-[#1B3A4B]/40">© 2026</span>
+          </div>
         </div>
-        <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
-          <Link to="/about" className="hover:text-[#1B3A4B] transition-colors">Mission</Link>
-          <a href="#manifesto" className="hover:text-[#1B3A4B] transition-colors">Manifesto</a>
-          <a href="#early-access" className="hover:text-[#1B3A4B] transition-colors">Contact</a>
-          <span className="text-[#1B3A4B]/40">© 2026</span>
-        </div>
+        <div className="footer-wordmark mt-8 -mb-[6vw] text-center" aria-hidden>Veris</div>
       </div>
     </footer>
   );
@@ -667,6 +682,7 @@ function VerisLanding() {
 
   return (
     <div ref={rootRef} className="flex flex-col bg-[#F4EFE6]">
+      <div className="page-curtain" aria-hidden />
       <div className="h-screen flex flex-col overflow-hidden relative">
         <Navbar />
         <HeroSection />

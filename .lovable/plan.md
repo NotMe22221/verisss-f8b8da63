@@ -1,50 +1,74 @@
-# Final QA Pass — Veris Landing
+# Moonshot Polish Plan
 
-A targeted polish round to bring the site to a "Google X / factory-tour" level of finish. Focused on the things that actually break the spell on a high-end site: duplicated content, weak metadata, dead links, and inconsistent claims. No re-architecture.
+Goal: take the site from "well-crafted landing page" to "Google X / Apple keynote" feel — cinematic, confident, quietly extraordinary. No new sections, no new copy direction; pure design and motion elevation on top of the existing structure.
 
-## 1. Cut the duplicate "Who it's for" content
-The page currently has **two** sections doing the same job:
-- `AudienceSection` (For families / For older adults) in `index.tsx`
-- `WhoItsForSection` (the new one with portrait imagery)
+## 1. Cinematic Hero (the 3-second test)
 
-Keep `WhoItsForSection` (richer, photographic, more recent), remove `AudienceSection`. One clear "who it's for" beat, not two.
+- Replace the soft pastel hero with a **deep slate-on-bone duotone**: video stays, but treated with a stronger gradient curtain + a single warm gold rim-light gradient anchored to the headline.
+- **Headline scale-up**: push H1 to clamp(3.5rem, 9vw, 9rem), tighter -0.05em tracking, line-height 0.95. Less marketing copy, more monument.
+- **Cinematic curtain entrance**: black-bone curtain wipes off on load (350ms), then headline words mask-reveal in stagger, CTA magnetic settle. Logo and nav fade in last.
+- **Live signal strip** under the headline (mono, 11px, gold dots): `HRV 62ms · VOICE Δ 0.04 · STATE calm` — slowly mutates every few seconds. Sells "this thing is alive" without a chart.
+- Move the marquee + counter into a thin bottom rail of the hero (instead of stacked) so the hero breathes.
 
-## 2. Fix the hero CTA over-claim
-Hero shows: `12,847 calls intercepted in pilot`, while the CTA later says we are shipping the *first* cohort of 127 rings. These contradict each other and read as fake. Replace the counter with something honest for an early-stage product, e.g. `127 families in the first cohort` (matches CTA) or remove the counter entirely and keep the marquee.
+## 2. Signature Motion System
 
-## 3. Page metadata + social share
-Currently the root sets `Lovable App` / `Lovable Generated Project` for og/twitter, and `index.tsx` only overrides `<title>` and `description`. On share, OG falls back to Lovable defaults.
+One language across the whole site, not per-section experiments:
 
-In `src/routes/index.tsx` `head()`, add:
-- `og:title`, `og:description`, `og:type=website`, `og:url`
-- `twitter:card=summary_large_image`, `twitter:title`, `twitter:description`
-- `og:image` + `twitter:image` pointing to a hero asset (e.g. `/ring-device-studio.png` exported as a public URL — use the imported asset URL via Vite)
+- **Section ingress**: eyebrow → hairline draws left-to-right (600ms) → heading words mask-up stagger (40ms) → body fade+rise. Already partially there; tighten and apply uniformly.
+- **Hairline rules** between every section, animated on scroll into view.
+- **Parallax discipline**: only hero copy + section heroes get parallax. Remove any micro-parallax elsewhere (cleaner = more premium).
+- **Magnetic primary CTA** everywhere it appears (already exists for hero — extend to early-access CTA + about CTAs).
+- **Cursor**: keep custom cursor but reduce to a 6px dot + 28px ring that snaps to interactive elements (Linear-style).
 
-Also strip the generic Lovable defaults from `__root.tsx` `head()` so route-level meta isn't competing with stale fallbacks (keep only charset, viewport, fonts, favicon, stylesheet).
+## 3. The Device — make it the hero moment
 
-## 4. Footer dead links
-All 4 footer links (`Mission`, `Manifesto`, `Privacy`, `Contact`) point to `#`. At minimum:
-- `Manifesto` → `#manifesto` (already exists)
-- `Mission` → `/about`
-- `Privacy` → keep `#` but mark as `aria-disabled` + muted, or remove
-- `Contact` → `#early-access`
+- Convert DeviceSection to a **full-bleed dark stage**: ring image floats on slate with a soft gold rim-light, slow rotate (0.5deg sway), shadow that breathes.
+- Specs become **giant numerals** (clamp(4rem, 8vw, 8rem)) with thin labels — "7 DAY · 4 g · 100 m" reads like a spec sheet on a museum plinth.
+- A scroll-pinned moment: as the user scrolls, the ring stays centered while three captions cross-fade beside it (Sense → Listen → Interrupt). One pin, three beats.
 
-## 5. Small consistency fixes
-- Nav `Pricing` link works (`#pricing` exists in BusinessModelSection) — verify it scrolls correctly with Lenis (it should, no change needed unless broken).
-- Marquee includes `MIT Media Lab`, `DARPA`, `Stanford HAI`, `FINCEN`, `AARP Labs`, `Apple Health`, `Verily`. ScienceSection then claims "AARP Labs early-access cohort" and "MIT Media Lab affiliated researchers." If these are aspirational, soften the marquee label (e.g. eyebrow above it: "Inspired by research from" instead of implying partnerships) — avoids a credibility hit.
-- Footer copyright says `© 2026` — fine for the project's stated date.
+## 4. Typography & Color Tightening
 
-## 6. Quick polish (low-risk)
-- Add `loading="lazy"` and `decoding="async"` to the non-hero `<img>` tags in StorySection / UseCases / WhoItsFor / Prototype / Device for faster first paint.
-- Ensure every section heading is an `<h2>` and the hero is the only `<h1>` (spot-check during edit).
+- Lift display tracking to **-0.045em** site-wide; bump display weight contrast (use 500 for heads, 400 for body — already mostly true).
+- Add a **single accent gold** (`--accent #C9A46A`) used sparingly: live signal dots, the 1px hairline under section eyebrows, the CountUp digits, the ring rim-light. Currently underused.
+- Replace any pure black/white with the slate/bone tokens — audit each component.
+- Add **OpenType features**: `font-feature-settings: "ss01","cv11","tnum"` on numerals (already on body, extend to stat blocks).
 
-## Out of scope
-- No new sections, no copy rewrites beyond the items above, no design-token changes, no animation rework (animations were already polished in prior turns).
+## 5. Sectional Drama
 
-## Files touched
-- `src/routes/index.tsx` — remove `AudienceSection`, fix hero counter, expand `head()` meta, fix footer links
-- `src/routes/__root.tsx` — strip generic OG/Twitter fallbacks
-- `src/components/landing/StorySection.tsx`, `UseCasesSection.tsx`, `WhoItsForSection.tsx`, `PrototypeSection.tsx` — add `loading="lazy"` / `decoding="async"` to images
-- (optional) marquee eyebrow line in `index.tsx`
+- **Problem section**: stats become a vertical ticker that counts up on scroll, divider lines draw in. Headline gets a single-word emphasis ("after") in gold italic.
+- **How It Works**: the 4-step grid becomes a **horizontal scroll-snap rail** on desktop (Apple-style), with a thin progress hairline that fills as the user scrolls through the steps.
+- **Use Cases**: cards get a subtle 3D tilt on hover (max 4deg), image zoom 1.03 → 1.0 on scroll-in.
+- **Prototype timeline**: render as a true horizontal timeline with a drawing line connecting milestones, dots that pulse when active.
+- **Business Model / Manifesto / Early Access**: tighten only, no restructuring.
 
-After edits I'll re-verify in the preview at desktop + the current 881px viewport.
+## 6. Footer & Closing
+
+- Footer becomes a quiet **oversized wordmark** (`Veris` set at clamp(8rem, 22vw, 22rem), bone on slate, 8% opacity) with the small links above it. Apple/Linear footer energy.
+- Add a final manifesto line above it: one sentence, large, centered, italic.
+
+## 7. Performance & Polish
+
+- Preload hero video poster + ring image; add `<link rel="preload" as="image">` for hero asset.
+- Audit `loading="lazy" decoding="async"` on all non-hero images (already mostly done).
+- Reduce-motion path: all of the above degrade to clean static layout.
+- Lighthouse pass for CLS (reserve aspect-ratio on every image — most done).
+
+## Files to touch
+
+- `src/styles.css` — motion tokens, hairline animation, signal strip styles, footer wordmark, cursor refinement
+- `src/routes/index.tsx` — hero recomposition, signal strip, footer wordmark, About/CTAs magnetic
+- `src/components/landing/HeroAmbient.tsx` — curtain entrance + warm rim-light layer
+- `src/components/landing/PrototypeSection.tsx` — true horizontal timeline with drawn line
+- `src/components/landing/UseCasesSection.tsx` — 3D tilt + image zoom
+- `src/components/landing/WhoItsForSection.tsx` — typography tighten only
+- New: `src/components/landing/DeviceStage.tsx` — pinned ring stage replacing inline DeviceSection block
+- New: `src/components/landing/LiveSignalStrip.tsx` — animated mono signal line for hero
+- `src/lib/reveal.ts` — unify ingress sequence (eyebrow → hairline → head → body)
+
+## Out of scope (intentionally)
+
+- No new copy, no new sections, no new pages.
+- No new images generated unless a specific shot is missing — reuse existing assets.
+- No backend/data changes.
+
+Once approved, I'll implement in this order: motion system + hero (biggest perceived lift) → device stage → timeline + use cases → footer + final pass.
