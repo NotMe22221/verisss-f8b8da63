@@ -301,7 +301,7 @@ function DeviceSection() {
           <SplitText by="word">The Device</SplitText>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-start">
-          <div className="rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative device-image-wrap">
+          <div className="device-stage rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative device-image-wrap">
             <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover device-image" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
