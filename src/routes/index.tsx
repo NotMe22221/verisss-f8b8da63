@@ -131,10 +131,14 @@ function HeroSection() {
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
         <HeroAmbient containerRef={heroRef} />
         <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
-          <p data-parallax="0.3" className="text-[#1B3A4B]/70 text-xs lg:text-sm font-medium tracking-[0.18em] uppercase mb-4 lg:mb-6 hero-eyebrow">
+          <p data-parallax="0.3" className="hero-eyebrow reveal-eyebrow in text-[#1B3A4B]/80 mb-5 lg:mb-7">
             Private Beta · The Cognitive Defense Layer
           </p>
-          <h1 data-parallax="0.5" className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.02] max-w-xl lg:max-w-3xl xl:max-w-4xl mb-4 lg:mb-6 hero-head" style={{ letterSpacing: "-0.04em" }}>
+          <h1
+            data-parallax="0.5"
+            className="text-[#1B3A4B] font-medium max-w-xl lg:max-w-3xl xl:max-w-5xl mb-5 lg:mb-7 hero-head"
+            style={{ letterSpacing: "-0.05em", lineHeight: 0.95, fontSize: "clamp(2.75rem, 8.5vw, 8.5rem)" }}
+          >
             <SplitText by="word">Every fraud tool reacts.</SplitText>
             <br />
             <SplitText by="word">Veris intervenes.</SplitText>
@@ -152,9 +156,13 @@ function HeroSection() {
               </a>
             </Magnetic>
           </div>
-          <p className="mt-5 text-[#1B3A4B]/60 text-sm font-medium hero-counter">
-            <CountUp to={127} className="text-[#1B3A4B] font-semibold tabular-nums" /> families in the first cohort
-          </p>
+          <div className="mt-5 hero-counter flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+            <p className="text-[#1B3A4B]/60 text-sm font-medium">
+              <CountUp to={127} className="text-[#C9A46A] font-semibold tnum" /> families in the first cohort
+            </p>
+            <span className="hidden sm:inline text-[#1B3A4B]/25">·</span>
+            <LiveSignalStrip />
+          </div>
           <p className="mt-10 text-[#1B3A4B]/40 text-[11px] font-medium tracking-[0.18em] uppercase">
             Inspired by research from
           </p>
