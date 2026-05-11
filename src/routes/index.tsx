@@ -561,9 +561,9 @@ function VerisLanding() {
         parallaxEls.forEach((el) => {
           const depth = parseFloat(el.dataset.parallax || "0.5");
           animate(el, {
-            x: cx * depth * -28,
-            y: cy * depth * -22,
-            duration: 900,
+            x: cx * depth * -18,
+            y: cy * depth * -14,
+            duration: 1000,
             ease: "outExpo",
           });
         });
