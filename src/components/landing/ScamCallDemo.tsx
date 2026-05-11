@@ -49,10 +49,15 @@ export function ScamCallDemo() {
 
     tl.call(() => {
       setIntervened(true);
-      if (ringRef.current) {
-        animate(ringRef.current, {
-          scale: [1, 1.08, 1, 1.08, 1, 1.08, 1],
-          duration: 1080,
+      const r = ringRef.current;
+      if (r) {
+        r.classList.remove("haptic-shake", "gold-flash");
+        // Force reflow to restart animations.
+        void r.offsetWidth;
+        r.classList.add("haptic-shake", "gold-flash");
+        animate(r, {
+          scale: [1, 1.06, 1, 1.06, 1],
+          duration: 900,
           ease: "inOutQuad",
         });
       }
