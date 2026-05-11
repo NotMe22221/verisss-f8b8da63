@@ -377,14 +377,7 @@ body.has-custom-cursor textarea {
 }
 .haptic-shake { animation: haptic-shake 380ms cubic-bezier(0.36,0.07,0.19,0.97); }
 
-/* Subtle device sway rotation, layered with the existing float */
-@keyframes device-sway {
-  0%, 100% { transform: rotate(-0.4deg); }
-  50%      { transform: rotate(0.4deg); }
-}
-.device-image-wrap .device-image {
-  animation: device-sway 7s ease-in-out infinite;
-}
+/* Device sway is applied via JS in VerisLanding (combined with float). */
 
 /* Tabular numerals */
 .tnum { font-feature-settings: "tnum","ss01"; font-variant-numeric: tabular-nums; }
