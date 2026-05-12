@@ -2,9 +2,8 @@
 export { animate, createTimeline, createTimer, stagger, utils, eases } from "animejs";
 import { animate, utils } from "animejs";
 
-export const reducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// Animations always play — OS-level reduce-motion preference is intentionally ignored.
+export const reducedMotion = () => false;
 
 /**
  * IntersectionObserver-based "play once when visible" helper.
