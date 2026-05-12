@@ -7,11 +7,6 @@ export function PageCurtain() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      el.style.display = "none";
-      return;
-    }
     // Two RAFs so the initial transform commits before transitioning.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {

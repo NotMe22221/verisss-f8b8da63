@@ -278,12 +278,7 @@ body.has-custom-cursor textarea {
   transform-origin: left center;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reveal-up, .reveal-fade, .reveal-eyebrow, .reveal-line, .reveal-stagger > * { opacity: 1; transform: none; }
-  .reveal-head .anim-word, .reveal-head .anim-char { transform: none; opacity: 1; }
-  .hero-mesh, .hero-grain { animation: none; }
-  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-}
+/* Reduce-motion media query intentionally removed — animations always play. */
 
 /* ---------- MOONSHOT POLISH ---------- */
 

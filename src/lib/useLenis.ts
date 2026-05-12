@@ -7,7 +7,6 @@ import { useEffect } from "react";
 export function useLenis() {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let cleanup: (() => void) | null = null;
     let cancelled = false;
