@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
   head: () => {
     const title = "Veris — The cognitive defense ring.";
     const description =
-      "A wearable that interrupts manipulation the second it happens. Biosignals, voice, and on-device AI fused in a ring — so your parents get a moment to think, before the regret.";
+      "A titanium ring that interrupts phone-scam manipulation in the moment — biosignals, voice, and on-device AI giving older adults a second to think.";
     const url = "https://verisss.lovable.app/";
     return {
       meta: [
@@ -32,6 +32,32 @@ export const Route = createFileRoute("/")({
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
         { name: "twitter:image", content: ringDevice },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Veris",
+            url,
+            description: "Cognitive defense wearable that interrupts scam manipulation in real time.",
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: "Veris Ring",
+            description:
+              "A titanium ring with on-device AI that detects scam-call manipulation through biosignals and voice, then delivers a haptic interruption.",
+            brand: { "@type": "Brand", name: "Veris" },
+            category: "Wearable Technology",
+            url,
+          }),
+        },
       ],
     };
   },
