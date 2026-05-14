@@ -113,6 +113,8 @@ function HeroVeris() {
             alt="Veris ring"
             width={1200}
             height={1200}
+            fetchPriority="high"
+            decoding="async"
             className="w-full max-w-[520px] mx-auto object-contain hero-ring"
           />
         </div>
@@ -122,6 +124,7 @@ function HeroVeris() {
             style={{ letterSpacing: "-0.05em", lineHeight: 0.9, fontSize: "clamp(4rem, 12vw, 10rem)" }}
           >
             <SplitText by="word">VERIS</SplitText>
+            <span className="sr-only"> — the cognitive defense ring</span>
           </h1>
           <p className="text-[#1B3A4B]/80 text-lg lg:text-xl leading-relaxed font-medium max-w-lg reveal-up">
             A ring that interrupts manipulation the second it happens. Biosignals, voice, and on-device AI fused into a single piece of titanium worn on the finger. So the people you love get one moment to think, before the regret.
