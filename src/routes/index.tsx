@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
   head: () => {
     const title = "Veris — The cognitive defense ring.";
     const description =
-      "A wearable that interrupts manipulation the second it happens. Biosignals, voice, and on-device AI fused in a ring — so your parents get a moment to think, before the regret.";
+      "A titanium ring that interrupts phone-scam manipulation in the moment — biosignals, voice, and on-device AI giving older adults a second to think.";
     const url = "https://verisss.lovable.app/";
     return {
       meta: [
@@ -32,6 +32,32 @@ export const Route = createFileRoute("/")({
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
         { name: "twitter:image", content: ringDevice },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Veris",
+            url,
+            description: "Cognitive defense wearable that interrupts scam manipulation in real time.",
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: "Veris Ring",
+            description:
+              "A titanium ring with on-device AI that detects scam-call manipulation through biosignals and voice, then delivers a haptic interruption.",
+            brand: { "@type": "Brand", name: "Veris" },
+            category: "Wearable Technology",
+            url,
+          }),
+        },
       ],
     };
   },
@@ -57,8 +83,8 @@ function PillNav() {
             const Icon = l.icon;
             const inner = (
               <>
-                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">{l.label}</span>
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+                <span className="sr-only sm:not-sr-only">{l.label}</span>
               </>
             );
             const cls =
@@ -87,6 +113,8 @@ function HeroVeris() {
             alt="Veris ring"
             width={1200}
             height={1200}
+            fetchPriority="high"
+            decoding="async"
             className="w-full max-w-[520px] mx-auto object-contain hero-ring"
           />
         </div>
@@ -96,6 +124,7 @@ function HeroVeris() {
             style={{ letterSpacing: "-0.05em", lineHeight: 0.9, fontSize: "clamp(4rem, 12vw, 10rem)" }}
           >
             <SplitText by="word">VERIS</SplitText>
+            <span className="sr-only"> — the cognitive defense ring</span>
           </h1>
           <p className="text-[#1B3A4B]/80 text-lg lg:text-xl leading-relaxed font-medium max-w-lg reveal-up">
             A ring that interrupts manipulation the second it happens. Biosignals, voice, and on-device AI fused into a single piece of titanium worn on the finger. So the people you love get one moment to think, before the regret.
@@ -375,6 +404,7 @@ function EarlyAccess() {
             <input
               type="text"
               placeholder="Your name"
+              aria-label="Your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="flex-1 bg-[#1B3A4B]/5 border border-[#1B3A4B]/15 text-[#1B3A4B] placeholder:text-[#1B3A4B]/40 rounded-full px-5 py-3 outline-none focus:border-[#1B3A4B]/40 transition-colors"
@@ -382,6 +412,7 @@ function EarlyAccess() {
             <input
               type="email"
               placeholder="you@email.com"
+              aria-label="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1 bg-[#1B3A4B]/5 border border-[#1B3A4B]/15 text-[#1B3A4B] placeholder:text-[#1B3A4B]/40 rounded-full px-5 py-3 outline-none focus:border-[#1B3A4B]/40 transition-colors"
