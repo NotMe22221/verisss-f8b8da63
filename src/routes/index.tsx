@@ -1,30 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { Home, Users, PlayCircle, Wrench, ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import ringDevice from "@/assets/ring-device-studio.png";
+import problemFace from "@/assets/problem-face.png";
+import architectureExploded from "@/assets/architecture-exploded.jpg";
+import handWithRing from "@/assets/hand-with-ring.jpg";
 import { submitEarlyAccess } from "@/lib/early-access.functions";
-import { animate, createTimeline, stagger, onInView, rafThrottle, reducedMotion } from "@/lib/anime";
+import { animate, createTimeline, stagger, onInView, rafThrottle } from "@/lib/anime";
 import { revealAll } from "@/lib/reveal";
 import { SplitText } from "@/components/landing/SplitText";
 import { Magnetic } from "@/components/landing/MagneticButton";
-import { ScamCallDemo } from "@/components/landing/ScamCallDemo";
-import { HeroAmbient } from "@/components/landing/HeroAmbient";
-import { CountUp } from "@/components/landing/CountUp";
-import { LiveSignalStrip } from "@/components/landing/LiveSignalStrip";
-import { StorySection } from "@/components/landing/StorySection";
-import { UseCasesSection } from "@/components/landing/UseCasesSection";
-import { PrototypeSection } from "@/components/landing/PrototypeSection";
-import { BusinessModelSection } from "@/components/landing/BusinessModelSection";
-import { WhoItsForSection } from "@/components/landing/WhoItsForSection";
 
 export const Route = createFileRoute("/")({
   component: VerisLanding,
   head: () => {
-    const title = "Veris — Every fraud tool reacts. Veris intervenes.";
+    const title = "Veris — The cognitive defense ring.";
     const description =
-      "Veris is a wearable cognitive defense system. Biosignals, voice, and on-device AI fused in a ring, to interrupt manipulation the second it happens, before money is ever lost.";
-    const image = ringDevice;
+      "A wearable that interrupts manipulation the second it happens. Biosignals, voice, and on-device AI fused in a ring — so your parents get a moment to think, before the regret.";
     const url = "https://verisss.lovable.app/";
     return {
       meta: [
@@ -34,292 +27,219 @@ export const Route = createFileRoute("/")({
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
-        { property: "og:image", content: image },
+        { property: "og:image", content: ringDevice },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
-        { name: "twitter:image", content: image },
+        { name: "twitter:image", content: ringDevice },
       ],
     };
   },
 });
 
-/* ---------- LOGO ---------- */
-function LogoIcon({ className = "w-7 h-7" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 256 256" className={className} fill="currentColor" aria-hidden="true">
-      <path d="M 128.005 191.173 C 128.448 156.208 156.93 128 192 128 L 192 64 L 128 64 C 128 99.346 99.346 128 64 128 L 64 192 L 128 192 Z M 192 256 L 64 256 C 28.654 256 0 227.346 0 192 L 0 64 L 64 64 L 64 0 L 192 0 C 227.346 0 256 28.654 256 64 L 256 192 L 192 192 Z" />
-    </svg>
-  );
-}
-
-/* ---------- NAVBAR ---------- */
-function Navbar() {
+/* ---------- PILL NAV ---------- */
+function PillNav() {
   const links = [
-    { label: "Story", href: "#story" },
-    { label: "The Device", href: "#device" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Manifesto", href: "#manifesto" },
+    { label: "HOME", icon: Home, href: "#top" },
+    { label: "ABOUT", icon: Users, to: "/about" as const },
+    { label: "MANIFESTO", icon: PlayCircle, href: "#manifesto" },
+    { label: "PROTOTYPE", icon: Wrench, href: "#architecture" },
   ];
   return (
-    <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-5">
-      <div className="max-w-[88rem] mx-auto flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-[#1B3A4B]">
-          <LogoIcon className="w-7 h-7" />
-          <span className="text-2xl font-medium tracking-tight">Veris</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-7">
-          {links.map((l) => (
-            <a key={l.label} href={l.href} className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200">
-              {l.label}
-            </a>
-          ))}
-          <Link to="/about" className="text-base text-[#1B3A4B]/70 hover:text-[#1B3A4B] font-medium transition-colors duration-200" activeProps={{ className: "text-[#1B3A4B] font-medium" }}>
-            About
-          </Link>
-          <a href="#early-access" className="text-base bg-[#1B3A4B] text-[#F4EFE6] px-4 py-2 rounded-full hover:bg-[#1B3A4B]/90 font-medium transition-colors duration-200">
-            Early Access
+    <nav className="sticky top-0 z-30 px-3 sm:px-6 pt-4 pb-2 bg-[#F4EFE6]/85 backdrop-blur-md">
+      <div className="max-w-[88rem] mx-auto flex justify-center">
+        <div className="pill-nav flex items-center gap-1 sm:gap-2 rounded-full px-2 sm:px-3 py-2">
+          <a href="#top" className="text-[#1B3A4B] font-bold tracking-tight px-3 sm:px-4 text-sm sm:text-base">
+            VERIS
           </a>
+          <span className="hidden sm:block w-px h-5 bg-[#1B3A4B]/15 mx-1" />
+          {links.map((l) => {
+            const Icon = l.icon;
+            const inner = (
+              <>
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">{l.label}</span>
+              </>
+            );
+            const cls =
+              "flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-[0.12em] text-[#1B3A4B]/75 hover:text-[#1B3A4B] hover:bg-[#1B3A4B]/5 transition-colors";
+            return l.to ? (
+              <Link key={l.label} to={l.to} className={cls}>{inner}</Link>
+            ) : (
+              <a key={l.label} href={l.href} className={cls}>{inner}</a>
+            );
+          })}
         </div>
       </div>
     </nav>
   );
 }
 
-/* ---------- BRAND MARQUEE ---------- */
-const heroBrands: Array<{ name: string; style: React.CSSProperties }> = [
-  { name: "MIT Media Lab", style: { fontFamily: "Georgia, serif", fontWeight: 700, letterSpacing: "-0.02em", fontSize: 15 } },
-  { name: "DARPA", style: { fontFamily: "Arial, sans-serif", fontWeight: 900, letterSpacing: "0.08em", fontSize: 13, textTransform: "uppercase" } },
-  { name: "Stanford HAI", style: { fontFamily: "'Trebuchet MS', sans-serif", fontWeight: 600, letterSpacing: "0.01em", fontSize: 15, fontStyle: "italic" } },
-  { name: "FINCEN", style: { fontFamily: "'Courier New', monospace", fontWeight: 700, letterSpacing: "0.12em", fontSize: 13, textTransform: "uppercase" } },
-  { name: "AARP Labs", style: { fontFamily: "Palatino, serif", fontWeight: 400, letterSpacing: "-0.01em", fontSize: 16 } },
-  { name: "Apple Health", style: { fontFamily: "Impact, sans-serif", fontWeight: 400, letterSpacing: "0.04em", fontSize: 14 } },
-  { name: "Verily", style: { fontFamily: "Verdana, sans-serif", fontWeight: 700, letterSpacing: "-0.03em", fontSize: 13 } },
-];
-
-function HeroMarquee() {
+/* ---------- 1. HERO VERIS ---------- */
+function HeroVeris() {
   return (
-    <div className="mt-16 lg:mt-24 w-full max-w-md lg:max-w-2xl overflow-hidden">
-      <style>{`
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .marquee-track { display: flex; width: max-content; animation: marquee 22s linear infinite; }
-      `}</style>
-      <div className="marquee-track">
-        {[...heroBrands, ...heroBrands].map((b, i) => (
-          <span key={i} className="mx-7 shrink-0 text-[#1B3A4B]/60 whitespace-nowrap" style={b.style}>
-            {b.name}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ---------- HERO ---------- */
-function HeroSection() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  return (
-    <section className="flex-1 px-4 md:px-6 pt-20 pb-6 flex items-end">
-      <div
-        ref={heroRef}
-        className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto min-h-[640px] lg:min-h-[720px]"
-      >
-        <video autoPlay muted loop playsInline className="object-cover absolute inset-0 w-full h-full" style={{ filter: "grayscale(1) contrast(1.05) brightness(1.02)" }}>
-          <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(244,239,230,0.55) 0%, rgba(244,239,230,0.35) 50%, rgba(244,239,230,0.65) 100%)" }} />
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#1B3A4B", mixBlendMode: "soft-light", opacity: 0.5 }} />
-        <HeroAmbient containerRef={heroRef} />
-        <div className="relative z-10 flex flex-col items-start justify-start h-full p-6 pt-12 md:p-10 md:pt-16 lg:p-14 lg:pt-20 xl:p-20 xl:pt-28">
-          <p data-parallax="0.3" className="hero-eyebrow reveal-eyebrow in text-[#1B3A4B]/80 mb-5 lg:mb-7">
-            Private Beta · The Cognitive Defense Layer
-          </p>
+    <section id="top" className="px-6 lg:px-12 pt-12 lg:pt-20 pb-24 lg:pb-32">
+      <div className="max-w-[88rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div className="lg:col-span-6 relative reveal-image order-1">
+          <div className="absolute inset-0 -z-10 ring-glow" aria-hidden />
+          <img
+            src={ringDevice}
+            alt="Veris ring"
+            width={1200}
+            height={1200}
+            className="w-full max-w-[520px] mx-auto object-contain hero-ring"
+          />
+        </div>
+        <div className="lg:col-span-6 order-2">
           <h1
-            data-parallax="0.5"
-            className="text-[#1B3A4B] font-medium max-w-xl lg:max-w-3xl xl:max-w-5xl mb-5 lg:mb-7 hero-head"
-            style={{ letterSpacing: "-0.05em", lineHeight: 0.95, fontSize: "clamp(2.75rem, 8.5vw, 8.5rem)" }}
+            className="text-[#1B3A4B] font-bold mb-6 hero-head"
+            style={{ letterSpacing: "-0.05em", lineHeight: 0.9, fontSize: "clamp(4rem, 12vw, 10rem)" }}
           >
-            <SplitText by="word">Every fraud tool reacts.</SplitText>
-            <br />
-            <SplitText by="word">Veris intervenes.</SplitText>
+            <SplitText by="word">VERIS</SplitText>
           </h1>
-          <p data-parallax="0.7" className="text-[#1B3A4B] text-base md:text-lg lg:text-xl max-w-lg lg:max-w-2xl mb-6 lg:mb-8 leading-relaxed font-medium hero-copy">
-            Biosignals, voice, and on-device AI, fused in a ring, to interrupt manipulation the second it happens. So your parents get a moment to think, before the transfer, before the regret.
+          <p className="text-[#1B3A4B]/80 text-lg lg:text-xl leading-relaxed font-medium max-w-lg reveal-up">
+            A ring that interrupts manipulation the second it happens. Biosignals, voice, and on-device AI fused into a single piece of titanium worn on the finger. So the people you love get one moment to think, before the regret.
           </p>
-          <div data-parallax="0.9" className="hero-cta">
-            <Magnetic>
-              <a href="#early-access" className="inline-flex items-center gap-3 bg-[#1B3A4B] text-[#F4EFE6] text-base md:text-lg lg:text-xl font-medium pl-8 lg:pl-10 pr-2 py-2 lg:py-2.5 rounded-full hover:bg-[#14303f] transition-colors duration-200">
-                Join the beta
-                <span className="bg-[#F4EFE6] rounded-full p-2">
-                  <ArrowRight className="w-5 h-5 text-[#1B3A4B]" />
-                </span>
-              </a>
-            </Magnetic>
-          </div>
-          <div className="mt-5 hero-counter flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
-            <p className="text-[#1B3A4B]/60 text-sm font-medium">
-              <CountUp to={127} className="text-[#C9A46A] font-semibold tnum" /> families in the first cohort
-            </p>
-            <span className="hidden sm:inline text-[#1B3A4B]/25">·</span>
-            <LiveSignalStrip />
-          </div>
-          <p className="mt-10 text-[#1B3A4B]/40 text-[11px] font-medium tracking-[0.18em] uppercase">
-            Inspired by research from
-          </p>
-          <HeroMarquee />
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------- PROBLEM ---------- */
+/* ---------- 2. PROBLEM ---------- */
 function ProblemSection() {
+  return (
+    <section className="px-6 lg:px-12 py-24 lg:py-32">
+      <div className="max-w-[88rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div className="lg:col-span-5 reveal-image">
+          <img
+            src={problemFace}
+            alt="Worried face"
+            loading="lazy"
+            width={800}
+            height={800}
+            className="w-full max-w-sm mx-auto object-contain"
+          />
+        </div>
+        <div className="lg:col-span-7">
+          <h2
+            className="text-[#1B3A4B] font-bold mb-6 reveal-head"
+            style={{ letterSpacing: "-0.04em", lineHeight: 0.95, fontSize: "clamp(3rem, 8vw, 6rem)" }}
+          >
+            <SplitText by="word">PROBLEM</SplitText>
+          </h2>
+          <p className="text-[#1B3A4B]/80 text-lg lg:text-xl leading-relaxed font-medium max-w-xl reveal-up">
+            Every fraud system in the world reacts after the money is gone. Banks freeze the wire after it clears. Apps flag the call after it ends. Family finds out after the regret. By then the damage is done — financially, and to the trust an older person has in their own judgment.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- 3. DATA ---------- */
+function DataSection() {
   const stats = [
-    { value: "$3.4B", label: "lost annually to elder fraud (FTC, 2024)" },
-    { value: "1 in 10", label: "adults 65+ targeted every year" },
-    { value: "$35,000", label: "average loss per incident" },
+    { value: "$3.4B", label: "lost annually to elder fraud" },
+    { value: "1 in 6", label: "adults 65+ targeted every year" },
+    { value: "19 min", label: "average time to clear a wire" },
   ];
   return (
-    <section id="problem" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
-      <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">The Problem</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24 reveal-head" style={{ letterSpacing: "-0.04em" }}>
-          <SplitText by="word">Every fraud system in the world reacts after the money is gone.</SplitText>
+    <section className="px-6 lg:px-12 py-24 lg:py-32">
+      <div className="max-w-[88rem] mx-auto text-center">
+        <h2
+          className="text-[#1B3A4B] font-bold mb-16 lg:mb-20 reveal-head section-title"
+          style={{ letterSpacing: "-0.04em", lineHeight: 1, fontSize: "clamp(3rem, 8vw, 6rem)" }}
+        >
+          <SplitText by="word">DATA</SplitText>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
-          <p className="text-[#1B3A4B]/80 text-xl md:text-2xl leading-relaxed font-medium reveal-up">
-            Banks freeze the transfer after it clears. Apps flag the call after it ends. Family finds out after the regret. By then the damage is done, financially, and to the trust an older person has in their own judgment.
-          </p>
-          <div className="flex flex-col divide-y divide-[#1B3A4B]/15">
-            {stats.map((s) => (
-              <div key={s.value} className="py-5 first:pt-0 reveal-up">
-                <p className="text-[#1B3A4B] text-4xl md:text-5xl font-medium relative inline-block tnum pb-1" style={{ letterSpacing: "-0.04em", borderBottom: "1px solid rgba(201,164,106,0.55)" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12 max-w-5xl mx-auto mb-12 lg:mb-16">
+          {stats.map((s) => (
+            <div key={s.value} className="flex flex-col items-center reveal-up">
+              <div className="stat-medallion">
+                <span className="text-[#1B3A4B] font-bold text-2xl lg:text-3xl tnum" style={{ letterSpacing: "-0.03em" }}>
                   {s.value}
-                </p>
-                <p className="text-[#1B3A4B]/60 text-sm md:text-base mt-2">{s.label}</p>
-              </div>
-            ))}
-            <p className="pt-5 text-[#1B3A4B]/40 text-[11px] tracking-wide uppercase">Sources: FTC · FBI IC3 · AARP</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- HOW IT WORKS ---------- */
-const steps = [
-  { n: "01", title: "Sense.", body: "The ring continuously reads heart-rate variability, skin conductance, and micro-stress signatures." },
-  { n: "02", title: "Listen.", body: "On-device AI analyzes the conversation locally, for scripted scam patterns, urgency, impersonation cues, emotional coercion." },
-  { n: "03", title: "Interrupt.", body: "When manipulation is detected, a quiet haptic pulse breaks the spell. A single moment to think." },
-  { n: "04", title: "Alert.", body: "If pressure continues, a trusted family contact gets a discreet notification, never a recording, never a transcript." },
-];
-
-function HowItWorksSection() {
-  return (
-    <section className="bg-[#1B3A4B] px-6 lg:px-12 py-24 lg:py-36">
-      <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#F4EFE6]/50 text-sm mb-3 reveal-eyebrow">How It Works</p>
-        <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-4xl lg:max-w-6xl mb-16 lg:mb-24 reveal-head" style={{ letterSpacing: "-0.04em" }}>
-          <SplitText by="word">Four signals. One second. Before the decision.</SplitText>
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#F4EFE6]/10 rounded-2xl overflow-hidden">
-          {steps.map((s) => (
-            <div key={s.n} className="bg-[#1B3A4B] p-7 md:p-8 lg:p-10 min-h-56 lg:min-h-72 flex flex-col justify-between step-card reveal-up">
-              <p className="text-[#F4EFE6]/40 text-sm font-medium tracking-wider">{s.n}</p>
-              <div>
-                <h3 className="text-[#F4EFE6] text-2xl lg:text-3xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{s.title}</h3>
-                <p className="text-[#F4EFE6]/60 text-base lg:text-lg leading-relaxed">{s.body}</p>
+                </span>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-[#F4EFE6]/60 italic text-base md:text-lg mt-10 max-w-2xl reveal-up">
-          Nothing leaves the ring unless it has to. No cameras. No surveillance. No loss of independence.
+        <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed max-w-3xl mx-auto reveal-up">
+          The numbers describe a quiet epidemic. Phone scams, romance scams, government-impersonation calls — all targeting the cohort with the most savings and the least time to recover them. Existing tools intervene at the bank, at the app, at the carrier. Veris intervenes at the wearer.
+        </p>
+        <p className="text-[#1B3A4B]/40 text-[11px] tracking-[0.2em] uppercase mt-6 reveal-up">
+          Sources · FTC · FBI IC3 · AARP
         </p>
       </div>
     </section>
   );
 }
 
-/* ---------- AUDIENCE ---------- */
-function AudienceSection() {
+/* ---------- 4. FEATURE BLOCK A ---------- */
+function FeatureBlockA() {
   return (
-    <section className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
-      <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">Who It's For</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-12 lg:mb-20 reveal-head" style={{ letterSpacing: "-0.04em" }}>
-          <SplitText by="word">Built for the people doing the worrying, and the people they worry about.</SplitText>
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6] reveal-up">
-            <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For families</p>
-            <div>
-              <h3 className="text-[#1B3A4B] text-3xl md:text-4xl font-medium mb-4 leading-tight" style={{ letterSpacing: "-0.03em" }}>
-                Peace of mind, without surveillance.
-              </h3>
-              <p className="text-[#1B3A4B]/70 text-base md:text-lg leading-relaxed">
-                No cameras in your parents' home. No asking them to hand over their phone. Just a quiet alert if something is wrong.
-              </p>
-            </div>
-          </div>
-          <div className="rounded-2xl border border-[#1B3A4B]/15 p-8 md:p-10 min-h-64 flex flex-col justify-between bg-[#F4EFE6] reveal-up">
-            <p className="text-[#1B3A4B]/50 text-sm font-medium tracking-wider uppercase">For older adults</p>
-            <div>
-              <h3 className="text-[#1B3A4B] text-3xl md:text-4xl font-medium mb-4 leading-tight" style={{ letterSpacing: "-0.03em" }}>
-                Protection that respects you.
-              </h3>
-              <p className="text-[#1B3A4B]/70 text-base md:text-lg leading-relaxed">
-                The ring stays on your finger. The decision stays yours. We just give you back the second you need to make it.
-              </p>
-            </div>
-          </div>
+    <section className="px-6 lg:px-12 py-24 lg:py-32">
+      <div className="max-w-[88rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div className="lg:col-span-7 order-2 lg:order-1">
+          <h2
+            className="text-[#1B3A4B] font-bold mb-6 reveal-head"
+            style={{ letterSpacing: "-0.04em", lineHeight: 0.95, fontSize: "clamp(2.5rem, 6.5vw, 5rem)" }}
+          >
+            <SplitText by="word">INTERVENE</SplitText>
+          </h2>
+          <p className="text-[#1B3A4B]/80 text-lg lg:text-xl leading-relaxed font-medium max-w-xl mb-4 reveal-up">
+            The ring continuously reads heart-rate variability, skin conductance, and micro-stress signatures. On-device AI listens for scripted scam patterns, urgency, impersonation cues, emotional coercion.
+          </p>
+          <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed max-w-xl reveal-up">
+            When pressure is detected, a quiet haptic pulse breaks the spell. A single moment to think. If the call continues, a trusted family contact gets a discreet notification — never a recording, never a transcript.
+          </p>
+        </div>
+        <div className="lg:col-span-5 relative order-1 lg:order-2 reveal-image">
+          <div className="absolute inset-0 -z-10 ring-glow" aria-hidden />
+          <img
+            src={ringDevice}
+            alt="Veris ring"
+            loading="lazy"
+            width={1200}
+            height={1200}
+            className="w-full max-w-[420px] mx-auto object-contain"
+          />
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------- THE DEVICE ---------- */
-const deviceFeatures = [
-  { title: "Titanium Shell", body: "Aerospace-grade, hypoallergenic, 4g." },
-  { title: "On-device AI", body: "Edge inference. Zero cloud dependency." },
-  { title: "Haptic Engine", body: "Silent alerts only the wearer feels." },
-  { title: "Skin Contact Sensors", body: "Continuous physiological readout." },
-];
-const deviceStats = [
-  { value: "7", unit: "DAY", label: "Battery" },
-  { value: "4", unit: "g", label: "Weight" },
-  { value: "100", unit: "m", label: "Water resistance" },
-];
-
-function DeviceSection() {
+/* ---------- 5. ARCHITECTURE ---------- */
+function ArchitectureSection() {
+  const pieces = ["Shell", "Sensor", "SoC", "Antenna", "Coil", "Battery", "Band"];
   return (
-    <section id="device" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
-      <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">The Device</p>
-        <h2 className="text-[#1B3A4B] text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-none mb-12 lg:mb-20 reveal-head" style={{ letterSpacing: "-0.04em" }}>
-          <SplitText by="word">The Device</SplitText>
+    <section id="architecture" className="px-6 lg:px-12 py-24 lg:py-32">
+      <div className="max-w-[88rem] mx-auto text-center">
+        <h2
+          className="text-[#1B3A4B] font-bold reveal-head section-title"
+          style={{ letterSpacing: "-0.04em", lineHeight: 1, fontSize: "clamp(2.5rem, 7vw, 5.5rem)" }}
+        >
+          <SplitText by="word">THE ARCHITECTURE</SplitText>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-start">
-          <div className="device-stage rounded-2xl overflow-hidden bg-[#1B3A4B] min-h-[520px] lg:min-h-[640px] relative device-image-wrap">
-            <img src={ringDevice} alt="Veris ring" className="absolute inset-0 w-full h-full object-cover device-image" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-            {deviceFeatures.map((f) => (
-              <div key={f.title} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between reveal-up">
-                <h3 className="text-[#F4EFE6] text-lg font-medium" style={{ letterSpacing: "-0.02em" }}>{f.title}</h3>
-                <p className="text-[#F4EFE6]/60 text-sm">{f.body}</p>
-              </div>
+        <p className="text-[#1B3A4B]/50 text-xs italic mt-2 mb-12 lg:mb-16 reveal-up">*Out of scale</p>
+        <div className="relative max-w-6xl mx-auto reveal-image">
+          <img
+            src={architectureExploded}
+            alt="Exploded view of the Veris ring components"
+            loading="lazy"
+            width={1600}
+            height={800}
+            className="w-full object-contain"
+          />
+          <div className="hidden md:flex absolute inset-x-0 -top-4 justify-around px-12">
+            {pieces.slice(0, 4).map((p, i) => (
+              <span key={p} className="piece-label" style={{ animationDelay: `${i * 80}ms` }}>{p}</span>
             ))}
-            {deviceStats.map((s) => (
-              <div key={s.label} className="rounded-2xl bg-[#1B3A4B] p-6 min-h-40 flex flex-col justify-between reveal-up">
-                <p className="text-[#F4EFE6] text-4xl font-medium" style={{ letterSpacing: "-0.03em" }}>
-                  {s.value}<span className="text-[#F4EFE6]/70 text-xl ml-1">{s.unit}</span>
-                </p>
-                <p className="text-[#F4EFE6]/60 text-sm uppercase tracking-wider">{s.label}</p>
-              </div>
+          </div>
+          <div className="hidden md:flex absolute inset-x-0 -bottom-4 justify-around px-20">
+            {pieces.slice(4).map((p, i) => (
+              <span key={p} className="piece-label" style={{ animationDelay: `${i * 80 + 320}ms` }}>{p}</span>
             ))}
           </div>
         </div>
@@ -328,35 +248,68 @@ function DeviceSection() {
   );
 }
 
-/* ---------- SCIENCE & TRUST ---------- */
-function ScienceSection() {
-  const cols = [
-    {
-      eyebrow: "Built on peer-reviewed signals",
-      body: "Heart-rate variability and voice-stress markers are among the most studied indicators of acute psychological pressure. Veris fuses both, in real time, on your finger.",
-    },
-    {
-      eyebrow: "Privacy by architecture",
-      body: "On-device inference. No cloud transcripts. No audio ever leaves the ring. Even we can't hear what your parents say.",
-    },
-    {
-      eyebrow: "In pilot with",
-      body: "AARP Labs early-access cohort. MIT Media Lab affiliated researchers. A clinical advisory board of geriatricians and behavioral economists.",
-    },
+/* ---------- 6. FEATURE BLOCK B (HAND) ---------- */
+function HandSection() {
+  return (
+    <section className="px-6 lg:px-12 py-24 lg:py-32">
+      <div className="max-w-[88rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div className="lg:col-span-5 reveal-image">
+          <img
+            src={handWithRing}
+            alt="A hand wearing the Veris ring"
+            loading="lazy"
+            width={1200}
+            height={1200}
+            className="w-full max-w-md mx-auto object-contain"
+          />
+        </div>
+        <div className="lg:col-span-7">
+          <h2
+            className="text-[#1B3A4B] font-bold mb-6 reveal-head"
+            style={{ letterSpacing: "-0.04em", lineHeight: 0.95, fontSize: "clamp(2.5rem, 6.5vw, 5rem)" }}
+          >
+            <SplitText by="word">EVERYDAY</SplitText>
+          </h2>
+          <p className="text-[#1B3A4B]/80 text-lg lg:text-xl leading-relaxed font-medium max-w-xl mb-4 reveal-up">
+            4 grams of aerospace-grade titanium. Hypoallergenic. Water resistant to 100m. Seven-day battery on a single charge. Designed to disappear into the rest of a life — no screen, no notification, no constant reminder that something might go wrong.
+          </p>
+          <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed max-w-xl reveal-up">
+            The ring stays on the finger. The decision stays with the wearer. Veris just gives back the second they need to make it.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- 7. TEAM ---------- */
+function TeamSection() {
+  const team = [
+    { name: "Founder One", role: "CEO · Product", contact: "@founder1" },
+    { name: "Founder Two", role: "CTO · Hardware", contact: "@founder2" },
+    { name: "Founder Three", role: "AI · ML", contact: "@founder3" },
+    { name: "Founder Four", role: "Design", contact: "@founder4" },
+    { name: "Founder Five", role: "Clinical", contact: "@founder5" },
   ];
   return (
-    <section id="science" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36 border-t border-[#1B3A4B]/10">
-      <div className="max-w-[88rem] mx-auto">
-        <p className="text-[#1B3A4B]/60 text-sm mb-3 reveal-eyebrow">Science & Trust</p>
-        <h2 className="text-[#1B3A4B] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-16 lg:mb-24 reveal-head" style={{ letterSpacing: "-0.04em" }}>
-          <SplitText by="word">A moonshot, built like medicine.</SplitText>
+    <section className="px-6 lg:px-12 py-24 lg:py-32">
+      <div className="max-w-[88rem] mx-auto text-center">
+        <h2
+          className="text-[#1B3A4B] font-bold mb-14 lg:mb-20 reveal-head section-title"
+          style={{ letterSpacing: "-0.04em", lineHeight: 1, fontSize: "clamp(2.5rem, 7vw, 5.5rem)" }}
+        >
+          <SplitText by="word">THE TEAM</SplitText>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-16">
-          {cols.map((c) => (
-            <div key={c.eyebrow} className="reveal-up">
-              <p className="text-[#1B3A4B] text-lg lg:text-xl font-medium mb-3" style={{ letterSpacing: "-0.02em" }}>{c.eyebrow}</p>
-              <p className="text-[#1B3A4B]/70 text-base lg:text-lg leading-relaxed">{c.body}</p>
-            </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6 max-w-6xl mx-auto">
+          {team.map((m) => (
+            <article key={m.name} className="team-card reveal-up">
+              <div className="team-avatar" aria-hidden />
+              <div className="px-3 pb-4 pt-3">
+                <p className="text-[#1B3A4B] text-sm font-bold">{m.name}</p>
+                <p className="text-[#1B3A4B]/60 text-xs mt-0.5">{m.role}</p>
+                <p className="text-[#1B3A4B]/40 text-[10px] mt-1 tracking-wider">{m.contact}</p>
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -364,22 +317,22 @@ function ScienceSection() {
   );
 }
 
-/* ---------- MANIFESTO BAND ---------- */
+/* ---------- 8. MANIFESTO BAND ---------- */
 function ManifestoBand() {
   return (
-    <section id="manifesto" className="bg-[#1B3A4B] px-6 lg:px-12 py-28 md:py-36 lg:py-48">
-      <div className="max-w-5xl lg:max-w-7xl mx-auto">
-        <p className="text-[#F4EFE6]/40 text-xs font-medium tracking-[0.18em] uppercase mb-6 reveal-eyebrow">Manifesto</p>
-        <p className="text-[#F4EFE6] text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.15] reveal-head" style={{ letterSpacing: "-0.03em" }}>
-          <SplitText by="word">Fraud is no longer a financial problem. It's a cognitive one. We built Veris for the second before the decision, because that's the only second that matters.</SplitText>
+    <section id="manifesto" className="px-6 lg:px-12 py-24 lg:py-32">
+      <div className="max-w-5xl mx-auto text-center">
+        <p className="text-[#1B3A4B]/50 text-xs font-semibold tracking-[0.2em] uppercase mb-6 reveal-eyebrow">Manifesto</p>
+        <p className="text-[#1B3A4B] text-2xl md:text-4xl lg:text-5xl font-medium leading-snug reveal-head" style={{ letterSpacing: "-0.03em" }}>
+          <SplitText by="word">Fraud is no longer a financial problem. It's a cognitive one. Veris exists for the second before the decision — because that's the only second that matters.</SplitText>
         </p>
       </div>
     </section>
   );
 }
 
-/* ---------- CTA / EARLY ACCESS ---------- */
-function CTASection() {
+/* ---------- 9. EARLY ACCESS ---------- */
+function EarlyAccess() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -405,82 +358,68 @@ function CTASection() {
   }
 
   return (
-    <section id="early-access" className="bg-[#F4EFE6] px-6 lg:px-12 py-24 lg:py-36">
-      <div className="max-w-[88rem] mx-auto">
-        <div className="rounded-2xl bg-[#1B3A4B] px-6 md:px-16 lg:px-24 py-16 md:py-24 lg:py-32 cta-card">
-          <p className="text-[#F4EFE6]/50 text-xs font-medium tracking-[0.18em] uppercase mb-6 reveal-eyebrow">Private Beta</p>
-          <h2 className="text-[#F4EFE6] text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] max-w-3xl lg:max-w-5xl mb-6 lg:mb-8 reveal-head" style={{ letterSpacing: "-0.04em" }}>
-            <SplitText by="word">Be early. Be the reason it doesn't happen to them.</SplitText>
-          </h2>
-          <p className="text-[#F4EFE6]/70 text-base md:text-lg lg:text-xl max-w-xl lg:max-w-2xl mb-10 lg:mb-14 leading-relaxed reveal-up">
-            We're shipping the first cohort of rings to 127 families across 9 states. Request access, we read every email.
-          </p>
-
-          {done ? (
-            <div className="rounded-xl border border-[#F4EFE6]/20 bg-[#F4EFE6]/5 p-6 max-w-xl animate-[fade-in_0.5s_ease-out]">
-              <p className="text-[#F4EFE6] text-lg font-medium mb-1">
-                {done === "duplicate" ? "You're already on the list." : "You're in."}
-              </p>
-              <p className="text-[#F4EFE6]/60 text-sm">
-                We'll be in touch as soon as the next cohort opens.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl reveal-up">
-              <input
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="flex-1 bg-[#F4EFE6]/10 border border-[#F4EFE6]/20 text-[#F4EFE6] placeholder:text-[#F4EFE6]/40 rounded-full px-5 py-3 outline-none focus:border-[#F4EFE6]/50 transition-colors"
-              />
-              <input
-                type="email"
-                placeholder="you@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-[#F4EFE6]/10 border border-[#F4EFE6]/20 text-[#F4EFE6] placeholder:text-[#F4EFE6]/40 rounded-full px-5 py-3 outline-none focus:border-[#F4EFE6]/50 transition-colors"
-              />
-              <Magnetic>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="inline-flex items-center justify-center gap-2 bg-[#F4EFE6] text-[#1B3A4B] font-medium px-6 py-3 rounded-full hover:bg-white transition-colors disabled:opacity-60"
-                >
-                  {submitting ? "Sending…" : "Request access"}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </Magnetic>
-            </form>
-          )}
-        </div>
+    <section id="early-access" className="px-6 lg:px-12 pb-12">
+      <div className="max-w-3xl mx-auto text-center">
+        <p className="text-[#1B3A4B]/50 text-xs font-semibold tracking-[0.2em] uppercase mb-4 reveal-eyebrow">Private Beta</p>
+        <h3 className="text-[#1B3A4B] text-3xl md:text-4xl font-medium mb-8 reveal-head" style={{ letterSpacing: "-0.03em" }}>
+          <SplitText by="word">Be early. Be the reason it doesn't happen to them.</SplitText>
+        </h3>
+        {done ? (
+          <div className="inline-block rounded-2xl border border-[#1B3A4B]/15 bg-[#1B3A4B]/[0.03] p-6">
+            <p className="text-[#1B3A4B] text-base font-medium">
+              {done === "duplicate" ? "You're already on the list." : "You're in. We'll be in touch."}
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto reveal-up">
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="flex-1 bg-[#1B3A4B]/5 border border-[#1B3A4B]/15 text-[#1B3A4B] placeholder:text-[#1B3A4B]/40 rounded-full px-5 py-3 outline-none focus:border-[#1B3A4B]/40 transition-colors"
+            />
+            <input
+              type="email"
+              placeholder="you@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="flex-1 bg-[#1B3A4B]/5 border border-[#1B3A4B]/15 text-[#1B3A4B] placeholder:text-[#1B3A4B]/40 rounded-full px-5 py-3 outline-none focus:border-[#1B3A4B]/40 transition-colors"
+            />
+            <Magnetic>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center justify-center gap-2 bg-[#1B3A4B] text-[#F4EFE6] font-medium px-6 py-3 rounded-full hover:bg-[#14303f] transition-colors disabled:opacity-60"
+              >
+                {submitting ? "Sending…" : "Request access"}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </Magnetic>
+          </form>
+        )}
       </div>
     </section>
   );
 }
 
-/* About moved to /about */
-function Footer() {
+/* ---------- 10. FOOTER WORDMARK ---------- */
+function FooterWordmark() {
   return (
-    <footer className="relative bg-[#F4EFE6] px-6 pt-16 pb-6 border-t border-[#1B3A4B]/10 overflow-hidden">
+    <footer className="px-6 lg:px-12 pb-10">
       <div className="max-w-[88rem] mx-auto">
-        <p className="text-center text-[#1B3A4B]/70 text-xl md:text-2xl lg:text-3xl font-medium italic max-w-3xl mx-auto leading-snug mb-12" style={{ letterSpacing: "-0.02em" }}>
-          One second is all it takes.
-        </p>
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative z-10">
-          <div className="flex items-center gap-3 text-[#1B3A4B]">
-            <LogoIcon className="w-6 h-6" />
-            <span className="text-xl font-medium tracking-tight">Veris</span>
-            <span className="hidden md:inline text-[#1B3A4B]/40 text-sm ml-3">In private beta, by invitation, with care.</span>
-          </div>
-          <div className="flex items-center gap-6 text-[#1B3A4B]/60 text-sm">
-            <Link to="/about" className="hover:text-[#1B3A4B] transition-colors">Mission</Link>
-            <a href="#manifesto" className="hover:text-[#1B3A4B] transition-colors">Manifesto</a>
-            <a href="#early-access" className="hover:text-[#1B3A4B] transition-colors">Contact</a>
-            <span className="text-[#1B3A4B]/40">© 2026</span>
-          </div>
+        <div className="footer-card rounded-3xl px-6 lg:px-12 py-16 lg:py-24 flex flex-col items-center text-center">
+          <h2 className="footer-veris" aria-label="Veris">VERIS</h2>
+          <img
+            src={ringDevice}
+            alt=""
+            loading="lazy"
+            width={1200}
+            height={1200}
+            className="w-44 lg:w-56 mx-auto -mt-4 lg:-mt-8 object-contain"
+          />
+          <p className="text-[#1B3A4B]/50 text-xs mt-6 tracking-wider">©2026, Veris. All rights reserved.</p>
         </div>
-        <div className="footer-wordmark mt-8 -mb-[6vw] text-center" aria-hidden>Veris</div>
       </div>
     </footer>
   );
@@ -496,184 +435,100 @@ function VerisLanding() {
     const cleanupReveal = revealAll(root);
     const cleanups: Array<() => void> = [cleanupReveal];
 
-    if (reducedMotion()) return () => cleanups.forEach((c) => c());
-
-    // 1. Hero intro on mount.
-    const heroEyebrow = root.querySelector<HTMLElement>(".hero-eyebrow");
+    // Hero intro
     const heroHeadWords = root.querySelectorAll<HTMLElement>(".hero-head .anim-word");
-    const heroCopy = root.querySelector<HTMLElement>(".hero-copy");
-    const heroCta = root.querySelector<HTMLElement>(".hero-cta");
-    const heroCounter = root.querySelector<HTMLElement>(".hero-counter");
-    const marquee = root.querySelector<HTMLElement>(".marquee-track");
-
-    const hide = (el: HTMLElement | null, transform: string) => {
-      if (!el) return;
-      el.style.opacity = "0";
-      el.style.transform = transform;
-    };
-    hide(heroEyebrow, "translateX(-16px)");
-    heroHeadWords.forEach((w) => hide(w, "translateY(115%)"));
-    hide(heroCopy, "translateY(28px)");
-    hide(heroCta, "translateY(24px) scale(0.95)");
-    hide(heroCounter, "translateY(16px)");
-    if (marquee) marquee.style.opacity = "0";
-
+    const heroRing = root.querySelector<HTMLElement>(".hero-ring");
+    heroHeadWords.forEach((w) => {
+      w.style.opacity = "0";
+      w.style.transform = "translateY(115%)";
+    });
+    if (heroRing) {
+      heroRing.style.opacity = "0";
+      heroRing.style.transform = "scale(0.92)";
+    }
     const intro = createTimeline({ defaults: { ease: "outExpo" } });
-    if (heroEyebrow)
-      intro.add(heroEyebrow, { opacity: [0, 1], translateX: [-16, 0], duration: 900 }, 950);
-    if (heroHeadWords.length)
+    if (heroRing) {
+      intro.add(heroRing, { opacity: [0, 1], scale: [0.92, 1], duration: 1400 }, 200);
+    }
+    if (heroHeadWords.length) {
       intro.add(
         heroHeadWords,
-        { opacity: [0, 1], translateY: ["115%", "0%"], duration: 1200, delay: stagger(70) },
-        1300,
+        { opacity: [0, 1], translateY: ["115%", "0%"], duration: 1100, delay: stagger(80) },
+        700,
       );
-    if (heroCopy)
-      intro.add(heroCopy, { opacity: [0, 1], translateY: [28, 0], duration: 900 }, 1700);
-    if (heroCta)
-      intro.add(
-        heroCta,
-        { opacity: [0, 1], translateY: [24, 0], scale: [0.95, 1], duration: 850, ease: "outBack(1.6)" },
-        2050,
-      );
-    if (heroCounter)
-      intro.add(heroCounter, { opacity: [0, 1], translateY: [16, 0], duration: 700 }, 2300);
-    if (marquee) intro.add(marquee, { opacity: [0, 1], duration: 800 }, 2500);
-
-    // 2. CTA continuous float.
-    if (heroCta) {
-      const float = animate(heroCta, {
-        translateY: [0, -5],
-        duration: 2600,
-        ease: "inOutSine",
-        loop: true,
-        alternate: true,
-        delay: 3400,
-      });
-      cleanups.push(() => float.pause());
     }
 
-    // 3. Hero parallax via cursor.
-    const heroSection = root.querySelector<HTMLElement>("section");
-    const parallaxEls = Array.from(root.querySelectorAll<HTMLElement>("[data-parallax]"));
-    if (heroSection && parallaxEls.length) {
-      const onMove = rafThrottle((e: PointerEvent) => {
-        const r = heroSection.getBoundingClientRect();
-        const cx = (e.clientX - r.left) / r.width - 0.5;
-        const cy = (e.clientY - r.top) / r.height - 0.5;
-        parallaxEls.forEach((el) => {
-          const depth = parseFloat(el.dataset.parallax || "0.5");
-          animate(el, {
-            x: cx * depth * -18,
-            y: cy * depth * -14,
-            duration: 1000,
-            ease: "outExpo",
-          });
-        });
-      });
-      heroSection.addEventListener("pointermove", onMove);
-      cleanups.push(() => heroSection.removeEventListener("pointermove", onMove));
-    }
-
-    // 4. Device image float + slow rotational sway (combined transform).
-    const deviceImg = root.querySelector<HTMLElement>(".device-image");
-    if (deviceImg) {
-      const a = animate(deviceImg, {
-        translateY: [0, -14],
-        rotate: [-0.5, 0.5],
+    // Continuous ring float
+    if (heroRing) {
+      const f = animate(heroRing, {
+        translateY: [0, -10],
+        rotate: [-1, 1],
         duration: 5200,
         ease: "inOutSine",
         loop: true,
         alternate: true,
+        delay: 2200,
       });
-      cleanups.push(() => a.pause());
+      cleanups.push(() => f.pause());
     }
 
-    // 5. Step cards: 3D tilt-in on scroll.
-    const stepCards = Array.from(root.querySelectorAll<HTMLElement>(".step-card"));
-    if (stepCards.length) {
-      stepCards.forEach((c) => {
-        c.style.opacity = "0";
-        c.style.transform = "translateY(80px) perspective(900px) rotateX(-18deg)";
+    // Stat medallions: pop-in
+    const medallions = Array.from(root.querySelectorAll<HTMLElement>(".stat-medallion"));
+    if (medallions.length) {
+      medallions.forEach((m) => {
+        m.style.opacity = "0";
+        m.style.transform = "scale(0.7)";
       });
       cleanups.push(
-        onInView(stepCards[0], () => {
-          animate(stepCards, {
+        onInView(medallions[0], () => {
+          animate(medallions, {
             opacity: [0, 1],
-            translateY: [80, 0],
-            rotateX: [-18, 0],
-            duration: 1100,
-            ease: "outExpo",
+            scale: [0.7, 1],
+            duration: 900,
+            ease: "outBack(1.7)",
             delay: stagger(140),
           });
         }),
       );
     }
 
-    // 6. CTA card scale-in.
-    const ctaCard = root.querySelector<HTMLElement>(".cta-card");
-    if (ctaCard) {
-      ctaCard.style.opacity = "0";
-      ctaCard.style.transform = "translateY(80px) scale(0.96)";
+    // Team cards: stagger up
+    const teamCards = Array.from(root.querySelectorAll<HTMLElement>(".team-card"));
+    if (teamCards.length) {
+      teamCards.forEach((c) => {
+        c.style.opacity = "0";
+        c.style.transform = "translateY(40px)";
+      });
       cleanups.push(
-        onInView(ctaCard, () => {
-          animate(ctaCard, {
+        onInView(teamCards[0], () => {
+          animate(teamCards, {
             opacity: [0, 1],
-            translateY: [80, 0],
-            scale: [0.96, 1],
-            duration: 1200,
+            translateY: [40, 0],
+            duration: 800,
             ease: "outExpo",
+            delay: stagger(90),
           });
         }),
       );
     }
 
-    // 7. Use-case cards: pointer-tilt parallax (clamped to ±4°, slower).
-    const usecaseCards = Array.from(root.querySelectorAll<HTMLElement>(".usecase-card"));
-    usecaseCards.forEach((card) => {
-      const img = card.querySelector<HTMLElement>(".usecase-img");
+    // Pointer parallax on rings
+    const rings = Array.from(root.querySelectorAll<HTMLElement>(".reveal-image img"));
+    rings.forEach((img) => {
+      const parent = img.parentElement;
+      if (!parent) return;
       const onMove = rafThrottle((e: PointerEvent) => {
-        const r = card.getBoundingClientRect();
+        const r = parent.getBoundingClientRect();
         const cx = (e.clientX - r.left) / r.width - 0.5;
         const cy = (e.clientY - r.top) / r.height - 0.5;
-        animate(card, {
-          rotateY: cx * 4,
-          rotateX: -cy * 4,
-          duration: 700,
-          ease: "outExpo",
-        });
-        if (img) {
-          animate(img, {
-            x: cx * -10,
-            y: cy * -7,
-            duration: 800,
-            ease: "outExpo",
-          });
-        }
+        animate(img, { x: cx * -14, y: cy * -10, duration: 800, ease: "outExpo" });
       });
-      const onLeave = () => {
-        animate(card, { rotateX: 0, rotateY: 0, duration: 800, ease: "outExpo" });
-        if (img) animate(img, { x: 0, y: 0, duration: 800, ease: "outExpo" });
-      };
-      card.style.transformStyle = "preserve-3d";
-      card.style.perspective = "1000px";
-      card.addEventListener("pointermove", onMove);
-      card.addEventListener("pointerleave", onLeave);
+      const onLeave = () => animate(img, { x: 0, y: 0, duration: 800, ease: "outExpo" });
+      parent.addEventListener("pointermove", onMove);
+      parent.addEventListener("pointerleave", onLeave);
       cleanups.push(() => {
-        card.removeEventListener("pointermove", onMove);
-        card.removeEventListener("pointerleave", onLeave);
-      });
-    });
-
-    // 8. Pricing cards: hover lift via JS for consistency.
-    const pricingCards = Array.from(root.querySelectorAll<HTMLElement>(".pricing-card"));
-    pricingCards.forEach((card) => {
-      const onEnter = () => animate(card, { translateY: -8, duration: 500, ease: "outExpo" });
-      const onLeave = () => animate(card, { translateY: 0, duration: 500, ease: "outExpo" });
-      card.addEventListener("pointerenter", onEnter);
-      card.addEventListener("pointerleave", onLeave);
-      cleanups.push(() => {
-        card.removeEventListener("pointerenter", onEnter);
-        card.removeEventListener("pointerleave", onLeave);
+        parent.removeEventListener("pointermove", onMove);
+        parent.removeEventListener("pointerleave", onLeave);
       });
     });
 
@@ -684,24 +539,18 @@ function VerisLanding() {
   }, []);
 
   return (
-    <div ref={rootRef} className="flex flex-col bg-[#F4EFE6] page-fade-in">
-      <div className="h-screen flex flex-col overflow-hidden relative">
-        <Navbar />
-        <HeroSection />
-      </div>
+    <div ref={rootRef} className="bg-[#F4EFE6] text-[#1B3A4B] page-fade-in min-h-screen">
+      <PillNav />
+      <HeroVeris />
       <ProblemSection />
-      <StorySection />
-      <HowItWorksSection />
-      <ScamCallDemo />
-      <UseCasesSection />
-      <PrototypeSection />
-      <DeviceSection />
-      <BusinessModelSection />
-      <WhoItsForSection />
-      <ScienceSection />
+      <DataSection />
+      <FeatureBlockA />
+      <ArchitectureSection />
+      <HandSection />
+      <TeamSection />
       <ManifestoBand />
-      <CTASection />
-      <Footer />
+      <EarlyAccess />
+      <FooterWordmark />
     </div>
   );
 }
