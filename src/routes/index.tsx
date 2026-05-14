@@ -85,7 +85,7 @@ function PillNav() {
               <>
                 <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
                 <span className="sr-only sm:not-sr-only">{l.label}</span>
-              </>)}
+              </>
             );
             const cls =
               "flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-[0.12em] text-[#1B3A4B]/75 hover:text-[#1B3A4B] hover:bg-[#1B3A4B]/5 transition-colors";
