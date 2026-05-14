@@ -404,6 +404,7 @@ function EarlyAccess() {
             <input
               type="text"
               placeholder="Your name"
+              aria-label="Your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="flex-1 bg-[#1B3A4B]/5 border border-[#1B3A4B]/15 text-[#1B3A4B] placeholder:text-[#1B3A4B]/40 rounded-full px-5 py-3 outline-none focus:border-[#1B3A4B]/40 transition-colors"
@@ -411,6 +412,7 @@ function EarlyAccess() {
             <input
               type="email"
               placeholder="you@email.com"
+              aria-label="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1 bg-[#1B3A4B]/5 border border-[#1B3A4B]/15 text-[#1B3A4B] placeholder:text-[#1B3A4B]/40 rounded-full px-5 py-3 outline-none focus:border-[#1B3A4B]/40 transition-colors"
