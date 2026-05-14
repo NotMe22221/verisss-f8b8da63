@@ -1,0 +1,8 @@
+# Veris
+
+> Veris is a titanium ring with on-device AI that detects scam-call manipulation through biosignals and voice, then delivers a haptic interruption — giving older adults a moment to think before regret.
+
+## Pages
+
+- [Home](/): Product overview, problem, architecture, and early-access signup.
+- [About](/about): The team, story, and principles behind Veris.
