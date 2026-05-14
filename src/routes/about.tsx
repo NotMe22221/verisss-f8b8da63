@@ -9,19 +9,21 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
   head: () => ({
     meta: [
-      { title: "About Veris, Built for the second before the decision" },
+      { title: "About Veris — Built for the second before the decision" },
       {
         name: "description",
         content:
-          "Veris began at a kitchen table after a phone call that cost a family $42,000. Meet the neuroscientists, engineers, and clinicians building the cognitive defense layer.",
+          "Veris began at a kitchen table after a phone call cost a family $42,000. Meet the team building cognitive defense for older adults.",
       },
       { property: "og:title", content: "About Veris" },
       {
         property: "og:description",
         content:
-          "Neuroscientists, engineers, and clinicians building the protection we wished our own families had.",
+          "Neuroscientists, engineers, and clinicians building the protection we wished our families had.",
       },
+      { property: "og:url", content: "https://verisss.lovable.app/about" },
     ],
+    links: [{ rel: "canonical", href: "https://verisss.lovable.app/about" }],
   }),
 });
 
